@@ -1,4 +1,4 @@
-package nameSayer;
+package namesayer;
 
 import javafx.animation.PauseTransition;
 import javafx.collections.FXCollections;

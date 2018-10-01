@@ -1,4 +1,4 @@
-package nameSayer;
+package namesayer;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -70,7 +70,7 @@ public class NameSelectionMenu implements Initializable {
 
     public void handleReturnFromSelection(ActionEvent actionEvent) {
         MainMenu ctrl = new MainMenu();
-        returnFromSelectionButton.getScene().setRoot(ctrl.getControllerRoot());
+        returnFromSelectionButton.getScene().setRoot(ctrl.getMainMenuRoot());
     }
 
     public void handleConfirmationPressed(ActionEvent actionEvent) {

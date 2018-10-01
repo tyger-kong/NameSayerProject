@@ -1,4 +1,4 @@
-package nameSayer;
+package namesayer;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -16,19 +16,22 @@ import java.util.*;
 
 public class MainMenu implements Initializable {
 
+    @FXML
+    private Button practiceBtn;
+    @FXML
+    private Button namesBtn;
+    @FXML
+    private Button settingsBtn;
+    @FXML
+    private Button quitBtn;
 
     private List<String> listOfNamesAdded;
     private static List<NameFile> namesListArray = new ArrayList<NameFile>();
-    private static Parent controllerRoot;
+    private static Parent mainMenuRoot;
 
     Stage practiceStage = new Stage();
 
-    @FXML
-    private Button practiceMenuButton;
-
-    @FXML
-    private Button nameMenuButton;
-
+    
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         initialiseListNotSelected();
@@ -67,28 +70,37 @@ public class MainMenu implements Initializable {
         return namesListArray;
     }
 
-    public Parent getControllerRoot() {
-        return controllerRoot;
+    
+    public Parent getMainMenuRoot() {
+        return mainMenuRoot;
     }
 
 
-    public void handlePracticeMenuPressed(ActionEvent actionEvent) {
+    public void practiceBtnClicked(ActionEvent actionEvent) {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/nameSayer/nameSelectionMenu.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("NameSelectionMenu.fxml"));
             Parent root = fxmlLoader.load();
-            practiceMenuButton.getScene().setRoot(root);
+            practiceBtn.getScene().setRoot(root);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        mainMenuRoot = practiceBtn.getScene().getRoot();
+    }
+    
 
-        controllerRoot = practiceMenuButton.getScene().getRoot();
-
+    public void namesBtnClicked(ActionEvent actionEvent) {
+    	mainMenuRoot = namesBtn.getScene().getRoot();
+    }
+    
+    
+    public void settingsBtnClicked(ActionEvent actionEvent) {
+    	
     }
 
-    public void handleNameMenuPressed(ActionEvent actionEvent) {
-        controllerRoot = nameMenuButton.getScene().getRoot();
-
+    
+    public void quitBtnClicked(ActionEvent actionEvent) {
+    	Stage stage = (Stage)quitBtn.getScene().getWindow();
+    	stage.close();
     }
-
 
 }

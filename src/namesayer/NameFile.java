@@ -1,4 +1,4 @@
-package nameSayer;
+package namesayer;
 
 import javafx.beans.property.SimpleStringProperty;
 

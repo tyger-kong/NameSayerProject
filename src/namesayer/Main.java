@@ -1,4 +1,4 @@
-package nameSayer;
+package namesayer;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -11,19 +11,20 @@ import java.io.IOException;
 
 public class Main extends Application {
 
-    @Override
-    public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("mainMenu.fxml"));
-        primaryStage.setTitle("Hello World");
-        primaryStage.setScene(new Scene(root, 700, 500));
-        primaryStage.show();
-    }
-
-
     public static void main(String[] args) {
         initialise();
         launch(args);
     }
+	
+	
+    @Override
+    public void start(Stage primaryStage) throws Exception{
+        Parent root = FXMLLoader.load(getClass().getResource("MainMenu.fxml"));
+        primaryStage.setTitle("NameSayer - Main Menu");
+        primaryStage.setScene(new Scene(root, 700, 500));
+        primaryStage.show();
+    }
+    
 
     public static void initialise() {
         File archiveFolder = new File("Creations");
@@ -43,4 +44,5 @@ public class Main extends Application {
             }
         }
     }
+    
 }

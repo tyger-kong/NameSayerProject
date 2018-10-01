@@ -1,4 +1,4 @@
-package nameSayer;
+package namesayer;
 
 import java.util.Collections;
 import java.util.List;
