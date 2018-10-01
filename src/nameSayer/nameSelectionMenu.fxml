@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox fx:controller="nameSayer.nameSelectionController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Pane maxHeight="50.0" maxWidth="700.0" minHeight="50.0" minWidth="700.0" prefHeight="50.0" prefWidth="700.0">
+         <children>
+            <Label layoutX="14.0" layoutY="5.0" text="Enter Names You Wish to Practice:">
+               <font>
+                  <Font size="28.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+      <Pane maxHeight="80.0" minHeight="80.0" prefHeight="80.0" prefWidth="700.0">
+         <children>
+            <ComboBox fx:id="inputMethodComboBox" layoutX="260.0" layoutY="2.0" prefWidth="180.0" promptText="Choose Input Method" />
+            <Pane layoutX="225.0" layoutY="35.0" prefHeight="30.0" prefWidth="250.0">
+               <children>
+                  <TextField fx:id="nameInputField" layoutX="14.0" layoutY="3.0" prefWidth="200.0" />
+                  <Button fx:id="fieldComfirmationButton" layoutX="224.0" layoutY="3.0" mnemonicParsing="false" onAction="#handleConfirmationPressed" prefHeight="25.0" prefWidth="25.0" />
+               </children>
+            </Pane>
+         </children>
+      </Pane>
+      <Pane prefHeight="300.0" prefWidth="700.0">
+         <children>
+            <ScrollPane hbarPolicy="NEVER" layoutX="100.0" maxHeight="300.0" prefHeight="300.0" prefWidth="500.0">
+               <content>
+                  <ListView fx:id="namesSelectedListView" maxHeight="300.0" minHeight="300.0" mouseTransparent="true" prefHeight="300.0" prefWidth="500.0" />
+               </content>
+            </ScrollPane>
+         </children>
+      </Pane>
+      <Pane maxHeight="70.0" minHeight="70.0" prefHeight="70.0" prefWidth="200.0">
+         <children>
+            <Button fx:id="returnFromSelectionButton" layoutX="14.0" layoutY="23.0" mnemonicParsing="false" onAction="#handleReturnFromSelection" text="Return" />
+            <Button fx:id="practiceButton" onAction="#onPracticeAction" layoutX="275.0" layoutY="10.0" maxHeight="50.0" minHeight="50.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="150.0" text="Practice">
+               <font>
+                  <Font name="System Bold" size="20.0" />
+               </font>
+            </Button>
+         </children>
+      </Pane>
+   </children>
+</VBox>
