@@ -5,14 +5,17 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.ResourceBundle;
 
 public class MainMenu implements Initializable {
 
@@ -28,8 +31,6 @@ public class MainMenu implements Initializable {
     private List<String> listOfNamesAdded;
     private static List<NameFile> namesListArray = new ArrayList<NameFile>();
     private static Parent mainMenuRoot;
-
-    Stage practiceStage = new Stage();
 
     
     @Override
@@ -70,21 +71,17 @@ public class MainMenu implements Initializable {
         return namesListArray;
     }
 
-    
-    public Parent getMainMenuRoot() {
-        return mainMenuRoot;
-    }
-
 
     public void practiceBtnClicked(ActionEvent actionEvent) {
         try {
+        	mainMenuRoot = practiceBtn.getScene().getRoot();
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("NameSelectionMenu.fxml"));
             Parent root = fxmlLoader.load();
             practiceBtn.getScene().setRoot(root);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        mainMenuRoot = practiceBtn.getScene().getRoot();
+//        mainMenuRoot = practiceBtn.getScene().getRoot();
     }
     
 
@@ -101,6 +98,11 @@ public class MainMenu implements Initializable {
     public void quitBtnClicked(ActionEvent actionEvent) {
     	Stage stage = (Stage)quitBtn.getScene().getWindow();
     	stage.close();
+    }
+    
+    
+    public static Parent getMainMenuRoot() {
+        return mainMenuRoot;
     }
 
 }

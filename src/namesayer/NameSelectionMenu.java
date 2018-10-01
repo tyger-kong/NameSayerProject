@@ -17,66 +17,69 @@ import java.util.ResourceBundle;
 
 public class NameSelectionMenu implements Initializable {
     @FXML
-    private ComboBox<String> inputMethodComboBox;
+    private Button mainMenuBtn;
     @FXML
-    private Button fieldComfirmationButton;
+    private ComboBox<String> inputMethodChoice;
     @FXML
     private TextField nameInputField;
     @FXML
-    private ListView<String> namesSelectedListView;
+    private Button addNameBtn;
     @FXML
-    private Button returnFromSelectionButton;
+    private ListView<String> namesListView;
     @FXML
     private Button practiceButton;
+    @FXML
+    private Button deleteBtn;
 
     private static List<String> listOfNamesSelected = new ArrayList<String>();
     private static Parent controllerRoot;
+    
+    
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        ObservableList<String> rateList = FXCollections.observableArrayList("Manual", "Text File");
+        inputMethodChoice.setItems(rateList);
+    }
 
-    public void onPracticeAction(ActionEvent actionEvent) {
+    
+    public void mainMenuBtnClicked(ActionEvent actionEvent) {
+        mainMenuBtn.getScene().setRoot(MainMenu.getMainMenuRoot());
+    }
+    
+    
+    public static List<String> getAddedList() {
+        return listOfNamesSelected;
+    }
 
+    
+    public void addNameBtnClicked(ActionEvent actionEvent) {
+    	
+    }
+    
+
+    public void practiceBtnClicked(ActionEvent actionEvent) {
         if (listOfNamesSelected.isEmpty()) {
             Alert nonSelectedAlert = new Alert(Alert.AlertType.INFORMATION);
-            nonSelectedAlert.setTitle("ERROR");
+            nonSelectedAlert.setTitle("ERROR - Please select some names");
             nonSelectedAlert.setHeaderText(null);
             nonSelectedAlert.setContentText("No name(s) have been selected. Please select at least one name to practice");
             nonSelectedAlert.showAndWait();
         } else {
-
-
             try {
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/nameSayer/practiceMenu.fxml"));
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("PracticeMenu.fxml"));
                 Parent root = fxmlLoader.load();
-                namesSelectedListView.getScene().setRoot(root);
+                namesListView.getScene().setRoot(root);
             } catch (IOException e) {
                 e.printStackTrace();
                 System.out.println("Failed to open practice menu");
             }
         }
         controllerRoot = practiceButton.getScene().getRoot();
-
     }
 
-    public static List<String> getAddedList() {
-        return listOfNamesSelected;
-    }
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-
-        ObservableList<String> rateList = FXCollections.observableArrayList("Manual", "Text File");
-        inputMethodComboBox.setItems(rateList);
-
-    }
-
-    public void handleReturnFromSelection(ActionEvent actionEvent) {
-        MainMenu ctrl = new MainMenu();
-        returnFromSelectionButton.getScene().setRoot(ctrl.getMainMenuRoot());
-    }
-
-    public void handleConfirmationPressed(ActionEvent actionEvent) {
-    }
-
+    
     public Parent getControllerRoot() {
         return controllerRoot;
     }
+    
 }
