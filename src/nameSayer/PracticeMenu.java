@@ -35,7 +35,7 @@ import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.TargetDataLine;
 
 
-public class practiceController implements Initializable {
+public class PracticeMenu implements Initializable {
 
     private String selectedName;
 
@@ -106,8 +106,8 @@ public class practiceController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        nameDatabase = Controller.getAddedNames();
-        listToPlay = FXCollections.observableArrayList(nameSelectionController.getAddedList());
+        nameDatabase = MainMenu.getAddedNames();
+        listToPlay = FXCollections.observableArrayList(NameSelectionMenu.getAddedList());
         displayListView.setItems(listToPlay);
         displayListView.getSelectionModel().clearSelection();
         displayListView.getSelectionModel().selectFirst();
@@ -461,7 +461,7 @@ public class practiceController implements Initializable {
 
     public void returnToNameSelection() {
         closePractice = true;
-        nameSelectionController ctrl = new nameSelectionController();
+        NameSelectionMenu ctrl = new NameSelectionMenu();
         returnButton.getScene().setRoot(ctrl.getControllerRoot());
     }
 

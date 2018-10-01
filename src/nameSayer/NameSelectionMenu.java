@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class nameSelectionController implements Initializable {
+public class NameSelectionMenu implements Initializable {
     @FXML
     private ComboBox<String> inputMethodComboBox;
     @FXML
@@ -69,7 +69,7 @@ public class nameSelectionController implements Initializable {
     }
 
     public void handleReturnFromSelection(ActionEvent actionEvent) {
-        Controller ctrl = new Controller();
+        MainMenu ctrl = new MainMenu();
         returnFromSelectionButton.getScene().setRoot(ctrl.getControllerRoot());
     }
 

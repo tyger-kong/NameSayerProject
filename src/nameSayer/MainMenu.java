@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
-public class Controller implements Initializable {
+public class MainMenu implements Initializable {
 
 
     private List<String> listOfNamesAdded;
