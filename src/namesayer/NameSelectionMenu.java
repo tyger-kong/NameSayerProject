@@ -32,12 +32,12 @@ public class NameSelectionMenu implements Initializable {
     private Button deleteBtn;
 
     private static List<String> listOfNamesSelected = new ArrayList<String>();
-    private static Parent controllerRoot;
+    private static Parent nameSelectionMenuRoot;
     
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        ObservableList<String> rateList = FXCollections.observableArrayList("Manual", "Text File");
+        ObservableList<String> rateList = FXCollections.observableArrayList("Manual input", "Browse for text file");
         inputMethodChoice.setItems(rateList);
     }
 
@@ -46,11 +46,6 @@ public class NameSelectionMenu implements Initializable {
         mainMenuBtn.getScene().setRoot(MainMenu.getMainMenuRoot());
     }
     
-    
-    public static List<String> getAddedList() {
-        return listOfNamesSelected;
-    }
-
     
     public void addNameBtnClicked(ActionEvent actionEvent) {
     	
@@ -66,6 +61,7 @@ public class NameSelectionMenu implements Initializable {
             nonSelectedAlert.showAndWait();
         } else {
             try {
+                nameSelectionMenuRoot = practiceButton.getScene().getRoot();
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("PracticeMenu.fxml"));
                 Parent root = fxmlLoader.load();
                 namesListView.getScene().setRoot(root);
@@ -74,12 +70,17 @@ public class NameSelectionMenu implements Initializable {
                 System.out.println("Failed to open practice menu");
             }
         }
-        controllerRoot = practiceButton.getScene().getRoot();
     }
 
-    
+
     public Parent getControllerRoot() {
-        return controllerRoot;
+        return nameSelectionMenuRoot;
     }
+    
+    
+    public static List<String> getAddedList() {
+        return listOfNamesSelected;
+    }
+
     
 }
