@@ -73,9 +73,9 @@ public class NameSelectionMenu implements Initializable {
 
 	public void addNameBtnClicked(ActionEvent actionEvent) {
 
-		if (selectedManual) {
-			// Trim white space and replace multiple " "/"-" with a single " "/"-"
-			String userInput = nameInputField.getText().trim().replaceAll(" +", " ").replaceAll("-+", "-");
+		if (selectedManual && (nameInputField.getText() != null)) {
+			// Trim leading and trailing white space and hyphens, and replace multiple " "/"-" with a single " "/"-"
+			String userInput = nameInputField.getText().trim().replaceAll(" +", " ").replaceAll("\\s*-\\s*", "-").replaceAll("-+", "-").replaceAll("^-", "").replaceAll("-$", "");
 			if (!userInput.isEmpty()) {
 				String[] inputArray = NameChecker.nameAsArray(userInput);
 				namesObsList.add(inputArray);
