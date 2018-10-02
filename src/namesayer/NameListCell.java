@@ -17,20 +17,14 @@ public class NameListCell extends ListCell<String[]> {
 
 	@Override
 	protected void updateItem(String[] names, boolean empty) {
-
-		System.out.println("\n\nUPDATEITEM METHOD CALLED");
-		System.out.println("***" + names);
-		System.out.println(empty);
-
 		super.updateItem(names,  empty);
 
 		if (empty || (names == null)) {
 			setText(null);
 			setGraphic(null);
-			System.out.println("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
 		} else {
 
-			// This prevents the ListView from bugging out and appending cells together
+			// This prevents the ListView from bugging out and appending cells together (IMPORTANT)
 			if (cellHBox != null) {
 				cellHBox.getChildren().clear();
 			}
@@ -48,7 +42,6 @@ public class NameListCell extends ListCell<String[]> {
 
 			// Add strings to the cell and set background colours
 			for (String n : names) {
-				System.out.println("..........................."  + n);
 				Label nameLabel = new Label(n);
 
 				// Set background color of the label appropriately

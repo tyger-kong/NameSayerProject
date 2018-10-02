@@ -22,10 +22,22 @@ public class NameChecker {
 		List<String> list = new ArrayList<String>();
 		String singleName = "";
 		for (int i = 0; i < name.length(); i++) {
-			if ((name.charAt(i) == ' ') || (name.charAt(i) == '-')) {
+//			if ((name.charAt(i) == ' ') || (name.charAt(i) == '-')) {
+//				list.add(singleName);
+//				singleName = "";
+//				list.add(Character.toString(name.charAt(i)));
+//			} else {
+//				singleName += name.charAt(i);
+//			}
+			
+			if (name.charAt(i) == ' ') {
 				list.add(singleName);
 				singleName = "";
-				list.add(Character.toString(name.charAt(i)));
+				list.add(" ");
+			} else if (name.charAt(i) == '-') {
+				list.add(singleName);
+				singleName = "";
+				list.add("-");
 			} else {
 				singleName += name.charAt(i);
 			}

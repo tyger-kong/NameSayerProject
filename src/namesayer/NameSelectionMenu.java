@@ -9,7 +9,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
-import javafx.util.Callback;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -56,7 +55,7 @@ public class NameSelectionMenu implements Initializable {
 		inputMethodChoice.setItems(rateList);
 		inputMethodChoice.setValue("Browse for text file");
 		nameInputField.setPromptText("Choose a text file");
-		nameInputField.setEditable(false);
+		nameInputField.setDisable(true);
 
 		namesObsList.addAll(testData2, testData1, testData3, testData4, testData5);
 		namesListView.setItems(namesObsList);
@@ -88,8 +87,8 @@ public class NameSelectionMenu implements Initializable {
 			FileChooser fileChooser = new FileChooser();
 			fileChooser.setTitle("Open txt file");
 			File selectedFile = fileChooser.showOpenDialog(addNameBtn.getScene().getWindow());
-			nameInputField.setText(selectedFile.getAbsolutePath());
 			if (selectedFile != null) {
+				nameInputField.setText(selectedFile.getAbsolutePath());
 				try (BufferedReader br = new BufferedReader(new FileReader(selectedFile))) {
 					String line;
 					while ((line = br.readLine()) != null) {
@@ -157,11 +156,13 @@ public class NameSelectionMenu implements Initializable {
 			listOfNamesSelected.clear();
 			selectedManual = true;
 			nameInputField.setPromptText("Enter a name");
-			nameInputField.setEditable(true);
+			nameInputField.setDisable(false);
+
 		} else if (inputMethodChoice.getValue().equals("Browse for text file")) {
 			selectedManual = false;
-			nameInputField.setPromptText("Choose a text file");
-			nameInputField.setEditable(false);
+			nameInputField.setPromptText("Browse for a text file by clicking the button -->");
+			nameInputField.setDisable(true);
+
 		}
 	}
 }
