@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+
 public class NameSelectionMenu implements Initializable {
 	@FXML
 	private Button mainMenuBtn;
@@ -88,7 +89,8 @@ public class NameSelectionMenu implements Initializable {
 			fileChooser.setTitle("Open txt file");
 			File selectedFile = fileChooser.showOpenDialog(addNameBtn.getScene().getWindow());
 			
-			if (selectedFile != null) {
+			if ((selectedFile != null) && (selectedFile.getPath().substring(selectedFile.getAbsolutePath().lastIndexOf('.')).equals(".txt"))) {
+				System.out.println(selectedFile.getPath().substring(selectedFile.getAbsolutePath().lastIndexOf('.')));
 				nameInputField.setText(selectedFile.getAbsolutePath());
 				try (BufferedReader br = new BufferedReader(new FileReader(selectedFile))) {
 					String line;
