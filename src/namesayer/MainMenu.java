@@ -50,10 +50,10 @@ public class MainMenu implements Initializable {
             int attempt = 0;
 
             // Handle duplicate names by numbering them
-            while (listOfNamesAdded.contains(listName)) {
-                attempt++;
-                listName = justName + "-" + attempt;
-            }
+//            while (listOfNamesAdded.contains(listName)) {
+//                attempt++;
+//                listName = justName + "-" + attempt;
+//            }
             listOfNamesAdded.add(listName);
 
             NameFile name = new NameFile(currentFile, listName);

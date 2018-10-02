@@ -41,7 +41,7 @@ public class NameSelectionMenu implements Initializable {
 
 	private String[] testData1 = new String[]{"this", "is", "a", "test"};
 	private String[] testData2 = new String[]{"Mike", "-", "John", " ", "Lee"};
-	private String[] testData3 = new String[]{"John", "-", "Fernando", " ", "Cena", "-", "Wison", " ", "Anderson"};
+	private String[] testData3 = new String[]{"John", "-", "Catherine", " ", "Cena", "-", "Wison", " ", "Anderson"};
 	private String[] testData4 = new String[]{"Tyger"};
 	private String[] testData5 = new String[]{"Ryan", " ", "Lim", " ", "En", "-", "Wei"};
 	private ObservableList<String[]> namesObsList = FXCollections.observableArrayList();

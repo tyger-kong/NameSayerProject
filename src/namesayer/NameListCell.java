@@ -29,7 +29,7 @@ public class NameListCell extends ListCell<String[]> {
 			setGraphic(null);
 			System.out.println("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
 		} else {
-			
+
 			// This prevents the ListView from bugging out and appending cells together
 			if (cellHBox != null) {
 				cellHBox.getChildren().clear();
@@ -51,16 +51,16 @@ public class NameListCell extends ListCell<String[]> {
 				System.out.println("..........................."  + n);
 				Label nameLabel = new Label(n);
 
-				// Set background color of the label
-				// USE HELPER CLASS THAT CHECKS THE STRING (if it's in database, or if it's a "-" or " ")
-				if ((n == "Mike") || (n == "Ryan")) {
-					nameLabel.setStyle("-fx-background-color: #ff3524;");
-				}
-				if ((n == "Cena") || (n == "Tyger")) {
-					nameLabel.setStyle("-fx-background-color: #34ff35;");
-				}
-				if (n == "En") {
-					nameLabel.setStyle("-fx-background-color: #44355f;");
+				// Set background color of the label appropriately
+				// Green = one occurrence, orange = more than one occurrence, red = no occurrences in database
+				if ((n != "-") && (n != " ")) {
+					if (NameChecker.checkNameDuplicates(n)) {
+						nameLabel.setStyle("-fx-background-color: #ffd633;");
+					} else if (NameChecker.checkNameExists(n)) {
+						nameLabel.setStyle("-fx-background-color: #34ff35;");
+					} else {
+						nameLabel.setStyle("-fx-background-color: #ff3524;");
+					}
 				}
 
 				cellHBox.getChildren().add(nameLabel);
