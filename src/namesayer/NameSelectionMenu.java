@@ -8,7 +8,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.stage.FileChooser;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -37,7 +41,10 @@ public class NameSelectionMenu implements Initializable {
     private String[] testData1 = new String[]{"this", "is", "a", "test"};
     private String[] testData2= new String[]{"Mike", "-", "John", " ", "Lee"};
     private ObservableList<String[]> namesObsList = FXCollections.observableArrayList();
-    
+
+    private boolean selectedManual;
+    private boolean noneSelected = false;
+
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -56,6 +63,34 @@ public class NameSelectionMenu implements Initializable {
     
     
     public void addNameBtnClicked(ActionEvent actionEvent) {
+        if(noneSelected){
+            Alert nonSelectedAlert = new Alert(Alert.AlertType.INFORMATION);
+            nonSelectedAlert.setTitle("ERROR - Please select input method");
+            nonSelectedAlert.setHeaderText(null);
+            nonSelectedAlert.setContentText("No input method selected. Please select an option from the dropdown menu");
+            nonSelectedAlert.showAndWait();
+        } else{
+            if(selectedManual){
+
+            } else if(!selectedManual){
+                listOfNamesSelected.clear();
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.setTitle("Open txt file");
+                File selectedFile = fileChooser.showOpenDialog(null);
+
+                if(selectedFile != null){
+                    try (BufferedReader br = new BufferedReader(new FileReader(selectedFile))) {
+                        String line;
+                        while ((line = br.readLine()) != null) {
+                            listOfNamesSelected.add(line);
+                        }
+                    } catch (IOException e){
+                    }
+                }
+
+
+            }
+        }
     	
     }
     
@@ -90,5 +125,14 @@ public class NameSelectionMenu implements Initializable {
         return listOfNamesSelected;
     }
 
-    
+
+    public void onInputSelected(ActionEvent actionEvent) {
+        noneSelected = false;
+        if(inputMethodChoice.getValue().equals("Manual input")){
+            listOfNamesSelected.clear();
+            selectedManual = true;
+        } else if (inputMethodChoice.getValue().equals("Browse for text file")){
+            selectedManual = false;
+        }
+    }
 }
