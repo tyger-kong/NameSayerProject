@@ -5,14 +5,13 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="namesayer.NameSelectionMenu">
+<VBox alignment="TOP_CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="namesayer.NameSelectionMenu">
    <children>
       <HBox prefHeight="37.0" prefWidth="700.0">
          <children>
@@ -37,11 +36,7 @@
             <Button fx:id="addNameBtn" layoutX="511.0" layoutY="38.0" mnemonicParsing="false" onAction="#addNameBtnClicked" prefHeight="25.0" prefWidth="25.0" />
          </children>
       </Pane>
-      <ScrollPane hbarPolicy="NEVER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="650.0">
-         <content>
-            <ListView fx:id="namesListView" minHeight="-Infinity" minWidth="-Infinity" mouseTransparent="true" prefHeight="300.0" prefWidth="650.0" />
-         </content>
-      </ScrollPane>
+      <ListView fx:id="namesListView" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mouseTransparent="true" prefHeight="300.0" prefWidth="580.0" />
       <Pane maxHeight="70.0" minHeight="70.0" prefHeight="70.0" prefWidth="200.0">
          <children>
             <Button fx:id="practiceButton" layoutX="290.0" layoutY="13.0" mnemonicParsing="false" onAction="#practiceBtnClicked" prefHeight="30.0" prefWidth="120.0" text="Practice">

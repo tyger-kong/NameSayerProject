@@ -6,12 +6,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 
 // Based on https://www.turais.de/how-to-custom-listview-cell-in-javafx/
 public class NameListCell extends ListCell<String[]> {
 	@FXML
-	GridPane cellGridPane;
+	HBox cellHBox;
 
 	private FXMLLoader loader;
 
@@ -42,15 +42,26 @@ public class NameListCell extends ListCell<String[]> {
 
 			// Add strings to the cell and set background colours
 			for (String n : names) {
-				
 				System.out.println("..........................."  + n);
-				
 				Label nameLabel = new Label(n);
-				cellGridPane.getChildren().add(nameLabel);
-
+				
 				// Set background color of the label
 				// USE HELPER CLASS THAT CHECKS THE STRING (if it's in database, or if it's a "-" or " "
+				if ((n == "Mike") || (n == "Ryan")) {
+					nameLabel.setStyle("-fx-background-color: #ff3524;");
+				}
+				if ((n == "Cena") || (n == "Tyger")) {
+					nameLabel.setStyle("-fx-background-color: #34ff35;");
+				}
+				if (n == "En") {
+					nameLabel.setStyle("-fx-background-color: #44355f;");
+				}
+				
+				cellHBox.getChildren().add(nameLabel);
 			}
+			
+			setText(null);
+            setGraphic(cellHBox);
 		}
 	}
 
