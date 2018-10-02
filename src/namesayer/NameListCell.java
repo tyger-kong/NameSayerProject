@@ -58,8 +58,13 @@ public class NameListCell extends ListCell<String[]> {
 						nameLabel.setStyle("-fx-background-color: #ffd633;");
 					} else if (NameChecker.checkNameExists(n)) {
 						nameLabel.setStyle("-fx-background-color: #34ff35;");
+						// MAYBE SHOW HOW MANY NAMES OF SAME SPELLING THERE ARE?
 					} else {
 						nameLabel.setStyle("-fx-background-color: #ff3524;");
+						// ADD SUGGESTIONS FOR SIMILAR NAMES THAT EXIST???//
+						// 												  //
+						//												  //
+						////////////////////////////////////////////////////
 					}
 				}
 

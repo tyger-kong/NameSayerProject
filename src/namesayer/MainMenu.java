@@ -47,13 +47,14 @@ public class MainMenu implements Initializable {
         for (String currentFile : listOfNamesInDatabase) {
             String justName = currentFile.substring((currentFile.lastIndexOf("_") + 1), currentFile.lastIndexOf("."));
             String listName = justName;
-            int attempt = 0;
-
-            // Handle duplicate names by numbering them
+            
+//            int attempt = 0;
+//            // Handle duplicate names by numbering them
 //            while (listOfNamesAdded.contains(listName)) {
 //                attempt++;
 //                listName = justName + "-" + attempt;
 //            }
+            
             listOfNamesAdded.add(listName);
 
             NameFile name = new NameFile(currentFile, listName);

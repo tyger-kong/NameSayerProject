@@ -42,8 +42,8 @@ public class NameSelectionMenu implements Initializable {
 	private String[] testData1 = new String[]{"this", "is", "a", "test"};
 	private String[] testData2 = new String[]{"Mike", "-", "John", " ", "Lee"};
 	private String[] testData3 = new String[]{"John", "-", "Catherine", " ", "Cena", "-", "Wison", " ", "Anderson"};
-	private String[] testData4 = new String[]{"Tyger"};
-	private String[] testData5 = new String[]{"Ryan", " ", "Lim", " ", "En", "-", "Wei"};
+	private String[] testData4 = new String[]{"Antony"};
+	private String[] testData5 = new String[]{"Ryan", " ", "Lim", " ", "Li", "-", "Bruce"};
 	private ObservableList<String[]> namesObsList = FXCollections.observableArrayList();
 
 	private boolean selectedManual;
@@ -55,11 +55,13 @@ public class NameSelectionMenu implements Initializable {
 		ObservableList<String> rateList = FXCollections.observableArrayList("Browse for text file", "Manual input");
 		inputMethodChoice.setItems(rateList);
 		inputMethodChoice.setValue("Browse for text file");
+		nameInputField.setPromptText("Choose a text file");
+		nameInputField.setEditable(false);
 
 		namesObsList.addAll(testData2, testData1, testData3, testData4, testData5);
 		namesListView.setItems(namesObsList);
 		namesListView.setCellFactory(names -> new NameListCell());
-		
+
 		namesListView.setMouseTransparent(false);
 		namesListView.setFocusTraversable(true);
 	}
@@ -71,39 +73,48 @@ public class NameSelectionMenu implements Initializable {
 
 
 	public void addNameBtnClicked(ActionEvent actionEvent) {
-//		if(noneSelected) {
-//			Alert nonSelectedAlert = new Alert(Alert.AlertType.INFORMATION);
-//			nonSelectedAlert.setTitle("ERROR - Please select input method");
-//			nonSelectedAlert.setHeaderText(null);
-//			nonSelectedAlert.setContentText("No input method selected. Please select an option from the dropdown menu");
-//			nonSelectedAlert.showAndWait();
-//		} else {
+
+		if (selectedManual) {
+			// Trim white space and replace multiple " "/"-" with a single " "/"-"
+			String userInput = nameInputField.getText().trim().replaceAll(" +", " ").replaceAll("-+", "-");
+			if (!userInput.isEmpty()) {
+				String[] inputArray = NameChecker.nameAsArray(userInput);
+				namesObsList.add(inputArray);
+				nameInputField.setText(null);
+			}	
+		} else {
 			
-			if (selectedManual) {
-				
-			} else if (!selectedManual) {
-				listOfNamesSelected.clear();
-				FileChooser fileChooser = new FileChooser();
-				fileChooser.setTitle("Open txt file");
-				File selectedFile = fileChooser.showOpenDialog(addNameBtn.getScene().getWindow());
-				
-				
-				if (selectedFile != null) {
-					try (BufferedReader br = new BufferedReader(new FileReader(selectedFile))) {
-						String line;
-						while ((line = br.readLine()) != null) {
-							listOfNamesSelected.add(line);
-						}
-					} catch (IOException e) {
-						e.printStackTrace();
+			listOfNamesSelected.clear();
+			FileChooser fileChooser = new FileChooser();
+			fileChooser.setTitle("Open txt file");
+			File selectedFile = fileChooser.showOpenDialog(addNameBtn.getScene().getWindow());
+			nameInputField.setText(selectedFile.getAbsolutePath());
+			if (selectedFile != null) {
+				try (BufferedReader br = new BufferedReader(new FileReader(selectedFile))) {
+					String line;
+					while ((line = br.readLine()) != null) {
+						listOfNamesSelected.add(line);
+						//
+						// **********************************************************************************************
+						// ListOfNamesSelected needs to be parsed into a namesObsList form so it can be put into ListView
+						// **********************************************************************************************
+						//
 					}
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
 			}
-			
-		//}
+
+		}
+
+	}
+	
+	
+	public void enterPressed(ActionEvent actionEvent) {
+		addNameBtnClicked(actionEvent);
 	}
 
-
+	
 	public void practiceBtnClicked(ActionEvent actionEvent) {
 		if (listOfNamesSelected.isEmpty()) {
 			Alert nonSelectedAlert = new Alert(Alert.AlertType.INFORMATION);
@@ -123,8 +134,8 @@ public class NameSelectionMenu implements Initializable {
 			}
 		}
 	}
-	
-	
+
+
 	public void deleteBtnClicked(ActionEvent actionEvent) {
 		namesObsList.add(new String[]{"Mike", "-", "John", " ", "Lee"});
 	}
@@ -142,11 +153,15 @@ public class NameSelectionMenu implements Initializable {
 
 	public void onInputSelected(ActionEvent actionEvent) {
 		noneSelected = false;
-		if(inputMethodChoice.getValue().equals("Manual input")){
+		if(inputMethodChoice.getValue().equals("Manual input")) {
 			listOfNamesSelected.clear();
 			selectedManual = true;
-		} else if (inputMethodChoice.getValue().equals("Browse for text file")){
+			nameInputField.setPromptText("Enter a name");
+			nameInputField.setEditable(true);
+		} else if (inputMethodChoice.getValue().equals("Browse for text file")) {
 			selectedManual = false;
+			nameInputField.setPromptText("Choose a text file");
+			nameInputField.setEditable(false);
 		}
 	}
 }

@@ -10,7 +10,6 @@ import javafx.scene.control.ListView;
 import javafx.scene.input.MouseEvent;
 
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 
 public class DatabaseMenu implements Initializable {
