@@ -32,7 +32,7 @@
       </Label>
       <Pane maxHeight="80.0" minHeight="75.0" prefHeight="75.0" prefWidth="700.0">
          <children>
-            <ComboBox fx:id="inputMethodChoice" layoutX="204.0" layoutY="2.0" prefHeight="25.0" prefWidth="292.0" promptText="Choose Input Method" />
+            <ComboBox fx:id="inputMethodChoice" layoutX="204.0" layoutY="2.0" prefHeight="25.0" prefWidth="292.0" promptText="&lt;&lt; Choose Input Method &gt;&gt;" />
             <TextField fx:id="nameInputField" layoutX="204.0" layoutY="38.0" prefHeight="25.0" prefWidth="292.0" />
             <Button fx:id="addNameBtn" layoutX="511.0" layoutY="38.0" mnemonicParsing="false" onAction="#addNameBtnClicked" prefHeight="25.0" prefWidth="25.0" />
          </children>

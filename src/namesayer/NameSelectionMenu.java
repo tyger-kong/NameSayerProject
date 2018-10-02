@@ -25,20 +25,28 @@ public class NameSelectionMenu implements Initializable {
     @FXML
     private Button addNameBtn;
     @FXML
-    private ListView<String> namesListView;
+    private ListView<String[]> namesListView;
     @FXML
     private Button practiceButton;
     @FXML
     private Button deleteBtn;
 
     private static List<String> listOfNamesSelected = new ArrayList<String>();
-    private static Parent controllerRoot;
+    private static Parent nameSelectionMenuRoot;
+    
+    private String[] testData1 = new String[]{"this", "is", "a", "test"};
+    private String[] testData2= new String[]{"Mike", "-", "John", " ", "Lee"};
+    private ObservableList<String[]> namesObsList = FXCollections.observableArrayList();
     
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        ObservableList<String> rateList = FXCollections.observableArrayList("Manual", "Text File");
+        ObservableList<String> rateList = FXCollections.observableArrayList("Manual input", "Browse for text file");
         inputMethodChoice.setItems(rateList);
+        
+        namesObsList.addAll(testData1, testData2);
+        namesListView.setItems(namesObsList);
+        namesListView.setCellFactory(names -> new NameListCell());
     }
 
     
@@ -46,11 +54,6 @@ public class NameSelectionMenu implements Initializable {
         mainMenuBtn.getScene().setRoot(MainMenu.getMainMenuRoot());
     }
     
-    
-    public static List<String> getAddedList() {
-        return listOfNamesSelected;
-    }
-
     
     public void addNameBtnClicked(ActionEvent actionEvent) {
     	
@@ -66,6 +69,7 @@ public class NameSelectionMenu implements Initializable {
             nonSelectedAlert.showAndWait();
         } else {
             try {
+                nameSelectionMenuRoot = practiceButton.getScene().getRoot();
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("PracticeMenu.fxml"));
                 Parent root = fxmlLoader.load();
                 namesListView.getScene().setRoot(root);
@@ -74,12 +78,17 @@ public class NameSelectionMenu implements Initializable {
                 System.out.println("Failed to open practice menu");
             }
         }
-        controllerRoot = practiceButton.getScene().getRoot();
     }
 
-    
+
     public Parent getControllerRoot() {
-        return controllerRoot;
+        return nameSelectionMenuRoot;
     }
+    
+    
+    public static List<String> getAddedList() {
+        return listOfNamesSelected;
+    }
+
     
 }
