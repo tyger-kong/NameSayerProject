@@ -74,7 +74,7 @@ public class NameSelectionMenu implements Initializable {
 	public void addNameBtnClicked(ActionEvent actionEvent) {
 
 		if (selectedManual && (nameInputField.getText() != null)) {
-			// Trim leading and trailing white space and hyphens, and replace multiple " "/"-" with a single " "/"-"
+			// Trim leading and trailing white space and hyphens, and replace multiple spaces/hyphens with single ones
 			String userInput = nameInputField.getText().trim().replaceAll(" +", " ").replaceAll("\\s*-\\s*", "-").replaceAll("-+", "-").replaceAll("^-", "").replaceAll("-$", "");
 			if (!userInput.isEmpty()) {
 				String[] inputArray = NameChecker.nameAsArray(userInput);
@@ -87,21 +87,25 @@ public class NameSelectionMenu implements Initializable {
 			FileChooser fileChooser = new FileChooser();
 			fileChooser.setTitle("Open txt file");
 			File selectedFile = fileChooser.showOpenDialog(addNameBtn.getScene().getWindow());
+			
 			if (selectedFile != null) {
 				nameInputField.setText(selectedFile.getAbsolutePath());
 				try (BufferedReader br = new BufferedReader(new FileReader(selectedFile))) {
 					String line;
 					while ((line = br.readLine()) != null) {
 						listOfNamesSelected.add(line);
-						//
-						// **********************************************************************************************
-						// ListOfNamesSelected needs to be parsed into a namesObsList form so it can be put into ListView
-						// **********************************************************************************************
-						//
 					}
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+				
+				namesObsList.clear();
+				for (String input : listOfNamesSelected) {
+					input = input.trim().replaceAll(" +", " ").replaceAll("\\s*-\\s*", "-").replaceAll("-+", "-").replaceAll("^-", "").replaceAll("-$", "");
+					String[] inputArray = NameChecker.nameAsArray(input);
+					namesObsList.add(inputArray);
+				}
+				
 			}
 
 		}
