@@ -9,6 +9,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
+import javafx.util.Callback;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -51,12 +52,16 @@ public class NameSelectionMenu implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		ObservableList<String> rateList = FXCollections.observableArrayList("Manual input", "Browse for text file");
+		ObservableList<String> rateList = FXCollections.observableArrayList("Browse for text file", "Manual input");
 		inputMethodChoice.setItems(rateList);
+		inputMethodChoice.setValue("Browse for text file");
 
 		namesObsList.addAll(testData2, testData1, testData3, testData4, testData5);
 		namesListView.setItems(namesObsList);
 		namesListView.setCellFactory(names -> new NameListCell());
+		
+		namesListView.setMouseTransparent(false);
+		namesListView.setFocusTraversable(true);
 	}
 
 
@@ -66,23 +71,24 @@ public class NameSelectionMenu implements Initializable {
 
 
 	public void addNameBtnClicked(ActionEvent actionEvent) {
-		if(noneSelected){
-			Alert nonSelectedAlert = new Alert(Alert.AlertType.INFORMATION);
-			nonSelectedAlert.setTitle("ERROR - Please select input method");
-			nonSelectedAlert.setHeaderText(null);
-			nonSelectedAlert.setContentText("No input method selected. Please select an option from the dropdown menu");
-			nonSelectedAlert.showAndWait();
-		} else {
+//		if(noneSelected) {
+//			Alert nonSelectedAlert = new Alert(Alert.AlertType.INFORMATION);
+//			nonSelectedAlert.setTitle("ERROR - Please select input method");
+//			nonSelectedAlert.setHeaderText(null);
+//			nonSelectedAlert.setContentText("No input method selected. Please select an option from the dropdown menu");
+//			nonSelectedAlert.showAndWait();
+//		} else {
 			
-			if(selectedManual) {
+			if (selectedManual) {
 				
-			} else if(!selectedManual) {
+			} else if (!selectedManual) {
 				listOfNamesSelected.clear();
 				FileChooser fileChooser = new FileChooser();
 				fileChooser.setTitle("Open txt file");
-				File selectedFile = fileChooser.showOpenDialog(null);
-
-				if(selectedFile != null) {
+				File selectedFile = fileChooser.showOpenDialog(addNameBtn.getScene().getWindow());
+				
+				
+				if (selectedFile != null) {
 					try (BufferedReader br = new BufferedReader(new FileReader(selectedFile))) {
 						String line;
 						while ((line = br.readLine()) != null) {
@@ -94,7 +100,7 @@ public class NameSelectionMenu implements Initializable {
 				}
 			}
 			
-		}
+		//}
 	}
 
 
@@ -116,6 +122,11 @@ public class NameSelectionMenu implements Initializable {
 				System.out.println("Failed to open practice menu");
 			}
 		}
+	}
+	
+	
+	public void deleteBtnClicked(ActionEvent actionEvent) {
+		namesObsList.add(new String[]{"Mike", "-", "John", " ", "Lee"});
 	}
 
 

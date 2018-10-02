@@ -17,7 +17,7 @@ public class NameListCell extends ListCell<String[]> {
 
 	@Override
 	protected void updateItem(String[] names, boolean empty) {
-		
+
 		System.out.println("\n\nUPDATEITEM METHOD CALLED");
 		System.out.println("***" + names);
 		System.out.println(empty);
@@ -27,12 +27,18 @@ public class NameListCell extends ListCell<String[]> {
 		if (empty || (names == null)) {
 			setText(null);
 			setGraphic(null);
+			System.out.println("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
 		} else {
 			
+			// This prevents the ListView from bugging out and appending cells together
+			if (cellHBox != null) {
+				cellHBox.getChildren().clear();
+			}
+
 			if (loader == null) {
 				loader = new FXMLLoader(getClass().getResource("NameListCell.fxml"));
 				loader.setController(this);
-				
+
 				try {
 					loader.load();
 				} catch (IOException e) {
@@ -44,9 +50,9 @@ public class NameListCell extends ListCell<String[]> {
 			for (String n : names) {
 				System.out.println("..........................."  + n);
 				Label nameLabel = new Label(n);
-				
+
 				// Set background color of the label
-				// USE HELPER CLASS THAT CHECKS THE STRING (if it's in database, or if it's a "-" or " "
+				// USE HELPER CLASS THAT CHECKS THE STRING (if it's in database, or if it's a "-" or " ")
 				if ((n == "Mike") || (n == "Ryan")) {
 					nameLabel.setStyle("-fx-background-color: #ff3524;");
 				}
@@ -56,12 +62,12 @@ public class NameListCell extends ListCell<String[]> {
 				if (n == "En") {
 					nameLabel.setStyle("-fx-background-color: #44355f;");
 				}
-				
+
 				cellHBox.getChildren().add(nameLabel);
 			}
-			
+
 			setText(null);
-            setGraphic(cellHBox);
+			setGraphic(cellHBox);
 		}
 	}
 
