@@ -28,7 +28,7 @@ public class MainMenu implements Initializable {
     @FXML
     private Button quitBtn;
 
-    private List<String> listOfNamesAdded;
+    private static List<String> listOfNamesAdded;
     private static List<NameFile> namesListArray = new ArrayList<NameFile>();
     private static Parent mainMenuRoot;
 
@@ -81,12 +81,18 @@ public class MainMenu implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-//        mainMenuRoot = practiceBtn.getScene().getRoot();
     }
     
 
     public void namesBtnClicked(ActionEvent actionEvent) {
-    	mainMenuRoot = namesBtn.getScene().getRoot();
+        try {
+            mainMenuRoot = practiceBtn.getScene().getRoot();
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("DatabaseMenu.fxml"));
+            Parent root = fxmlLoader.load();
+            practiceBtn.getScene().setRoot(root);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     
     
@@ -103,6 +109,10 @@ public class MainMenu implements Initializable {
     
     public static Parent getMainMenuRoot() {
         return mainMenuRoot;
+    }
+
+    public static List<String> getAddedList(){
+        return listOfNamesAdded;
     }
 
 }

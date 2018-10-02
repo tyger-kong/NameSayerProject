@@ -62,7 +62,7 @@ public class NameSelectionMenu implements Initializable {
             Alert nonSelectedAlert = new Alert(Alert.AlertType.INFORMATION);
             nonSelectedAlert.setTitle("ERROR - Please select some names");
             nonSelectedAlert.setHeaderText(null);
-            nonSelectedAlert.setContentText("No name(s) have been selected. Please select at least one name to practice");
+            nonSelectedAlert.setContentText("No name(s) have been entered. Please enter at least one name to practice");
             nonSelectedAlert.showAndWait();
         } else {
             try {
