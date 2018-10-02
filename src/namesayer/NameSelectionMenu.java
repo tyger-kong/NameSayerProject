@@ -25,7 +25,7 @@ public class NameSelectionMenu implements Initializable {
     @FXML
     private Button addNameBtn;
     @FXML
-    private ListView<String> namesListView;
+    private ListView<String[]> namesListView;
     @FXML
     private Button practiceButton;
     @FXML
@@ -34,11 +34,19 @@ public class NameSelectionMenu implements Initializable {
     private static List<String> listOfNamesSelected = new ArrayList<String>();
     private static Parent nameSelectionMenuRoot;
     
+    private String[] testData1 = new String[]{"this", "is", "a", "test"};
+    private String[] testData2= new String[]{"Mike", "-", "John", " ", "Lee"};
+    private ObservableList<String[]> namesObsList = FXCollections.observableArrayList();
+    
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         ObservableList<String> rateList = FXCollections.observableArrayList("Manual input", "Browse for text file");
         inputMethodChoice.setItems(rateList);
+        
+        namesObsList.addAll(testData1, testData2);
+        namesListView.setItems(namesObsList);
+        namesListView.setCellFactory(names -> new NameListCell());
     }
 
     
