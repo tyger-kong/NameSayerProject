@@ -44,7 +44,7 @@ public class NameSelectionMenu implements Initializable {
 	private String[] testData3 = new String[]{"John", "-", "Catherine", " ", "Cena", "-", "Wison", " ", "Anderson"};
 	private String[] testData4 = new String[]{"Antony"};
 	private String[] testData5 = new String[]{"Ryan", " ", "Lim", " ", "Li", "-", "Bruce"};
-	private ObservableList<String[]> namesObsList = FXCollections.observableArrayList();
+	private static ObservableList<String[]> namesObsList = FXCollections.observableArrayList();
 
 	private boolean selectedManual;
 	private boolean noneSelected = false;
@@ -74,52 +74,58 @@ public class NameSelectionMenu implements Initializable {
 
 	public void addNameBtnClicked(ActionEvent actionEvent) {
 
-		if (selectedManual && (nameInputField.getText() != null)) {
-			// Trim leading and trailing white space and hyphens, and replace multiple spaces/hyphens with single ones
-			String userInput = nameInputField.getText().trim().replaceAll(" +", " ").replaceAll("\\s*-\\s*", "-").replaceAll("-+", "-").replaceAll("^-", "").replaceAll("-$", "");
-			if (!userInput.isEmpty()) {
-				String[] inputArray = NameChecker.nameAsArray(userInput);
-				namesObsList.add(inputArray);
-				nameInputField.setText(null);
-			}	
+		if (selectedManual) {
+			if(((nameInputField.getText() == null) || nameInputField.getText().trim().equals(""))) {
+				//Alert
+			} else {
+				// Trim leading and trailing white space and hyphens, and replace multiple spaces/hyphens with single ones
+				String userInput = nameInputField.getText().trim().replaceAll(" +", " ").replaceAll("\\s*-\\s*", "-").replaceAll("-+", "-").replaceAll("^-", "").replaceAll("-$", "");
+				if (!userInput.isEmpty()) {
+					String[] inputArray = NameChecker.nameAsArray(userInput);
+					namesObsList.add(inputArray);
+					nameInputField.setText(null);
+				}	
+			}
 		} else {
-			
+
 			listOfNamesSelected.clear();
 			FileChooser fileChooser = new FileChooser();
 			fileChooser.setTitle("Open txt file");
 			File selectedFile = fileChooser.showOpenDialog(addNameBtn.getScene().getWindow());
-			
+
 			if ((selectedFile != null) && (selectedFile.getPath().substring(selectedFile.getAbsolutePath().lastIndexOf('.')).equals(".txt"))) {
 				System.out.println(selectedFile.getPath().substring(selectedFile.getAbsolutePath().lastIndexOf('.')));
 				nameInputField.setText(selectedFile.getAbsolutePath());
 				try (BufferedReader br = new BufferedReader(new FileReader(selectedFile))) {
 					String line;
 					while ((line = br.readLine()) != null) {
-						listOfNamesSelected.add(line);
+						if (!line.trim().equals("")) {
+							listOfNamesSelected.add(line);
+						}
 					}
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				
+
 				namesObsList.clear();
 				for (String input : listOfNamesSelected) {
 					input = input.trim().replaceAll(" +", " ").replaceAll("\\s*-\\s*", "-").replaceAll("-+", "-").replaceAll("^-", "").replaceAll("-$", "");
 					String[] inputArray = NameChecker.nameAsArray(input);
 					namesObsList.add(inputArray);
 				}
-				
+
 			}
 
 		}
 
 	}
-	
-	
+
+
 	public void enterPressed(ActionEvent actionEvent) {
 		addNameBtnClicked(actionEvent);
 	}
 
-	
+
 	public void practiceBtnClicked(ActionEvent actionEvent) {
 		if (listOfNamesSelected.isEmpty()) {
 			Alert nonSelectedAlert = new Alert(Alert.AlertType.INFORMATION);
@@ -170,5 +176,9 @@ public class NameSelectionMenu implements Initializable {
 			nameInputField.setDisable(true);
 
 		}
+	}
+
+	public static ObservableList<String[]> getNamesObList(){
+		return namesObsList;
 	}
 }
