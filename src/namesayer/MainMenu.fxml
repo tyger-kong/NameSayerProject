@@ -6,9 +6,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="TOP_CENTER" maxHeight="500.0" maxWidth="700.0" minHeight="500.0" minWidth="700.0" prefHeight="500.0" prefWidth="700.0" spacing="40.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="namesayer.MainMenu">
+<VBox alignment="TOP_CENTER" maxHeight="500.0" maxWidth="700.0" minHeight="500.0" minWidth="700.0" prefHeight="500.0" prefWidth="700.0" spacing="40.0" style="-fx-background-color: #373737;" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="namesayer.MainMenu">
    <children>
-      <Label text="Name Sayer">
+      <Label text="Name Sayer" textFill="#c0b283">
          <font>
             <Font name="System Bold" size="60.0" />
          </font>
@@ -16,22 +16,22 @@
             <Insets bottom="40.0" />
          </VBox.margin>
       </Label>
-      <Button fx:id="practiceBtn" mnemonicParsing="false" onAction="#practiceBtnClicked" prefHeight="40.0" prefWidth="200.0" text="Practice">
+      <Button fx:id="practiceBtn" mnemonicParsing="false" onAction="#practiceBtnClicked" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #c0b283;" text="Practice" textFill="#373737">
          <font>
             <Font size="20.0" />
          </font>
       </Button>
-      <Button fx:id="namesBtn" mnemonicParsing="false" onAction="#namesBtnClicked" prefHeight="40.0" prefWidth="200.0" text="Names">
+      <Button fx:id="namesBtn" mnemonicParsing="false" onAction="#namesBtnClicked" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #c0b283;" text="Names" textFill="#373737">
          <font>
             <Font size="20.0" />
          </font>
       </Button>
-      <Button fx:id="settingsBtn" mnemonicParsing="false" onAction="#settingsBtnClicked" prefHeight="40.0" prefWidth="200.0" text="Settings">
+      <Button fx:id="settingsBtn" mnemonicParsing="false" onAction="#settingsBtnClicked" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #c0b283;" text="Settings" textFill="#373737">
          <font>
             <Font size="20.0" />
          </font>
       </Button>
-      <Button fx:id="quitBtn" mnemonicParsing="false" onAction="#quitBtnClicked" prefHeight="40.0" prefWidth="200.0" text="Quit">
+      <Button fx:id="quitBtn" mnemonicParsing="false" onAction="#quitBtnClicked" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #c0b283;" text="Quit" textFill="#373737">
          <font>
             <Font size="20.0" />
          </font>
