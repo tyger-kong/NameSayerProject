@@ -1,4 +1,19 @@
+VBox {
+	-fx-background-color: #373737;
+}
+
+Button {
+	-fx-background-color: #c0b283;
+}
+
+Label {
+	-fx-text-fill: #c0b283;
+}
+
 Button:hover {
-        -fx-background-color: #383838;
-        -fx-scale-y: 1.1;
+    -fx-scale-y: 1.1;
+}
+
+ListCell:selected {
+    -fx-background-color: #373737;
 }
