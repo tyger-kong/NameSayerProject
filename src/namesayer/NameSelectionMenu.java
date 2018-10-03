@@ -76,7 +76,11 @@ public class NameSelectionMenu implements Initializable {
 
 		if (selectedManual) {
 			if(((nameInputField.getText() == null) || nameInputField.getText().trim().equals(""))) {
-				//Alert
+				Alert noInputAlert = new Alert(Alert.AlertType.INFORMATION);
+				noInputAlert.setTitle("ERROR - Please enter a name");
+				noInputAlert.setHeaderText(null);
+				noInputAlert.setContentText("No name entered. Please enter a name to practice");
+				noInputAlert.showAndWait();
 			} else {
 				// Trim leading and trailing white space and hyphens, and replace multiple spaces/hyphens with single ones
 				String userInput = nameInputField.getText().trim().replaceAll(" +", " ").replaceAll("\\s*-\\s*", "-").replaceAll("-+", "-").replaceAll("^-", "").replaceAll("-$", "");
@@ -127,7 +131,7 @@ public class NameSelectionMenu implements Initializable {
 
 
 	public void practiceBtnClicked(ActionEvent actionEvent) {
-		if (listOfNamesSelected.isEmpty()) {
+		if (namesObsList.isEmpty()) {
 			Alert nonSelectedAlert = new Alert(Alert.AlertType.INFORMATION);
 			nonSelectedAlert.setTitle("ERROR - Please select some names");
 			nonSelectedAlert.setHeaderText(null);

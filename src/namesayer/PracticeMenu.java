@@ -1,5 +1,6 @@
 package namesayer;
 
+
 import javafx.animation.PauseTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -41,7 +42,7 @@ public class PracticeMenu implements Initializable {
 
     private int selectedIndex = 0;
 
-    private ObservableList<String> listToPlay;
+    private ObservableList<String> listToDisplay;
 
     private ObservableList<String> recordedList;
 
@@ -107,14 +108,15 @@ public class PracticeMenu implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         nameDatabase = MainMenu.getAddedNames();
-        listToPlay = FXCollections.observableArrayList(NameSelectionMenu.getAddedList());
-        displayListView.setItems(listToPlay);
+        listToDisplay = FXCollections.observableArrayList();
+        getlistToDisplay();
+        displayListView.setItems(listToDisplay);
         displayListView.getSelectionModel().clearSelection();
         displayListView.getSelectionModel().selectFirst();
         selectedIndex = 0;
         selectedName = displayListView.getSelectionModel().getSelectedItem();
         playingLabel.setText(selectedName);
-        newNameSelected();
+//        newNameSelected();
 
         // Show microphone level on a ProgressBar
         new Thread() {
@@ -171,7 +173,7 @@ public class PracticeMenu implements Initializable {
 
 
     public void handleNextButton(ActionEvent actionEvent) {
-        if (selectedIndex == listToPlay.size() - 1) {
+        if (selectedIndex == listToDisplay.size() - 1) {
             displayListView.scrollTo(selectedIndex);
             displayListView.getSelectionModel().selectLast();
         } else {
@@ -465,5 +467,11 @@ public class PracticeMenu implements Initializable {
         returnButton.getScene().setRoot(ctrl.getControllerRoot());
     }
 
+    public void getlistToDisplay(){
+        for( String[] s : NameSelectionMenu.getNamesObList()){
+            String string = String.join("", s);
+            listToDisplay.add(string);
+        }
+    }
 
 }
