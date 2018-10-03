@@ -82,8 +82,7 @@ public class PracticeMenu implements Initializable {
     @FXML
     private ProgressBar recordingIndicator;
 
-    @FXML
-    private Button rateButton;
+
 
     @FXML
     private ProgressBar micBar = new ProgressBar();
@@ -91,12 +90,14 @@ public class PracticeMenu implements Initializable {
     @FXML
     private Label playingLabel;
 
-    private List<NameFile> nameDatabase;
+    private List<String> namesToPractice;
+    private List<NameFile> namesDatabase;
 
     private File creations = new File("./Creations");
 
-    private NameFile currentName;
+    private String currentName;
 
+    private List<String> attemptDatabase;
     private List<String> listOfAttempts;
 
     private boolean closePractice = false;
@@ -107,7 +108,8 @@ public class PracticeMenu implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        nameDatabase = MainMenu.getAddedNames();
+        namesDatabase = MainMenu.getAddedNames();
+        namesToPractice = new ArrayList<>();
         listToDisplay = FXCollections.observableArrayList();
         getlistToDisplay();
         displayListView.setItems(listToDisplay);
@@ -188,7 +190,7 @@ public class PracticeMenu implements Initializable {
 
 
     public void handlePlayButton(ActionEvent actionEvent) {
-        toPlay = currentName.getFileName();
+        toPlay = currentName;
         playAudio("names/" + toPlay);
     }
 
@@ -202,7 +204,7 @@ public class PracticeMenu implements Initializable {
         if (selectedArchive == null) {
             noFileAlert();
         } else {
-            toPlay = currentName.getFileName();
+            toPlay = currentName;
             String fileToPlay = toPlay.substring(0, toPlay.lastIndexOf("_")+1) + selectedArchive;
             playAudio("Creations/" + fileToPlay + ".wav");
         }
@@ -261,7 +263,7 @@ public class PracticeMenu implements Initializable {
         if (selectedArchive == null) {
             noFileAlert();
         } else {
-            toPlay = currentName.getFileName();
+            toPlay = currentName;
             String fileToDelete = toPlay.substring(0, toPlay.lastIndexOf("_")+1) + selectedArchive;
             String fileString = "Creations/" + fileToDelete + ".wav";
             File toDelete = new File(fileString);
@@ -277,7 +279,7 @@ public class PracticeMenu implements Initializable {
                         e.printStackTrace();
                     }
 
-                    currentName.deleteAttempt(fileToDelete);
+                    listOfAttempts.remove(fileToDelete);
                     updateArchive();
                     availableListView.getSelectionModel().clearSelection();
                     selectedArchive = null;
@@ -296,7 +298,7 @@ public class PracticeMenu implements Initializable {
     public void handleRecordAction(ActionEvent actionEvent) {
         date = new Date();
         String currentTime = formatter.format(date);
-        String recordingName = currentName.getName() + " " + currentTime;
+        String recordingName = currentName + " " + currentTime;
         String recordCommand = "ffmpeg -f alsa -ac 1 -ar 44100 -i default -t 5 \"" + recordingName + "\".wav";
         ProcessBuilder recordAudio = new ProcessBuilder("/bin/bash", "-c", recordCommand);
         recordAudio.directory(creations);
@@ -335,7 +337,7 @@ public class PracticeMenu implements Initializable {
                 5000
         );
 
-        currentName.addAttempt(recordingName);
+        listOfAttempts.add(recordingName);
         updateArchive();
     }
 
@@ -367,55 +369,36 @@ public class PracticeMenu implements Initializable {
     }
 
 
-    public void handleRateAction(ActionEvent actionEvent) {
-        Alert rateConfirm = new Alert(Alert.AlertType.CONFIRMATION, "Change " + selectedName + "'s rating?", ButtonType.YES, ButtonType.NO);
-        rateConfirm.showAndWait();
 
-        if (rateConfirm.getResult() == ButtonType.YES) {
-            toPlay = currentName.getFileName();
-
-            if(!currentName.checkIfBadRating()) {
-                currentName.setBadRating(true);
-            } else {
-                currentName.setBadRating(false);
-            }
-            setRatingButton();
-        }
-    }
 
 
     public void newNameSelected() {
         getCurrentName();
-        initialiseListOfAttempts();
+        initialiseAttemptDatabase();
         fillAttemptList();
         updateArchive();
-        setRatingButton();
         selectedArchive = null;
     }
 
 
     public void getCurrentName() {
-        for (NameFile n : nameDatabase) {
-            if (n.toString().equals(selectedName)) {
-                currentName = n;
-            }
-        }
+        currentName = selectedName;
     }
 
 
-    public void initialiseListOfAttempts() {
-        listOfAttempts = new ArrayList<String>(Arrays.asList(creations.list()));
+    public void initialiseAttemptDatabase() {
+        attemptDatabase = new ArrayList<String>(Arrays.asList(creations.list()));
     }
 
 
     public void fillAttemptList() {
-        for (String s : listOfAttempts) {
+        for (String s : attemptDatabase) {
             if (s.lastIndexOf(" ") != -1) {
                 String nameMatch = s.substring(0, s.lastIndexOf(" ")-1);
-                if (currentName.getFileNameWithoutWAV().equals(nameMatch)) {
+                if (currentName.equals(nameMatch)) {
                     String toAddToList = s.substring(0, s.lastIndexOf("."));
-                    if (!currentName.getAttemptList().contains(toAddToList)) {
-                        currentName.addAttempt(toAddToList);
+                    if (!listOfAttempts.contains(toAddToList)) {
+                        listOfAttempts.add(toAddToList);
                     }
                 }
             }
@@ -425,7 +408,7 @@ public class PracticeMenu implements Initializable {
 
     // Update attempts list
     public void updateArchive() {
-        recordedList = FXCollections.observableArrayList(currentName.getAttemptListNameOnly());
+        recordedList = FXCollections.observableArrayList(listOfAttempts);
         if (recordedList.size() == 0) {
             contains = false;
             availableListView.setMouseTransparent(true);
@@ -437,17 +420,6 @@ public class PracticeMenu implements Initializable {
         }
         availableListView.setItems(recordedList);
         availableListView.getSelectionModel().clearSelection();
-    }
-
-
-    private void setRatingButton() {
-        if (currentName.checkIfBadRating()) {
-            rateButton.setText("Rate Good");
-            rateButton.setStyle("-fx-background-color: red;");
-        } else {
-            rateButton.setText("Rate Bad");
-            rateButton.setStyle("-fx-background-color: green;");
-        }
     }
 
 
@@ -469,9 +441,13 @@ public class PracticeMenu implements Initializable {
 
     public void getlistToDisplay(){
         for( String[] s : NameSelectionMenu.getNamesObList()){
-            String string = String.join("", s);
-            listToDisplay.add(string);
+            String displayName = String.join("", s);
+            listToDisplay.add(displayName);
+            makeNewAudio(s);
         }
+    }
+    public void makeNewAudio(String[] s){
+
     }
 
 }
