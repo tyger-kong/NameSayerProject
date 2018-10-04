@@ -8,6 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 
 import java.io.BufferedReader;
@@ -30,11 +31,13 @@ public class NameSelectionMenu implements Initializable {
 	@FXML
 	private Button addNameBtn;
 	@FXML
-	private ListView<String[]> namesListView;
+	private ListView<String[]> namesSelectedListView;
 	@FXML
 	private Button practiceButton;
 	@FXML
 	private Button deleteBtn;
+	@FXML
+	private Button deleteAllButton;
 
 	private static List<String> listOfNamesSelected = new ArrayList<String>();
 	private static Parent nameSelectionMenuRoot;
@@ -47,7 +50,7 @@ public class NameSelectionMenu implements Initializable {
 	private static ObservableList<String[]> namesObsList = FXCollections.observableArrayList();
 
 	private boolean selectedManual;
-	private boolean noneSelected = false;
+	private String[] selectedNameArray;
 
 
 	@Override
@@ -59,11 +62,11 @@ public class NameSelectionMenu implements Initializable {
 		nameInputField.setDisable(true);
 
 		namesObsList.addAll(testData2, testData1, testData3, testData4, testData5);
-		namesListView.setItems(namesObsList);
-		namesListView.setCellFactory(names -> new NameListCell());
+		namesSelectedListView.setItems(namesObsList);
+		namesSelectedListView.setCellFactory(names -> new NameListCell());
 
-		namesListView.setMouseTransparent(false);
-		namesListView.setFocusTraversable(true);
+		namesSelectedListView.setMouseTransparent(false);
+		namesSelectedListView.setFocusTraversable(true);
 	}
 
 
@@ -142,7 +145,7 @@ public class NameSelectionMenu implements Initializable {
 				nameSelectionMenuRoot = practiceButton.getScene().getRoot();
 				FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("PracticeMenu.fxml"));
 				Parent root = fxmlLoader.load();
-				namesListView.getScene().setRoot(root);
+				namesSelectedListView.getScene().setRoot(root);
 			} catch (IOException e) {
 				e.printStackTrace();
 				System.out.println("Failed to open practice menu");
@@ -152,7 +155,7 @@ public class NameSelectionMenu implements Initializable {
 
 
 	public void deleteBtnClicked(ActionEvent actionEvent) {
-		namesObsList.add(new String[]{"Mike", "-", "John", " ", "Lee"});
+		namesObsList.remove(selectedNameArray);
 	}
 
 
@@ -167,7 +170,6 @@ public class NameSelectionMenu implements Initializable {
 
 
 	public void onInputSelected(ActionEvent actionEvent) {
-		noneSelected = false;
 		if(inputMethodChoice.getValue().equals("Manual input")) {
 			listOfNamesSelected.clear();
 			selectedManual = true;
@@ -184,5 +186,13 @@ public class NameSelectionMenu implements Initializable {
 
 	public static ObservableList<String[]> getNamesObList(){
 		return namesObsList;
+	}
+
+	public void handleDeleteAll(ActionEvent actionEvent) {
+		namesObsList.clear();
+	}
+
+	public void handleListSelected(MouseEvent mouseEvent) {
+		selectedNameArray = namesSelectedListView.getSelectionModel().getSelectedItem();
 	}
 }

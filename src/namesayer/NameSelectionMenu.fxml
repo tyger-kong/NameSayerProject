@@ -44,7 +44,7 @@
             <Insets bottom="15.0" left="40.0" />
          </VBox.margin>
       </HBox>
-      <ListView fx:id="namesListView" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mouseTransparent="true" prefHeight="300.0" prefWidth="580.0" style="-fx-background-color: #dcd0c0;" />
+      <ListView fx:id="namesSelectedListView" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleListSelected" mouseTransparent="true" prefHeight="300.0" prefWidth="580.0" style="-fx-background-color: #dcd0c0;" />
       <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="582.0">
          <children>
             <Button fx:id="deleteBtn" mnemonicParsing="false" onAction="#deleteBtnClicked" prefWidth="70.0" style="-fx-background-color: #c0b283;" text="Delete">
@@ -52,7 +52,7 @@
                   <Insets top="5.0" />
                </HBox.margin>
             </Button>
-            <Button mnemonicParsing="false" prefWidth="70.0" style="-fx-background-color: #c0b283;" text="Delete All">
+            <Button fx:id="deleteAllButton" onAction="#handleDeleteAll" mnemonicParsing="false" prefWidth="70.0" style="-fx-background-color: #c0b283;" text="Delete All">
                <HBox.margin>
                   <Insets left="25.0" top="5.0" />
                </HBox.margin>
