@@ -48,11 +48,14 @@ public class DatabaseMenu implements Initializable {
         namesList = FXCollections.observableArrayList(MainMenu.getAddedList());
         databaseListView.setItems(namesList);
         databaseListView.getSelectionModel().clearSelection();
+        rateButton.setDisable(true);
     }
 
     public void handleListClicked(MouseEvent mouseEvent) {
         selectedName = databaseListView.getSelectionModel().getSelectedItem();
         getCurrentName();
+        System.out.println(currentName.getFileName());
+        rateButton.setDisable(false);
         setRatingButton();
     }
 

@@ -29,6 +29,7 @@ public class MainMenu implements Initializable {
     private Button quitBtn;
 
     private static List<String> listOfNamesAdded;
+    private static List<String> listOfJustNames;
     private static List<NameFile> namesListArray = new ArrayList<NameFile>();
     private static Parent mainMenuRoot;
 
@@ -40,20 +41,22 @@ public class MainMenu implements Initializable {
 
     public void initialiseListNotSelected() {
         listOfNamesAdded = new ArrayList<>();
+        listOfJustNames = new ArrayList<>();
 
         File nameFolder = new File("names");
         List<String> listOfNamesInDatabase = new ArrayList<String>(Arrays.asList(nameFolder.list()));
 
         for (String currentFile : listOfNamesInDatabase) {
             String justName = currentFile.substring((currentFile.lastIndexOf("_") + 1), currentFile.lastIndexOf("."));
+            listOfJustNames.add(justName);
             String listName = justName;
             
-//            int attempt = 0;
-//            // Handle duplicate names by numbering them
-//            while (listOfNamesAdded.contains(listName)) {
-//                attempt++;
-//                listName = justName + "-" + attempt;
-//            }
+            int attempt = 0;
+            // Handle duplicate names by numbering them
+            while (listOfNamesAdded.contains(listName)) {
+                attempt++;
+                listName = justName + "-" + attempt;
+            }
             
             listOfNamesAdded.add(listName);
 
@@ -114,6 +117,10 @@ public class MainMenu implements Initializable {
 
     public static List<String> getAddedList(){
         return listOfNamesAdded;
+    }
+
+    public static List<String> getListOfJustNames(){
+        return listOfJustNames;
     }
 
 }
