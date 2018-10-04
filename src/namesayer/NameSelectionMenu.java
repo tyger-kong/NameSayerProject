@@ -17,6 +17,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -38,6 +39,8 @@ public class NameSelectionMenu implements Initializable {
 	private Button deleteBtn;
 	@FXML
 	private Button deleteAllButton;
+	@FXML
+	private RadioButton shuffleButton;
 
 	private static List<String> listOfNamesSelected = new ArrayList<String>();
 	private static Parent nameSelectionMenuRoot;
@@ -51,6 +54,8 @@ public class NameSelectionMenu implements Initializable {
 
 	private boolean selectedManual;
 	private String[] selectedNameArray;
+	private static boolean shuffleSelected;
+
 
 
 	@Override
@@ -141,6 +146,11 @@ public class NameSelectionMenu implements Initializable {
 			nonSelectedAlert.setContentText("No name(s) have been entered. Please enter at least one name to practice");
 			nonSelectedAlert.showAndWait();
 		} else {
+			if(shuffleButton.isSelected()){
+				shuffleSelected = true;
+			} else{
+				shuffleSelected = false;
+			}
 			try {
 				nameSelectionMenuRoot = practiceButton.getScene().getRoot();
 				FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("PracticeMenu.fxml"));
@@ -195,4 +205,9 @@ public class NameSelectionMenu implements Initializable {
 	public void handleListSelected(MouseEvent mouseEvent) {
 		selectedNameArray = namesSelectedListView.getSelectionModel().getSelectedItem();
 	}
+
+	public static boolean isShuffleSelected() {
+		return shuffleSelected;
+	}
+
 }
