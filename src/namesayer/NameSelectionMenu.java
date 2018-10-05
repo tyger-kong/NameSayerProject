@@ -174,12 +174,15 @@ public class NameSelectionMenu implements Initializable {
 
 
 	public void deleteBtnClicked(ActionEvent actionEvent) {
-		namesObsList.remove(selectedNameArray);
 		for(String part : selectedNameArray){
 			if(namesNotInDatabase.contains(part)){
 				namesNotInDatabase.remove(part);
 			}
 		}
+		namesObsList.remove(selectedNameArray);
+
+		System.out.println(namesNotInDatabase);
+
 	}
 
 
@@ -235,6 +238,10 @@ public class NameSelectionMenu implements Initializable {
 	
 	public static void clearHasNone(){
 		namesNotInDatabase.clear();
+	}
+
+	public static List<String> getNoneList(){
+		return namesNotInDatabase;
 	}
 
 }

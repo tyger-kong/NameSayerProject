@@ -54,7 +54,10 @@ public class NameListCell extends ListCell<String[]> {
 						// MAYBE SHOW HOW MANY NAMES OF SAME SPELLING THERE ARE?
 					} else {
 						nameLabel.setStyle("-fx-background-color: #ff3524;");
-						NameSelectionMenu.addToNoneList(n);
+						if(!NameSelectionMenu.getNoneList().contains(n)){
+							NameSelectionMenu.addToNoneList(n);
+						}
+
 						// ADD SUGGESTIONS FOR SIMILAR NAMES THAT EXIST???//
 						// 												;  //
 						//												  //
