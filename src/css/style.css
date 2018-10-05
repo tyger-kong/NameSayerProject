@@ -17,3 +17,7 @@ Button:hover {
 ListCell:selected {
     -fx-background-color: #373737;
 }
+
+#cellLabel {
+	-fx-text-fill: #000000;
+}
