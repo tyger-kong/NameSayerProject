@@ -161,31 +161,33 @@ public class PracticeMenu implements Initializable {
 
     public void handlePrevButton(ActionEvent actionEvent) {
         if (selectedIndex == 0) {
-            displayListView.scrollTo(selectedIndex);
-            displayListView.getSelectionModel().selectFirst();
+//            displayListView.scrollTo(selectedIndex);
+//            displayListView.getSelectionModel().selectFirst();
         } else {
             selectedIndex--;
             displayListView.scrollTo(selectedIndex);
             displayListView.getSelectionModel().select(selectedIndex);
+//        }
+            selectedName = displayListView.getSelectionModel().getSelectedItem();
+            playingLabel.setText(selectedName);
+//        newNameSelected();
         }
-        selectedName = displayListView.getSelectionModel().getSelectedItem();
-        playingLabel.setText(selectedName);
-        newNameSelected();
     }
 
 
     public void handleNextButton(ActionEvent actionEvent) {
         if (selectedIndex == listToDisplay.size() - 1) {
-            displayListView.scrollTo(selectedIndex);
-            displayListView.getSelectionModel().selectLast();
+//            displayListView.scrollTo(selectedIndex);
+//            displayListView.getSelectionModel().selectLast();
         } else {
             selectedIndex++;
             displayListView.scrollTo(selectedIndex);
             displayListView.getSelectionModel().select(selectedIndex);
+
+            selectedName = displayListView.getSelectionModel().getSelectedItem();
+            playingLabel.setText(selectedName);
+//            newNameSelected();
         }
-        selectedName = displayListView.getSelectionModel().getSelectedItem();
-        playingLabel.setText(selectedName);
-        newNameSelected();
     }
 
 
@@ -451,4 +453,11 @@ public class PracticeMenu implements Initializable {
 
     }
 
+    public void handleDisplayListClicked(MouseEvent mouseEvent) {
+        selectedName = displayListView.getSelectionModel().getSelectedItem();
+        selectedIndex = listToDisplay.indexOf(selectedName);
+        playingLabel.setText(selectedName);
+//        newNameSelected();
+
+    }
 }
