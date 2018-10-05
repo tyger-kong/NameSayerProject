@@ -434,6 +434,7 @@ public class PracticeMenu implements Initializable {
 
 
     public void returnToNameSelection() {
+    	NameSelectionMenu.clearHasNone();
         closePractice = true;
         NameSelectionMenu ctrl = new NameSelectionMenu();
         returnButton.getScene().setRoot(ctrl.getControllerRoot());

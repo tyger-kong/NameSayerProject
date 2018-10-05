@@ -17,7 +17,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -44,18 +43,15 @@ public class NameSelectionMenu implements Initializable {
 
 	private static List<String> listOfNamesSelected = new ArrayList<String>();
 	private static Parent nameSelectionMenuRoot;
+	private static boolean hasNone = false;
 
-	//	private String[] testData1 = new String[]{"this", "is", "a", "test"};
-	//	private String[] testData2 = new String[]{"Mike", "-", "John", " ", "Lee"};
-	//	private String[] testData3 = new String[]{"John", "-", "Catherine", " ", "Cena", "-", "Wison", " ", "Anderson"};
-	//	private String[] testData4 = new String[]{"Antony"};
-	//	private String[] testData5 = new String[]{"Ryan", " ", "Lim", " ", "Li", "-", "Bruce"};
 	private static ObservableList<String[]> namesObsListManual = FXCollections.observableArrayList();
 	private static ObservableList<String[]> namesObsListFile = FXCollections.observableArrayList();
 
 	private static boolean selectedManual;
 	private String[] selectedNameArray;
 	private static boolean shuffleSelected;
+	private static List<String> namesNotInDatabase = new ArrayList<>();
 
 
 
@@ -67,7 +63,6 @@ public class NameSelectionMenu implements Initializable {
 		nameInputField.setPromptText("Choose a text file");
 		nameInputField.setDisable(true);
 
-		//		namesObsList.addAll(testData2, testData1, testData3, testData4, testData5);
 		namesSelectedListView.setItems(namesObsListFile);
 		namesSelectedListView.setCellFactory(names -> new NameListCell());
 
@@ -146,7 +141,14 @@ public class NameSelectionMenu implements Initializable {
 			nonSelectedAlert.setHeaderText(null);
 			nonSelectedAlert.setContentText("No name(s) have been entered. Please enter at least one name to practice");
 			nonSelectedAlert.showAndWait();
+		} else if(namesNotInDatabase.size() > 0){
+			Alert nonSelectedAlert = new Alert(Alert.AlertType.INFORMATION);
+			nonSelectedAlert.setTitle("ERROR - Name doesn't exist");
+			nonSelectedAlert.setHeaderText(null);
+			nonSelectedAlert.setContentText("One of the names entered is not in the database. Please delete it and enter another name.");
+			nonSelectedAlert.showAndWait();
 		} else {
+
 			if(shuffleButton.isSelected()){
 				shuffleSelected = true;
 			} else{
@@ -168,6 +170,12 @@ public class NameSelectionMenu implements Initializable {
 	public void deleteBtnClicked(ActionEvent actionEvent) {
 		if (selectedNameArray != null) {
 			namesSelectedListView.getItems().remove(selectedNameArray);
+			
+			for(String part : selectedNameArray) {
+				if(namesNotInDatabase.contains(part)) {
+					namesNotInDatabase.remove(part);
+				}
+			}
 		}
 	}
 
@@ -209,7 +217,8 @@ public class NameSelectionMenu implements Initializable {
 
 
 	public void handleDeleteAll(ActionEvent actionEvent) {
-		namesSelectedListView.getItems().remove(selectedNameArray);
+		namesSelectedListView.getItems().clear();
+		clearHasNone();
 	}
 
 
@@ -220,6 +229,18 @@ public class NameSelectionMenu implements Initializable {
 
 	public static boolean isShuffleSelected() {
 		return shuffleSelected;
+	}
+
+	public static void addToNoneList(String name){
+		namesNotInDatabase.add(name);
+	}
+
+	public static void removeFromNoneList(String name){
+		namesNotInDatabase.remove(name);
+	}
+
+	public static void clearHasNone(){
+		namesNotInDatabase.clear();
 	}
 
 }
