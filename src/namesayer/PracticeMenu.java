@@ -21,11 +21,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -114,6 +110,9 @@ public class PracticeMenu implements Initializable {
         namesToPractice = NameSelectionMenu.getNamesObList();
         listToDisplay = FXCollections.observableArrayList();
         getlistToDisplay();
+        if(NameSelectionMenu.isShuffleSelected()){
+            Collections.shuffle(listToDisplay);
+        }
         displayListView.setItems(listToDisplay);
         displayListView.getSelectionModel().clearSelection();
         displayListView.getSelectionModel().selectFirst();
