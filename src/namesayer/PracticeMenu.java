@@ -120,6 +120,7 @@ public class PracticeMenu implements Initializable {
         selectedIndex = 0;
         selectedName = displayListView.getSelectionModel().getSelectedItem();
         playingLabel.setText(selectedName);
+        makeNewAudio(selectedName);
 //        newNameSelected();
 
         // Show microphone level on a ProgressBar
@@ -194,8 +195,9 @@ public class PracticeMenu implements Initializable {
 
 
     public void handlePlayButton(ActionEvent actionEvent) {
-        toPlay = currentName;
-        playAudio("names/" + toPlay);
+    	for(String s : namesToPlay){
+    		playAudio("names /"+s);
+    	}
     }
 
 
@@ -450,7 +452,9 @@ public class PracticeMenu implements Initializable {
             listToDisplay.add(displayName);
         }
     }
-    public void makeNewAudio(String [] nameArray){
+    public void makeNewAudio(String name){
+    	
+    	String[] nameArray = namesToPractice.get(selectedIndex);
     	namesToPlay = new ArrayList<>();
     	for(String s : nameArray){
     		for(NameFile namefile : namesDatabase){
@@ -461,11 +465,7 @@ public class PracticeMenu implements Initializable {
     	}
     }
     
-    public void playNewAudio(){
-    	for(String s : namesToPlay){
-    		playAudio(s);
-    	}
-    }
+
 
     public void handleDisplayListClicked(MouseEvent mouseEvent) {
         selectedName = displayListView.getSelectionModel().getSelectedItem();
