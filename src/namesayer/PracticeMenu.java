@@ -90,7 +90,7 @@ public class PracticeMenu implements Initializable {
     @FXML
     private Label playingLabel;
 
-    private List<String> namesToPractice;
+    private List<String[]> namesToPractice;
     private List<NameFile> namesDatabase;
 
     private File creations = new File("./Creations");
@@ -104,12 +104,14 @@ public class PracticeMenu implements Initializable {
 
     private SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-HHmmss");
     private Date date;
+    private List<String> namesToPlay;
+   
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         namesDatabase = MainMenu.getAddedNames();
-        namesToPractice = new ArrayList<>();
+        namesToPractice = NameSelectionMenu.getNamesObList();
         listToDisplay = FXCollections.observableArrayList();
         getlistToDisplay();
         displayListView.setItems(listToDisplay);
@@ -443,14 +445,26 @@ public class PracticeMenu implements Initializable {
     }
 
     public void getlistToDisplay(){
-        for( String[] s : NameSelectionMenu.getNamesObList()){
+        for( String[] s : namesToPractice){
             String displayName = String.join("", s);
             listToDisplay.add(displayName);
-            makeNewAudio(s);
         }
     }
-    public void makeNewAudio(String[] s){
-
+    public void makeNewAudio(String [] nameArray){
+    	namesToPlay = new ArrayList<>();
+    	for(String s : nameArray){
+    		for(NameFile namefile : namesDatabase){
+    			if(namefile.toString().equals(s)){
+    				namesToPlay.add(namefile.getFileName());
+    			}
+    		}
+    	}
+    }
+    
+    public void playNewAudio(){
+    	for(String s : namesToPlay){
+    		playAudio(s);
+    	}
     }
 
     public void handleDisplayListClicked(MouseEvent mouseEvent) {
