@@ -45,14 +45,15 @@ public class NameSelectionMenu implements Initializable {
 	private static List<String> listOfNamesSelected = new ArrayList<String>();
 	private static Parent nameSelectionMenuRoot;
 
-	private String[] testData1 = new String[]{"this", "is", "a", "test"};
-	private String[] testData2 = new String[]{"Mike", "-", "John", " ", "Lee"};
-	private String[] testData3 = new String[]{"John", "-", "Catherine", " ", "Cena", "-", "Wison", " ", "Anderson"};
-	private String[] testData4 = new String[]{"Antony"};
-	private String[] testData5 = new String[]{"Ryan", " ", "Lim", " ", "Li", "-", "Bruce"};
-	private static ObservableList<String[]> namesObsList = FXCollections.observableArrayList();
+	//	private String[] testData1 = new String[]{"this", "is", "a", "test"};
+	//	private String[] testData2 = new String[]{"Mike", "-", "John", " ", "Lee"};
+	//	private String[] testData3 = new String[]{"John", "-", "Catherine", " ", "Cena", "-", "Wison", " ", "Anderson"};
+	//	private String[] testData4 = new String[]{"Antony"};
+	//	private String[] testData5 = new String[]{"Ryan", " ", "Lim", " ", "Li", "-", "Bruce"};
+	private static ObservableList<String[]> namesObsListManual = FXCollections.observableArrayList();
+	private static ObservableList<String[]> namesObsListFile = FXCollections.observableArrayList();
 
-	private boolean selectedManual;
+	private static boolean selectedManual;
 	private String[] selectedNameArray;
 	private static boolean shuffleSelected;
 
@@ -66,8 +67,8 @@ public class NameSelectionMenu implements Initializable {
 		nameInputField.setPromptText("Choose a text file");
 		nameInputField.setDisable(true);
 
-		namesObsList.addAll(testData2, testData1, testData3, testData4, testData5);
-		namesSelectedListView.setItems(namesObsList);
+		//		namesObsList.addAll(testData2, testData1, testData3, testData4, testData5);
+		namesSelectedListView.setItems(namesObsListFile);
 		namesSelectedListView.setCellFactory(names -> new NameListCell());
 
 		namesSelectedListView.setMouseTransparent(false);
@@ -94,7 +95,7 @@ public class NameSelectionMenu implements Initializable {
 				String userInput = nameInputField.getText().trim().replaceAll(" +", " ").replaceAll("\\s*-\\s*", "-").replaceAll("-+", "-").replaceAll("^-", "").replaceAll("-$", "");
 				if (!userInput.isEmpty()) {
 					String[] inputArray = NameChecker.nameAsArray(userInput);
-					namesObsList.add(inputArray);
+					namesObsListManual.add(inputArray);
 					nameInputField.setText(null);
 				}	
 			}
@@ -119,11 +120,11 @@ public class NameSelectionMenu implements Initializable {
 					e.printStackTrace();
 				}
 
-				namesObsList.clear();
+				namesObsListFile.clear();
 				for (String input : listOfNamesSelected) {
 					input = input.trim().replaceAll(" +", " ").replaceAll("\\s*-\\s*", "-").replaceAll("-+", "-").replaceAll("^-", "").replaceAll("-$", "");
 					String[] inputArray = NameChecker.nameAsArray(input);
-					namesObsList.add(inputArray);
+					namesObsListFile.add(inputArray);
 				}
 
 			}
@@ -139,7 +140,7 @@ public class NameSelectionMenu implements Initializable {
 
 
 	public void practiceBtnClicked(ActionEvent actionEvent) {
-		if (namesObsList.isEmpty()) {
+		if (namesSelectedListView.getItems().isEmpty()) {
 			Alert nonSelectedAlert = new Alert(Alert.AlertType.INFORMATION);
 			nonSelectedAlert.setTitle("ERROR - Please select some names");
 			nonSelectedAlert.setHeaderText(null);
@@ -165,7 +166,9 @@ public class NameSelectionMenu implements Initializable {
 
 
 	public void deleteBtnClicked(ActionEvent actionEvent) {
-		namesObsList.remove(selectedNameArray);
+		if (selectedNameArray != null) {
+			namesSelectedListView.getItems().remove(selectedNameArray);
+		}
 	}
 
 
@@ -183,28 +186,37 @@ public class NameSelectionMenu implements Initializable {
 		if(inputMethodChoice.getValue().equals("Manual input")) {
 			listOfNamesSelected.clear();
 			selectedManual = true;
+			nameInputField.clear();
 			nameInputField.setPromptText("Enter a name");
 			nameInputField.setDisable(false);
+			namesSelectedListView.setItems(namesObsListManual);
 
 		} else if (inputMethodChoice.getValue().equals("Browse for text file")) {
 			selectedManual = false;
 			nameInputField.setPromptText("Browse for a text file by clicking the button -->");
 			nameInputField.setDisable(true);
-
+			namesSelectedListView.setItems(namesObsListFile);
 		}
 	}
 
+
 	public static ObservableList<String[]> getNamesObList(){
-		return namesObsList;
+		if (selectedManual) {
+			return namesObsListManual;
+		}
+		return namesObsListFile;
 	}
 
+
 	public void handleDeleteAll(ActionEvent actionEvent) {
-		namesObsList.clear();
+		namesSelectedListView.getItems().remove(selectedNameArray);
 	}
+
 
 	public void handleListSelected(MouseEvent mouseEvent) {
 		selectedNameArray = namesSelectedListView.getSelectionModel().getSelectedItem();
 	}
+
 
 	public static boolean isShuffleSelected() {
 		return shuffleSelected;

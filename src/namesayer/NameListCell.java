@@ -43,6 +43,7 @@ public class NameListCell extends ListCell<String[]> {
 			// Add strings to the cell and set background colours
 			for (String n : names) {
 				Label nameLabel = new Label(n);
+				nameLabel.setId("cellLabel");
 
 				// Set background color of the label appropriately
 				// Green = one occurrence, orange = more than one occurrence, red = no occurrences in database
