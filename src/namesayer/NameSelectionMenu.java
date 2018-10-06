@@ -18,6 +18,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -27,11 +28,11 @@ public class NameSelectionMenu implements Initializable {
 	private Button mainMenuBtn;
 	@FXML
 	private ComboBox<String> inputMethodChoice;
-	
+
 	@FXML
 	private AnchorPane inputPane;
 	private AutoCompleteTextField nameInputField;
-	
+
 	@FXML
 	private Button addNameBtn;
 	@FXML
@@ -48,6 +49,8 @@ public class NameSelectionMenu implements Initializable {
 	private static List<String> listOfNamesSelected = new ArrayList<String>();
 	private static Parent nameSelectionMenuRoot;
 
+	private List<String> listOfUserInput = new ArrayList<>();
+
 	private static ObservableList<String[]> namesObsListManual = FXCollections.observableArrayList();
 	private static ObservableList<String[]> namesObsListFile = FXCollections.observableArrayList();
 
@@ -62,7 +65,7 @@ public class NameSelectionMenu implements Initializable {
 		ObservableList<String> rateList = FXCollections.observableArrayList("Browse for text file", "Manual input");
 		inputMethodChoice.setItems(rateList);
 		inputMethodChoice.setValue("Browse for text file");
-		
+
 		nameInputField = new AutoCompleteTextField();
 		nameInputField.getEntries().addAll(MainMenu.getAddedList());
 		nameInputField.setPromptText("Choose a text file");
@@ -75,7 +78,7 @@ public class NameSelectionMenu implements Initializable {
 
 		namesSelectedListView.setMouseTransparent(false);
 		namesSelectedListView.setFocusTraversable(true);
-		
+
 	}
 
 
@@ -87,7 +90,7 @@ public class NameSelectionMenu implements Initializable {
 	public void addNameBtnClicked(ActionEvent actionEvent) {
 
 		if (selectedManual) {
-			if(((nameInputField.getText() == null) || nameInputField.getText().trim().equals(""))) {
+			if (((nameInputField.getText() == null) || nameInputField.getText().trim().equals(""))) {
 				Alert noInputAlert = new Alert(Alert.AlertType.INFORMATION);
 				noInputAlert.setTitle("ERROR - Please enter a name");
 				noInputAlert.setHeaderText(null);
@@ -98,9 +101,26 @@ public class NameSelectionMenu implements Initializable {
 				String userInput = nameInputField.getText().trim().replaceAll(" +", " ").replaceAll("\\s*-\\s*", "-").replaceAll("-+", "-").replaceAll("^-", "").replaceAll("-$", "");
 				if (!userInput.isEmpty()) {
 					String[] inputArray = NameChecker.nameAsArray(userInput);
-					namesObsListManual.add(inputArray);
-					nameInputField.setText(null);
-				}	
+
+					boolean isInList = false;
+					for (String[] s : namesObsListManual) {
+						if (Arrays.equals(s, inputArray)) {
+							Alert alreadyExistsAlert = new Alert(Alert.AlertType.INFORMATION);
+							alreadyExistsAlert.setTitle("ERROR - Name Already in List");
+							alreadyExistsAlert.setHeaderText(null);
+							alreadyExistsAlert.setContentText("The name has already been selected. Please enter another name to practice");
+							alreadyExistsAlert.showAndWait();
+							nameInputField.setText(null);
+							isInList = true;
+							break;
+						}
+
+					}
+					if(!isInList) {
+						namesObsListManual.add(inputArray);
+						nameInputField.setText(null);
+					}
+				}
 			}
 		} else {
 
@@ -116,7 +136,9 @@ public class NameSelectionMenu implements Initializable {
 					String line;
 					while ((line = br.readLine()) != null) {
 						if (!line.trim().equals("")) {
-							listOfNamesSelected.add(line);
+							if (!listOfNamesSelected.contains(line)) {
+								listOfNamesSelected.add(line);
+							}
 						}
 					}
 				} catch (IOException e) {
@@ -149,7 +171,7 @@ public class NameSelectionMenu implements Initializable {
 			nonSelectedAlert.setHeaderText(null);
 			nonSelectedAlert.setContentText("No name(s) have been entered. Please enter at least one name to practice");
 			nonSelectedAlert.showAndWait();
-		} else if(namesNotInDatabase.size() > 0){
+		} else if (namesNotInDatabase.size() > 0) {
 			Alert nonSelectedAlert = new Alert(Alert.AlertType.INFORMATION);
 			nonSelectedAlert.setTitle("ERROR - Name doesn't exist");
 			nonSelectedAlert.setHeaderText(null);
@@ -157,9 +179,9 @@ public class NameSelectionMenu implements Initializable {
 			nonSelectedAlert.showAndWait();
 		} else {
 
-			if(shuffleButton.isSelected()){
+			if (shuffleButton.isSelected()) {
 				shuffleSelected = true;
-			} else{
+			} else {
 				shuffleSelected = false;
 			}
 			try {
@@ -183,8 +205,6 @@ public class NameSelectionMenu implements Initializable {
 				}
 			}
 			namesSelectedListView.getItems().remove(selectedNameArray);
-			
-			
 		}
 	}
 
@@ -200,7 +220,7 @@ public class NameSelectionMenu implements Initializable {
 
 
 	public void onInputSelected(ActionEvent actionEvent) {
-		if(inputMethodChoice.getValue().equals("Manual input")) {
+		if (inputMethodChoice.getValue().equals("Manual input")) {
 			listOfNamesSelected.clear();
 			selectedManual = true;
 			nameInputField.clear();
@@ -217,7 +237,8 @@ public class NameSelectionMenu implements Initializable {
 	}
 
 
-	public static ObservableList<String[]> getNamesObList(){
+
+	public static ObservableList<String[]> getNamesObList() {
 		if (selectedManual) {
 			return namesObsListManual;
 		}
@@ -240,16 +261,24 @@ public class NameSelectionMenu implements Initializable {
 		return shuffleSelected;
 	}
 
+
 	public static void addToNoneList(String name){
 		namesNotInDatabase.add(name);
 	}
+
 
 	public static void removeFromNoneList(String name){
 		namesNotInDatabase.remove(name);
 	}
 
+
 	public static void clearHasNone(){
 		namesNotInDatabase.clear();
+	}
+
+	
+	public static List<String> getNoneList() {
+		return namesNotInDatabase;
 	}
 
 }
