@@ -55,7 +55,7 @@ public class NameSelectionMenu implements Initializable {
     private Button exportButton;
     private String savedFolder = "Saved Lists/";
 
-    private static List<String> listOfNamesSelected = new ArrayList<String>();
+    private static List<String> listOfNamesFromFile = new ArrayList<String>();
     private static Parent nameSelectionMenuRoot;
 
     private List<String> listOfUserInput = new ArrayList<>();
@@ -183,7 +183,7 @@ public class NameSelectionMenu implements Initializable {
             }
         } else {
 
-            listOfNamesSelected.clear();
+            listOfNamesFromFile.clear();
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Open txt file");
             File selectedFile = fileChooser.showOpenDialog(addNameBtn.getScene().getWindow());
@@ -196,8 +196,8 @@ public class NameSelectionMenu implements Initializable {
                     String line;
                     while ((line = br.readLine()) != null) {
                         if (!line.trim().equals("")) {
-                            if (!listOfNamesSelected.contains(line)) {
-                                listOfNamesSelected.add(line);
+                            if (!listOfNamesFromFile.contains(line)) {
+                                listOfNamesFromFile.add(line);
                             }
                         }
                     }
@@ -206,7 +206,7 @@ public class NameSelectionMenu implements Initializable {
                 }
 
                 namesObsListFile.clear();
-                for (String input : listOfNamesSelected) {
+                for (String input : listOfNamesFromFile) {
                     input = input.trim().replaceAll(" +", " ").replaceAll("\\s*-\\s*", "-").replaceAll("-+", "-").replaceAll("^-", "").replaceAll("-$", "");
                     String[] inputArray = NameChecker.nameAsArray(input);
                     namesObsListFile.add(inputArray);
@@ -300,16 +300,11 @@ public class NameSelectionMenu implements Initializable {
     }
 
 
-    public static List<String> getAddedList() {
-        return listOfNamesSelected;
-    }
-
-
     public void onInputSelected(ActionEvent actionEvent) {
         if (inputMethodChoice.getValue().equals("Manual input")) {
             justDeletedList = null;
             justDeletedSingle = null;
-            listOfNamesSelected.clear();
+            listOfNamesFromFile.clear();
             selectedManual = true;
             nameInputField.clear();
             nameInputField.setPromptText("Enter a name");
@@ -354,20 +349,13 @@ public class NameSelectionMenu implements Initializable {
     }
 
 
-    public static void removeFromNoneList(String name) {
-        namesNotInDatabase.remove(name);
-    }
 
 
     public static void clearHasNone() {
         namesNotInDatabase.clear();
     }
 
-
-    public static List<String> getNoneList() {
-        return namesNotInDatabase;
-    }
-
+    
     public void handleExportButton(ActionEvent actionEvent) {
         if(!listOfUserInput.isEmpty()) {
             File savedFileFolder = new File("Saved Lists");

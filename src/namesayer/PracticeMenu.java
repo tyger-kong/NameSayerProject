@@ -244,43 +244,9 @@ public class PracticeMenu implements Initializable {
 						}
 					}
 					setAllButtonsDisabled(false);
-					//                    AudioInputStream stream = AudioSystem.getAudioInputStream(new File(fileToPlay));
-					//                    AudioFormat format = stream.getFormat();
-					//                    DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
-					//                    SourceDataLine sourceLine = (SourceDataLine) AudioSystem.getLine(info);
-					//                    sourceLine.open(format);
-					//                    sourceLine.start();
-					//
-					//                    // Disable buttons while audio file plays
-					//                    long frames = stream.getFrameLength();
-					//                    long durationInSeconds = (frames / (long)format.getFrameRate());
-					//                    setAllButtonsDisabled(true);
-					//                    PauseTransition pause = new PauseTransition(Duration.seconds(durationInSeconds));
-					//                    pause.setOnFinished(event -> {
-					//                        setAllButtonsDisabled(false);
-					//                        Thread.currentThread().interrupt();
-					//                    });
-					//                    pause.play();
-					//
-					//                    int nBytesRead = 0;
-					//                    int BUFFER_SIZE = 128000;
-					//                    byte[] abData = new byte[BUFFER_SIZE];
-					//                    while (nBytesRead != -1) {
-					//                        try {
-					//                            nBytesRead = stream.read(abData, 0, abData.length);
-					//                        } catch (IOException e) {
-					//                            e.printStackTrace();
-					//                        }
-					//                        if (nBytesRead >= 0) {
-					//                            @SuppressWarnings("unused")
-					//                            int nBytesWritten = sourceLine.write(abData, 0, nBytesRead);
-					//                        }
-					//                    }
-					//                    sourceLine.drain();
-					//                    sourceLine.close();
+
 				} catch (Exception e) {
-					//                    System.out.println("FAILED TO PLAY FILE");
-					//                    e.printStackTrace();
+
 				}
 			}
 		}.start();
@@ -330,7 +296,7 @@ public class PracticeMenu implements Initializable {
 		setAllButtonsDisabled(true);
 		recordButton.setDisable(false);
 		if (btnIsRecord) {
-			
+
 			//        String recordCommand = "ffmpeg -f alsa -ac 1 -ar 44100 -i default -t 5 \"" + recordingName + "\".wav";
 			//        ProcessBuilder recordAudio = new ProcessBuilder("/bin/bash", "-c", recordCommand);
 			//        recordAudio.directory(creations);
