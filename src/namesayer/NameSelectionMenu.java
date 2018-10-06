@@ -191,7 +191,7 @@ public class NameSelectionMenu implements Initializable {
 			Alert nonSelectedAlert = new Alert(Alert.AlertType.INFORMATION);
 			nonSelectedAlert.setTitle("ERROR - Name doesn't exist");
 			nonSelectedAlert.setHeaderText(null);
-			nonSelectedAlert.setContentText("One of the names entered is not in the database. Please delete it and enter another name.");
+			nonSelectedAlert.setContentText("There is at least one name entered that is not in the database. Please delete it and enter another name.");
 			nonSelectedAlert.showAndWait();
 		} else {
 
@@ -215,12 +215,9 @@ public class NameSelectionMenu implements Initializable {
 
 	public void deleteBtnClicked(ActionEvent actionEvent) {
 		if (selectedNameArray != null) {
-			for(String part : selectedNameArray) {
-				if(namesNotInDatabase.contains(part)) {
-					namesNotInDatabase.remove(part);
-				}
-			}
+			namesNotInDatabase.clear();
 			namesSelectedListView.getItems().remove(selectedNameArray);
+			selectedNameArray = null;
 		}
 	}
 
