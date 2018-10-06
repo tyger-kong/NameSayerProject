@@ -61,6 +61,8 @@ public class NameSelectionMenu implements Initializable {
 	private String[] selectedNameArray;
 	private static boolean shuffleSelected;
 	private static List<String> namesNotInDatabase = new ArrayList<>();
+	
+	private static String fileChosen;
 
 
 	@Override
@@ -70,6 +72,7 @@ public class NameSelectionMenu implements Initializable {
 		inputMethodChoice.setValue("Browse for text file");
 
 		nameInputField = new AutoCompleteTextField();
+		
 		// Handle keyboard buttons being pressed
 		nameInputField.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
@@ -84,8 +87,10 @@ public class NameSelectionMenu implements Initializable {
 			}
 			
 		});
+		
 		nameInputField.getEntries().addAll(MainMenu.getListOfJustNames());
-		nameInputField.setPromptText("Choose a text file");
+		String prompt = (fileChosen != null) ? fileChosen : "Browse for a text file by clicking the button -->";
+		nameInputField.setPromptText(prompt);
 		nameInputField.setDisable(true);
 		nameInputField.setPrefWidth(292);
 		inputPane.getChildren().add(nameInputField);
@@ -104,7 +109,6 @@ public class NameSelectionMenu implements Initializable {
 
 
 	public void addNameBtnClicked() {
-
 		if (selectedManual) {
 			if (((nameInputField.getText() == null) || nameInputField.getText().trim().equals(""))) {
 				Alert noInputAlert = new Alert(Alert.AlertType.INFORMATION);
@@ -144,10 +148,11 @@ public class NameSelectionMenu implements Initializable {
 			FileChooser fileChooser = new FileChooser();
 			fileChooser.setTitle("Open txt file");
 			File selectedFile = fileChooser.showOpenDialog(addNameBtn.getScene().getWindow());
-
+			
 			if ((selectedFile != null) && (selectedFile.getPath().substring(selectedFile.getAbsolutePath().lastIndexOf('.')).equals(".txt"))) {
 				System.out.println(selectedFile.getPath().substring(selectedFile.getAbsolutePath().lastIndexOf('.')));
-				nameInputField.setText(selectedFile.getAbsolutePath());
+				fileChosen = selectedFile.getAbsolutePath();
+				nameInputField.setText(fileChosen);
 				try (BufferedReader br = new BufferedReader(new FileReader(selectedFile))) {
 					String line;
 					while ((line = br.readLine()) != null) {
@@ -241,7 +246,8 @@ public class NameSelectionMenu implements Initializable {
 
 		} else if (inputMethodChoice.getValue().equals("Browse for text file")) {
 			selectedManual = false;
-			nameInputField.setPromptText("Browse for a text file by clicking the button -->");
+			String prompt = (fileChosen != null) ? fileChosen : "Browse for a text file by clicking the button -->";
+			nameInputField.setPromptText(prompt);
 			nameInputField.setDisable(true);
 			namesSelectedListView.setItems(namesObsListFile);
 		}
