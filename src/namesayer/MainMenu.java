@@ -115,11 +115,13 @@ public class MainMenu implements Initializable {
         return mainMenuRoot;
     }
 
-    public static List<String> getAddedList(){
+    
+    public static List<String> getAddedList() {
         return listOfNamesAdded;
     }
+    
 
-    public static List<String> getListOfJustNames(){
+    public static List<String> getListOfJustNames() {
         return listOfJustNames;
     }
 

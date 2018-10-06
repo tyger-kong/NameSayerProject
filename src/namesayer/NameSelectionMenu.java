@@ -9,6 +9,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 
 import java.io.BufferedReader;
@@ -26,8 +27,11 @@ public class NameSelectionMenu implements Initializable {
 	private Button mainMenuBtn;
 	@FXML
 	private ComboBox<String> inputMethodChoice;
+	
 	@FXML
-	private TextField nameInputField;
+	private AnchorPane inputPane;
+	private AutoCompleteTextField nameInputField;
+	
 	@FXML
 	private Button addNameBtn;
 	@FXML
@@ -43,7 +47,6 @@ public class NameSelectionMenu implements Initializable {
 
 	private static List<String> listOfNamesSelected = new ArrayList<String>();
 	private static Parent nameSelectionMenuRoot;
-	private static boolean hasNone = false;
 
 	private static ObservableList<String[]> namesObsListManual = FXCollections.observableArrayList();
 	private static ObservableList<String[]> namesObsListFile = FXCollections.observableArrayList();
@@ -54,20 +57,25 @@ public class NameSelectionMenu implements Initializable {
 	private static List<String> namesNotInDatabase = new ArrayList<>();
 
 
-
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		ObservableList<String> rateList = FXCollections.observableArrayList("Browse for text file", "Manual input");
 		inputMethodChoice.setItems(rateList);
 		inputMethodChoice.setValue("Browse for text file");
+		
+		nameInputField = new AutoCompleteTextField();
+		nameInputField.getEntries().addAll(MainMenu.getAddedList());
 		nameInputField.setPromptText("Choose a text file");
 		nameInputField.setDisable(true);
+		nameInputField.setPrefWidth(292);
+		inputPane.getChildren().add(nameInputField);
 
 		namesSelectedListView.setItems(namesObsListFile);
 		namesSelectedListView.setCellFactory(names -> new NameListCell());
 
 		namesSelectedListView.setMouseTransparent(false);
 		namesSelectedListView.setFocusTraversable(true);
+		
 	}
 
 
@@ -169,13 +177,14 @@ public class NameSelectionMenu implements Initializable {
 
 	public void deleteBtnClicked(ActionEvent actionEvent) {
 		if (selectedNameArray != null) {
-			namesSelectedListView.getItems().remove(selectedNameArray);
-			
 			for(String part : selectedNameArray) {
 				if(namesNotInDatabase.contains(part)) {
 					namesNotInDatabase.remove(part);
 				}
 			}
+			namesSelectedListView.getItems().remove(selectedNameArray);
+			
+			
 		}
 	}
 
