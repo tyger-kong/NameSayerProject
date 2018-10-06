@@ -8,11 +8,15 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 
 import java.io.BufferedReader;
@@ -27,6 +31,8 @@ import java.util.ResourceBundle;
 
 
 public class NameSelectionMenu implements Initializable {
+	@FXML
+	private VBox vBoxRoot;
 	@FXML
 	private Button mainMenuBtn;
 	@FXML
@@ -59,9 +65,14 @@ public class NameSelectionMenu implements Initializable {
 
 	private static boolean selectedManual;
 	private String[] selectedNameArray;
+
+	private static String[] justDeletedSingle;
+	private static ObservableList<String[]> justDeletedList;
+	private static boolean singleDeleted;
+
 	private static boolean shuffleSelected;
 	private static List<String> namesNotInDatabase = new ArrayList<>();
-	
+
 	private static String fileChosen;
 
 
@@ -72,7 +83,7 @@ public class NameSelectionMenu implements Initializable {
 		inputMethodChoice.setValue("Browse for text file");
 
 		nameInputField = new AutoCompleteTextField();
-		
+
 		// Handle keyboard buttons being pressed
 		nameInputField.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
@@ -85,9 +96,9 @@ public class NameSelectionMenu implements Initializable {
 					nameInputField.positionCaret(nameInputField.getText().length());
 				}
 			}
-			
+
 		});
-		
+
 		nameInputField.getEntries().addAll(MainMenu.getListOfJustNames());
 		String prompt = (fileChosen != null) ? fileChosen : "Browse for a text file by clicking the button -->";
 		nameInputField.setPromptText(prompt);
@@ -100,6 +111,30 @@ public class NameSelectionMenu implements Initializable {
 
 		namesSelectedListView.setMouseTransparent(false);
 		namesSelectedListView.setFocusTraversable(true);
+
+		// Shortcuts to delete and undo previous delete
+		namesSelectedListView.setOnKeyPressed(new EventHandler<KeyEvent>() {
+			final KeyCombination delete = new KeyCodeCombination(KeyCode.D, KeyCombination.CONTROL_DOWN);
+			final KeyCombination undo = new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN);
+			@Override
+			public void handle(KeyEvent k) {
+				if (delete.match(k) || k.getCode().equals(KeyCode.DELETE)) {
+					deleteBtnClicked(null);
+				}
+				if (undo.match(k)) {
+					if (singleDeleted && (justDeletedSingle != null)) {
+						namesSelectedListView.getItems().add(justDeletedSingle);
+						justDeletedSingle = null;
+
+					} else if (!singleDeleted && (justDeletedList != null)) {
+						namesSelectedListView.getItems().addAll(justDeletedList);
+						justDeletedList = null;
+					}
+				}
+			}
+
+		});
+
 	}
 
 
@@ -148,7 +183,7 @@ public class NameSelectionMenu implements Initializable {
 			FileChooser fileChooser = new FileChooser();
 			fileChooser.setTitle("Open txt file");
 			File selectedFile = fileChooser.showOpenDialog(addNameBtn.getScene().getWindow());
-			
+
 			if ((selectedFile != null) && (selectedFile.getPath().substring(selectedFile.getAbsolutePath().lastIndexOf('.')).equals(".txt"))) {
 				System.out.println(selectedFile.getPath().substring(selectedFile.getAbsolutePath().lastIndexOf('.')));
 				fileChosen = selectedFile.getAbsolutePath();
@@ -215,10 +250,44 @@ public class NameSelectionMenu implements Initializable {
 
 	public void deleteBtnClicked(ActionEvent actionEvent) {
 		if (selectedNameArray != null) {
+			setDeleteShortcuts();
 			namesNotInDatabase.clear();
 			namesSelectedListView.getItems().remove(selectedNameArray);
+			singleDeleted = true;
+			justDeletedSingle = selectedNameArray;
 			selectedNameArray = null;
 		}
+		namesSelectedListView.getSelectionModel().clearSelection();
+	}
+
+
+	public void handleDeleteAll(ActionEvent actionEvent) {
+		setDeleteShortcuts();
+		justDeletedList = FXCollections.observableArrayList(namesSelectedListView.getItems());
+		singleDeleted = false;
+		namesSelectedListView.getItems().clear();
+		clearHasNone();
+	}
+	
+	
+	private void setDeleteShortcuts() {
+		// Shortcuts to delete and undo previous delete
+		vBoxRoot.getScene().setOnKeyPressed(new EventHandler<KeyEvent>() {
+			final KeyCombination undo = new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN);
+			@Override
+			public void handle(KeyEvent k) {
+				if (undo.match(k)) {
+					if (singleDeleted && (justDeletedSingle != null)) {
+						namesSelectedListView.getItems().add(justDeletedSingle);
+						justDeletedSingle = null;
+
+					} else if (!singleDeleted && (justDeletedList != null)) {
+						namesSelectedListView.getItems().addAll(justDeletedList);
+						justDeletedList = null;
+					}
+				}
+			}
+		});
 	}
 
 
@@ -234,6 +303,8 @@ public class NameSelectionMenu implements Initializable {
 
 	public void onInputSelected(ActionEvent actionEvent) {
 		if (inputMethodChoice.getValue().equals("Manual input")) {
+			justDeletedList = null;
+			justDeletedSingle = null;
 			listOfNamesSelected.clear();
 			selectedManual = true;
 			nameInputField.clear();
@@ -242,6 +313,8 @@ public class NameSelectionMenu implements Initializable {
 			namesSelectedListView.setItems(namesObsListManual);
 
 		} else if (inputMethodChoice.getValue().equals("Browse for text file")) {
+			justDeletedList = null;
+			justDeletedSingle = null;
 			selectedManual = false;
 			String prompt = (fileChosen != null) ? fileChosen : "Browse for a text file by clicking the button -->";
 			nameInputField.setPromptText(prompt);
@@ -257,12 +330,6 @@ public class NameSelectionMenu implements Initializable {
 			return namesObsListManual;
 		}
 		return namesObsListFile;
-	}
-
-
-	public void handleDeleteAll(ActionEvent actionEvent) {
-		namesSelectedListView.getItems().clear();
-		clearHasNone();
 	}
 
 
@@ -290,7 +357,7 @@ public class NameSelectionMenu implements Initializable {
 		namesNotInDatabase.clear();
 	}
 
-	
+
 	public static List<String> getNoneList() {
 		return namesNotInDatabase;
 	}
