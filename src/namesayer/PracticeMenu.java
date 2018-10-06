@@ -209,13 +209,13 @@ public class PracticeMenu implements Initializable {
 
 
 	public void handlePlayArc(ActionEvent actionEvent) {
-		if (selectedArchive == null) {
-			noFileAlert();
-		} else {
-			toPlay = currentName;
-			String fileToPlay = toPlay.substring(0, toPlay.lastIndexOf("_")+1) + selectedArchive;
-			playAudio("Creations/" + fileToPlay + ".wav");
-		}
+//		if (selectedArchive == null) {
+//			noFileAlert();
+//		} else {
+//			toPlay = currentName;
+//			String fileToPlay = toPlay.substring(0, toPlay.lastIndexOf("_")+1) + selectedArchive;
+//			playAudio("Creations/" + fileToPlay + ".wav");
+//		}
 	}
 
 
@@ -422,7 +422,7 @@ public class PracticeMenu implements Initializable {
 				System.err.println("Line unavailable: " + e);
 				System.exit(-2);
 			}
-		} else
+		} //else
 	}
 
 
