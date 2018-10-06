@@ -3,11 +3,14 @@ package namesayer;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
@@ -67,7 +70,21 @@ public class NameSelectionMenu implements Initializable {
 		inputMethodChoice.setValue("Browse for text file");
 
 		nameInputField = new AutoCompleteTextField();
-		nameInputField.getEntries().addAll(MainMenu.getAddedList());
+		// Handle keyboard buttons being pressed
+		nameInputField.setOnKeyPressed(new EventHandler<KeyEvent>() {
+			@Override
+			public void handle(KeyEvent k) {
+				if (k.getCode().equals(KeyCode.ENTER)) {
+					addNameBtnClicked();
+				}
+				if (k.getCode().equals(KeyCode.BACK_SPACE) && !nameInputField.getText().isEmpty()) {
+					nameInputField.setText(nameInputField.getText().substring(0, nameInputField.getText().length()-1));
+					nameInputField.positionCaret(nameInputField.getText().length());
+				}
+			}
+			
+		});
+		nameInputField.getEntries().addAll(MainMenu.getListOfJustNames());
 		nameInputField.setPromptText("Choose a text file");
 		nameInputField.setDisable(true);
 		nameInputField.setPrefWidth(292);
@@ -78,7 +95,6 @@ public class NameSelectionMenu implements Initializable {
 
 		namesSelectedListView.setMouseTransparent(false);
 		namesSelectedListView.setFocusTraversable(true);
-
 	}
 
 
@@ -87,7 +103,7 @@ public class NameSelectionMenu implements Initializable {
 	}
 
 
-	public void addNameBtnClicked(ActionEvent actionEvent) {
+	public void addNameBtnClicked() {
 
 		if (selectedManual) {
 			if (((nameInputField.getText() == null) || nameInputField.getText().trim().equals(""))) {
@@ -156,11 +172,6 @@ public class NameSelectionMenu implements Initializable {
 
 		}
 
-	}
-
-
-	public void enterPressed(ActionEvent actionEvent) {
-		addNameBtnClicked(actionEvent);
 	}
 
 

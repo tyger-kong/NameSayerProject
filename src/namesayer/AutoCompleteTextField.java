@@ -38,29 +38,30 @@ public class AutoCompleteTextField extends TextField {
 		textProperty().addListener(new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observableValue, String s, String s2) {
-				
-				String txt = null;
-				// Check if there are spaces or hyphens before the name (when typed by user)
-				if ((getText().lastIndexOf(" ") != -1) || (getText().lastIndexOf("-") != -1)) {
-					txt = (getText().lastIndexOf(" ") > getText().lastIndexOf("-")) 
-							? getText().substring(getText().lastIndexOf(" ")+1, getText().length()) 
-									: getText().substring(getText().lastIndexOf("-")+1, getText().length());
-				} else {
-					txt = getText();
-				}
-				
-				if (txt.length() == 0) {
-					entriesPopup.hide();
-				} else {
-					LinkedList<String> searchResult = new LinkedList<>();
-					searchResult.addAll(entries.subSet(txt, txt + Character.MAX_VALUE));
-					if (entries.size() > 0) {
-						populatePopup(searchResult);
-						if (!entriesPopup.isShowing()) {
-							entriesPopup.show(AutoCompleteTextField.this, Side.BOTTOM, 0, 0);
-						}
+				if (getText() != null) {
+					String txt = null;
+					// Check if there are spaces or hyphens before the name (when typed by user)
+					if ((getText().lastIndexOf(" ") != -1) || (getText().lastIndexOf("-") != -1)) {
+						txt = (getText().lastIndexOf(" ") > getText().lastIndexOf("-")) 
+								? getText().substring(getText().lastIndexOf(" ")+1, getText().length()) 
+										: getText().substring(getText().lastIndexOf("-")+1, getText().length());
 					} else {
+						txt = getText();
+					}
+
+					if (txt.length() == 0) {
 						entriesPopup.hide();
+					} else {
+						LinkedList<String> searchResult = new LinkedList<>();
+						searchResult.addAll(entries.subSet(txt, txt + Character.MAX_VALUE));
+						if (entries.size() > 0) {
+							populatePopup(searchResult);
+							if (!entriesPopup.isShowing()) {
+								entriesPopup.show(AutoCompleteTextField.this, Side.BOTTOM, 0, 0);
+							}
+						} else {
+							entriesPopup.hide();
+						}
 					}
 				}
 			}
@@ -101,7 +102,7 @@ public class AutoCompleteTextField extends TextField {
 			item.setOnAction(new EventHandler<ActionEvent>() {
 				@Override
 				public void handle(ActionEvent actionEvent) {
-					
+
 					String prevWords;
 					if ((getText().lastIndexOf(" ") != -1) || (getText().lastIndexOf("-") != -1)) {
 						prevWords = (getText().lastIndexOf(" ") > getText().lastIndexOf("-")) 
@@ -110,7 +111,7 @@ public class AutoCompleteTextField extends TextField {
 					} else {
 						prevWords = "";
 					}
-					
+
 					setText(prevWords + result);
 					positionCaret((prevWords+result).length());
 					entriesPopup.hide();
@@ -120,7 +121,22 @@ public class AutoCompleteTextField extends TextField {
 		}
 		entriesPopup.getItems().clear();
 		entriesPopup.getItems().addAll(menuItems);
-
+	}
+	
+	
+	@Override
+	public void replaceText(int start, int end, String text) {
+		if (text.matches("[a-zA-Z -]")) {
+			super.replaceText(start, end, text);
+		}
+	}
+	
+	
+	@Override
+	public void replaceSelection(String text) {
+		if (text.matches("[a-zA-Z -]")) {
+			super.replaceSelection(text);
+		}
 	}
 
 }
