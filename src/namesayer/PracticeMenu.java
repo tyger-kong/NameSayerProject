@@ -21,6 +21,7 @@ import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import javax.naming.Name;
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -36,6 +37,8 @@ public class PracticeMenu implements Initializable {
 	private String selectedName;
 
 	private int selectedIndex = 0;
+	private Random r = new Random();
+
 
 	private ObservableList<String> listToDisplay;
 
@@ -93,6 +96,7 @@ public class PracticeMenu implements Initializable {
 
 	private List<String> attemptDatabase;
 	private List<String> listOfAttempts = new ArrayList<String>();
+	private List<String> listOfJustNames;
 
 	private boolean closePractice = false;
 
@@ -107,9 +111,7 @@ public class PracticeMenu implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		btnIsRecord = true;
-		namesDatabase = MainMenu.getAddedNames();
-		namesToPractice = NameSelectionMenu.getNamesObList();
-		initialiseAttemptDatabase();
+		initialiseDatabases();
 		listToDisplay = FXCollections.observableArrayList();
 		getlistToDisplay();
 		if(NameSelectionMenu.isShuffleSelected()){
@@ -503,14 +505,26 @@ public class PracticeMenu implements Initializable {
 		String[] nameArray = namesToPractice.get(selectedIndex);
 		namesToPlay = new ArrayList<>();
 		for(String s : nameArray){
-			for(NameFile namefile : namesDatabase){
-				if(namefile.toString().equals(s)){
-					namesToPlay.add(new File("names/"+namefile.getFileName()));
+			if(Collections.frequency(MainMenu.getListOfJustNames(), s) > 1) {
+				List<File> duplicates = new ArrayList<>();
+				for (NameFile namefile : namesDatabase) {
+					if (namefile.getName().equals(s)) {
+						duplicates.add(new File("names/" + namefile.getFileName()));
+					}
+				}
+				int index = r.nextInt(duplicates.size());
+				System.out.println(index);
+				System.out.println("Size"+duplicates.size());
+				namesToPlay.add(duplicates.get(index));
+			} else {
+				for (NameFile namefile : namesDatabase) {
+					if (namefile.toString().equals(s)) {
+						namesToPlay.add(new File("names/" + namefile.getFileName()));
+					}
 				}
 			}
 		}
 	}
-
 
 
 	public void handleDisplayListClicked(MouseEvent mouseEvent) {
@@ -520,5 +534,12 @@ public class PracticeMenu implements Initializable {
 		playingLabel.setText(selectedName);
 		//        newNameSelected();
 
+	}
+
+	private void initialiseDatabases(){
+		namesDatabase = MainMenu.getAddedNames();
+		listOfJustNames = MainMenu.getListOfJustNames();
+		namesToPractice = NameSelectionMenu.getNamesObList();
+		initialiseAttemptDatabase();
 	}
 }

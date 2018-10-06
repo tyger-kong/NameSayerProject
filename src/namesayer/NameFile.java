@@ -29,8 +29,9 @@ public class NameFile {
 
 
     public String getName() {
-        int point = _fileName.get().lastIndexOf("_");
-        return (_fileName.get().substring(0, point)) + "_" + (_listName.get());
+        int point = _fileName.get().lastIndexOf("_") + 1;
+        int last = _fileName.get().lastIndexOf(".");
+        return (_fileName.get().substring(point, last));
     }
 
 
