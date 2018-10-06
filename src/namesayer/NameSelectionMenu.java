@@ -190,11 +190,7 @@ public class NameSelectionMenu implements Initializable {
     public void deleteBtnClicked(ActionEvent actionEvent) {
 
         if (selectedNameArray != null) {
-            for (String part : selectedNameArray) {
-                if (namesNotInDatabase.contains(part)) {
-                    namesNotInDatabase.remove(part);
-                }
-            }
+            namesNotInDatabase.clear();
 
             namesSelectedListView.getItems().remove(selectedNameArray);
         }
