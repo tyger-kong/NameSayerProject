@@ -349,8 +349,6 @@ public class NameSelectionMenu implements Initializable {
     }
 
 
-
-
     public static void clearHasNone() {
         namesNotInDatabase.clear();
     }

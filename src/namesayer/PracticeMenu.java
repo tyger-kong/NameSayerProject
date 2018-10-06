@@ -90,7 +90,6 @@ public class PracticeMenu implements Initializable {
 
 	private File creations = new File("./Creations");
 
-	private String currentName;
 
 	private List<String> attemptDatabase;
 	private List<String> listOfAttempts = new ArrayList<String>();
@@ -110,6 +109,7 @@ public class PracticeMenu implements Initializable {
 		btnIsRecord = true;
 		namesDatabase = MainMenu.getAddedNames();
 		namesToPractice = NameSelectionMenu.getNamesObList();
+		initialiseAttemptDatabase();
 		listToDisplay = FXCollections.observableArrayList();
 		getlistToDisplay();
 		if(NameSelectionMenu.isShuffleSelected()){
@@ -165,8 +165,7 @@ public class PracticeMenu implements Initializable {
 
 	public void handlePrevButton(ActionEvent actionEvent) {
 		if (selectedIndex == 0) {
-			//            displayListView.scrollTo(selectedIndex);
-			//            displayListView.getSelectionModel().selectFirst();
+
 		} else {
 			selectedIndex--;
 			makeNewAudio();
@@ -182,8 +181,7 @@ public class PracticeMenu implements Initializable {
 
 	public void handleNextButton(ActionEvent actionEvent) {
 		if (selectedIndex == listToDisplay.size() - 1) {
-			//            displayListView.scrollTo(selectedIndex);
-			//            displayListView.getSelectionModel().selectLast();
+
 		} else {
 			selectedIndex++;
 			makeNewAudio();
@@ -257,7 +255,7 @@ public class PracticeMenu implements Initializable {
 		if (selectedArchive == null) {
 			noFileAlert();
 		} else {
-			toPlay = currentName;
+			toPlay = selectedName;
 			String fileToDelete = toPlay.substring(0, toPlay.lastIndexOf("_")+1) + selectedArchive;
 			String fileString = "Creations/" + fileToDelete + ".wav";
 			File toDelete = new File(fileString);
@@ -292,7 +290,7 @@ public class PracticeMenu implements Initializable {
 	public void handleRecordAction(ActionEvent actionEvent) {
 		date = new Date();
 		String currentTime = formatter.format(date);
-		String recordingName = currentName + " " + currentTime;
+		String recordingName = selectedName + "_" + currentTime;
 		setAllButtonsDisabled(true);
 		recordButton.setDisable(false);
 		if (btnIsRecord) {
@@ -433,16 +431,10 @@ public class PracticeMenu implements Initializable {
 
 
 	public void newNameSelected() {
-		getCurrentName();
-		initialiseAttemptDatabase();
+
 		fillAttemptList();
 		updateArchive();
 		selectedArchive = null;
-	}
-
-
-	public void getCurrentName() {
-		currentName = selectedName;
 	}
 
 
@@ -453,9 +445,9 @@ public class PracticeMenu implements Initializable {
 
 	public void fillAttemptList() {
 		for (String s : attemptDatabase) {
-			if (s.lastIndexOf(" ") != -1) {
-				String nameMatch = s.substring(0, s.lastIndexOf(" ")-1);
-				if (currentName.equals(nameMatch)) {
+			if (s.lastIndexOf("_") != -1) {
+				String nameMatch = s.substring(0, s.lastIndexOf("_")-1);
+				if (selectedName.equals(nameMatch)) {
 					String toAddToList = s.substring(0, s.lastIndexOf("."));
 					if (!listOfAttempts.contains(toAddToList)) {
 						listOfAttempts.add(toAddToList);
