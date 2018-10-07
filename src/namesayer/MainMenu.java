@@ -39,6 +39,7 @@ public class MainMenu implements Initializable {
 		initialiseListNotSelected();
 	}
 
+	
 	// Goes through the database folder and converts each name into a NameFile object and stores it in namesListArray
 	public void initialiseListNotSelected() {
 		listOfNamesAdded = new ArrayList<>();
@@ -72,8 +73,6 @@ public class MainMenu implements Initializable {
 	}
 
 
-
-
 	//Starts practicing menu
 	public void practiceBtnClicked(ActionEvent actionEvent) {
 		try {
@@ -85,6 +84,7 @@ public class MainMenu implements Initializable {
 			e.printStackTrace();
 		}
 	}
+	
 
 	// Loads database menu
 	public void namesBtnClicked(ActionEvent actionEvent) {
@@ -98,6 +98,7 @@ public class MainMenu implements Initializable {
 		}
 	}
 
+	
 	// Loads the instructions menu
 	public void helpBtnClicked(ActionEvent actionEvent) {
 		try {
@@ -111,17 +112,20 @@ public class MainMenu implements Initializable {
 
 	}
 
+	
 	// Exits the app
 	public void quitBtnClicked(ActionEvent actionEvent) {
 		Stage stage = (Stage)quitBtn.getScene().getWindow();
 		stage.close();
 	}
 
+	
 	// Allows switching scene back to main menu
 	public static Parent getMainMenuRoot() {
 		return mainMenuRoot;
 	}
 
+	
 	// Getters for different lists
 	public static List<NameFile> getAddedNames() {
 		return namesListArray;

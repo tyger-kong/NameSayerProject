@@ -36,12 +36,10 @@ import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.TargetDataLine;
 
 public class PracticeMenu implements Initializable {
-
 	private String selectedName;
 
 	private int selectedIndex = 0;
 	private Random r = new Random();
-
 
 	private ObservableList<String> listToDisplay;
 
@@ -97,8 +95,6 @@ public class PracticeMenu implements Initializable {
 
 	private List<String> attemptDatabase;
 	private List<String> listOfAttempts = new ArrayList<String>();
-	private List<String> listOfJustNames;
-
 
 	private SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-HHmmss");
 	private Date date;
@@ -117,8 +113,6 @@ public class PracticeMenu implements Initializable {
 	private String recordingName;
 
 
-
-
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		numberOfListens = 0;
@@ -132,6 +126,7 @@ public class PracticeMenu implements Initializable {
 		if(NameSelectionMenu.isShuffleSelected()){ // Checks if shuffle has been selected
 			Collections.shuffle(listToDisplay);
 		}
+		
 		// Sets items to the listView
 		displayListView.setItems(listToDisplay);
 		displayListView.getSelectionModel().clearSelection();
@@ -141,8 +136,8 @@ public class PracticeMenu implements Initializable {
 		playingLabel.setText(selectedName);
 		makeNewAudio(); // Make audio list for the first name
 		newNameSelected(); // Method to update attempt list
-
 	}
+	
 
 	// Chooses a new name. 
 	public void handlePrevButton(ActionEvent actionEvent) {
@@ -157,6 +152,8 @@ public class PracticeMenu implements Initializable {
 			newNameSelected(); // Updates attemptlist
 		}
 	}
+	
+	
 	// Same functionality as handlePrevButton()
 	public void handleNextButton(ActionEvent actionEvent) {
 		if (selectedIndex == listToDisplay.size() - 1) {
@@ -173,6 +170,7 @@ public class PracticeMenu implements Initializable {
 		}
 	}
 
+	
 	// Plays the names in the list of the selectedName
 	public void handlePlayButton(ActionEvent actionEvent) {
 		numberOfListens++;
@@ -189,17 +187,17 @@ public class PracticeMenu implements Initializable {
 		}
 	}
 
+	
 	// Gets the selected recording
 	public void handleArcListClicked(MouseEvent mouseEvent) {
 		selectedArchive = availableListView.getSelectionModel().getSelectedItem();
 	}
 
+	
 	// Plays the selected recording
 	public void handlePlayArc(ActionEvent actionEvent) {
-
 		if (selectedArchive == null) {
 			noFileAlert();
-
 		} else {
 			new Thread() {
 				@Override
@@ -234,11 +232,10 @@ public class PracticeMenu implements Initializable {
 				}
 
 			}.start();		
-
-
 		}
 	}
 
+	
 	// Plays the files in the given list one at a time
 	private void playAudio(List<File> toPlay) {
 		new Thread() {
@@ -258,7 +255,7 @@ public class PracticeMenu implements Initializable {
 								int len = is.read(buffer);
 								line.write(buffer, 0, len);
 							}
-							line.drain(); //**[DEIT]** wait for the buffer to empty before closing the line
+							line.drain(); // Wait for the buffer to empty before closing the line
 							line.close();
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -272,6 +269,7 @@ public class PracticeMenu implements Initializable {
 			}
 		}.start();
 	}
+	
 
 	// Deletes the recording
 	public void handleDeleteArc(ActionEvent actionEvent) {
@@ -336,6 +334,7 @@ public class PracticeMenu implements Initializable {
 			recordButton.setText("Record");
 			btnIsRecord = true;
 		}
+		
 		if(numberOfRecords >= 5) {
 			numberOfRecords = 0;
 			Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -358,7 +357,6 @@ public class PracticeMenu implements Initializable {
 				recorder.startRecording(wavFile);
 			}
 		}.start();
-
 	}
 
 
@@ -366,7 +364,8 @@ public class PracticeMenu implements Initializable {
 		recorder.finishRecording();
 	}
 
-	// Load test mic window
+	
+	// Load test microphone window
 	public void testMicBtnClicked() {
 		try {
 			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../fxml/MicTest.fxml"));
@@ -383,6 +382,7 @@ public class PracticeMenu implements Initializable {
 			e.printStackTrace();
 		}
 	}
+	
 
 	public void noFileAlert() {
 		Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -395,17 +395,18 @@ public class PracticeMenu implements Initializable {
 
 	// Fill the recording list with corresponding recordings
 	public void newNameSelected() {
-
 		fillAttemptList();
 		updateArchive();
 		selectedArchive = null;
 	}
 
+	
 	// Gets the files in the creations folder as a list
 	public void initialiseAttemptDatabase() {
 		attemptDatabase = new ArrayList<String>(Arrays.asList(creations.list()));
 	}
 
+	
 	// Finds corresponding names in creations folder and adds to recordinglist
 	public void fillAttemptList() {
 		for (String s : attemptDatabase) {
@@ -438,6 +439,7 @@ public class PracticeMenu implements Initializable {
 		availableListView.getSelectionModel().clearSelection();
 	}
 
+	
 	// Disable all buttons
 	private void setAllButtonsDisabled(boolean b) {
 		playButton.setDisable(b);
@@ -452,6 +454,7 @@ public class PracticeMenu implements Initializable {
 		testMicBtn.setDisable(b);
 	}
 
+	
 	// Goes back to name selection menu
 	public void returnToNameSelection() {
 		NameSelectionMenu.clearHasNone();
@@ -499,6 +502,7 @@ public class PracticeMenu implements Initializable {
 		}
 	}
 
+	
 	// Gets new selected name from mouse click
 	public void handleDisplayListClicked(MouseEvent mouseEvent) {
 		selectedName = displayListView.getSelectionModel().getSelectedItem();
@@ -508,14 +512,13 @@ public class PracticeMenu implements Initializable {
 		playingLabel.setText(selectedName);
 	}
 
+	
 	// Initialises lists by getting them from other menus
 	private void initialiseDatabases(){
 		namesDatabase = MainMenu.getAddedNames();
-		listOfJustNames = MainMenu.getListOfJustNames();
 		namesToPractice = NameSelectionMenu.getNamesObList();
 		numberToPractice = namesToPractice.size();
 		listOfAudioCreated = new ArrayList<List>(Collections.nCopies(numberToPractice, null));
-
 		initialiseAttemptDatabase();
 	}
 

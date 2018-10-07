@@ -140,6 +140,7 @@ public class NameSelectionMenu implements Initializable {
 
 	}
 
+
 	// Goes back to main menu
 	public void mainMenuBtnClicked(ActionEvent actionEvent) {
 		mainMenuBtn.getScene().setRoot(MainMenu.getMainMenuRoot());
@@ -330,9 +331,11 @@ public class NameSelectionMenu implements Initializable {
 		}
 	}
 
+
 	public void handleListSelected(MouseEvent mouseEvent) {
 		selectedNameArray = namesSelectedListView.getSelectionModel().getSelectedItem();
 	}
+
 
 	// Getters
 	public static ObservableList<String[]> getNamesObList() { // Returns the names to practice
@@ -342,9 +345,11 @@ public class NameSelectionMenu implements Initializable {
 		return namesObsListFile;
 	}
 
+
 	public static boolean isShuffleSelected() { // Returns if shuffle has been selected
 		return shuffleSelected;
 	}
+
 
 	public Parent getControllerRoot() { // Allows for switching back to this scene
 		return nameSelectionMenuRoot;
@@ -354,6 +359,7 @@ public class NameSelectionMenu implements Initializable {
 	public static void addToNoneList(String name) { // Adds a name to list of names not in database
 		namesNotInDatabase.add(name);
 	}
+
 
 	// Exports the list of selected names to a .txt file
 	public void handleExportButton(ActionEvent actionEvent) {
@@ -396,10 +402,9 @@ public class NameSelectionMenu implements Initializable {
 		} else {
 			showNoNamesEnteredAlert();
 		}
-
-
 	}
 
+	
 	// Shows alert notifying no names have been inputed
 	public void showNoNamesEnteredAlert(){
 		Alert nonSelectedAlert = new Alert(Alert.AlertType.INFORMATION);
@@ -409,8 +414,10 @@ public class NameSelectionMenu implements Initializable {
 		nonSelectedAlert.showAndWait();
 	}
 
+	
 	// Clears the list of names not in database
 	public static void clearHasNone() {
 		namesNotInDatabase.clear();
 	}
+	
 }
