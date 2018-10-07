@@ -103,8 +103,11 @@ public class PracticeMenu implements Initializable {
 	private SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-HHmmss");
 	private Date date;
 	private List<File> namesToPlay;
+	private List<List> listOfAudioCreated;
 
 	private boolean btnIsRecord;
+
+	private int numberToPractice;
 
 
 
@@ -199,7 +202,7 @@ public class PracticeMenu implements Initializable {
 
 
 	public void handlePlayButton(ActionEvent actionEvent) {
-		playAudio();
+		playAudio(listOfAudioCreated.get(selectedIndex));
 	}
 
 
@@ -209,24 +212,24 @@ public class PracticeMenu implements Initializable {
 
 
 	public void handlePlayArc(ActionEvent actionEvent) {
-//		if (selectedArchive == null) {
-//			noFileAlert();
-//		} else {
-//			toPlay = currentName;
-//			String fileToPlay = toPlay.substring(0, toPlay.lastIndexOf("_")+1) + selectedArchive;
-//			playAudio("Creations/" + fileToPlay + ".wav");
-//		}
+		//		if (selectedArchive == null) {
+		//			noFileAlert();
+		//		} else {
+		//			toPlay = currentName;
+		//			String fileToPlay = toPlay.substring(0, toPlay.lastIndexOf("_")+1) + selectedArchive;
+		//			playAudio("Creations/" + fileToPlay + ".wav");
+		//		}
 	}
 
 
-	private void playAudio() {
+	private void playAudio(List<File> toPlay) {
 		new Thread() {
 			@Override
 			public void run() {
 				try {
 					byte[] buffer = new byte[4096];
 					setAllButtonsDisabled(true);
-					for (File file : namesToPlay) {
+					for (File file : toPlay) {
 						try {
 							AudioInputStream is = AudioSystem.getAudioInputStream(file);
 							AudioFormat format = is.getFormat();
@@ -501,28 +504,30 @@ public class PracticeMenu implements Initializable {
 		}
 	}
 	public void makeNewAudio(){
-
-		String[] nameArray = namesToPractice.get(selectedIndex);
-		namesToPlay = new ArrayList<>();
-		for(String s : nameArray){
-			if(Collections.frequency(MainMenu.getListOfJustNames(), s) > 1) {
-				List<File> duplicates = new ArrayList<>();
-				for (NameFile namefile : namesDatabase) {
-					if (namefile.getName().equals(s)) {
-						duplicates.add(new File("names/" + namefile.getFileName()));
+		if(listOfAudioCreated.get(selectedIndex) == null) {
+			String[] nameArray = namesToPractice.get(selectedIndex);
+			namesToPlay = new ArrayList<>();
+			for(String s : nameArray){
+				if(Collections.frequency(MainMenu.getListOfJustNames(), s) > 1) {
+					List<File> duplicates = new ArrayList<>();
+					for (NameFile namefile : namesDatabase) {
+						if (namefile.getName().equals(s)) {
+							duplicates.add(new File("names/" + namefile.getFileName()));
+						}
 					}
-				}
-				int index = r.nextInt(duplicates.size());
-				System.out.println(index);
-				System.out.println("Size"+duplicates.size());
-				namesToPlay.add(duplicates.get(index));
-			} else {
-				for (NameFile namefile : namesDatabase) {
-					if (namefile.toString().equals(s)) {
-						namesToPlay.add(new File("names/" + namefile.getFileName()));
+					int index = r.nextInt(duplicates.size());
+					System.out.println(index);
+					System.out.println("Size"+duplicates.size());
+					namesToPlay.add(duplicates.get(index));
+				} else {
+					for (NameFile namefile : namesDatabase) {
+						if (namefile.toString().equals(s)) {
+							namesToPlay.add(new File("names/" + namefile.getFileName()));
+						}
 					}
 				}
 			}
+			listOfAudioCreated.set(selectedIndex, namesToPlay);
 		}
 	}
 
@@ -540,6 +545,9 @@ public class PracticeMenu implements Initializable {
 		namesDatabase = MainMenu.getAddedNames();
 		listOfJustNames = MainMenu.getListOfJustNames();
 		namesToPractice = NameSelectionMenu.getNamesObList();
+		numberToPractice = namesToPractice.size();
+		listOfAudioCreated = new ArrayList<List>(Collections.nCopies(numberToPractice, null));
+
 		initialiseAttemptDatabase();
 	}
 }
