@@ -20,8 +20,6 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
-import javax.naming.Name;
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -108,6 +106,7 @@ public class PracticeMenu implements Initializable {
 	private boolean btnIsRecord;
 
 	private int numberToPractice;
+	private int numberOfRecordings;
 
 
 
