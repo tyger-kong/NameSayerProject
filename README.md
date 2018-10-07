@@ -57,3 +57,12 @@
 	2. Press the RATE button to change the rating between good and bad.
       * Bad ratings are stored in a file called Bad_ratings.txt, located in the same directory as NameSayer.jar.
 
+* Special Features
+----------------------------------------
+	1. Suggestions as you manually input a name (Auto-Fill)
+
+	2. Names are coloured in accordance to their frequency in the database
+	
+	3. Users can export the names they manually typed in as a .txt file
+	
+	4. In-app instructions
