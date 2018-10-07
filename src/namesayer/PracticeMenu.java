@@ -117,43 +117,40 @@ public class PracticeMenu implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		btnIsRecord = true;
-		initialiseDatabases();
+		initialiseDatabases(); // Initialises the database lists
 		listToDisplay = FXCollections.observableArrayList();
 		getlistToDisplay();
-		if(NameSelectionMenu.isShuffleSelected()){
+		if(NameSelectionMenu.isShuffleSelected()){ // Checks if shuffle has been selected
 			Collections.shuffle(listToDisplay);
 		}
+		// Sets items to the listView
 		displayListView.setItems(listToDisplay);
 		displayListView.getSelectionModel().clearSelection();
 		displayListView.getSelectionModel().selectFirst();
 		selectedIndex = 0;
 		selectedName = displayListView.getSelectionModel().getSelectedItem();
 		playingLabel.setText(selectedName);
-		makeNewAudio();
-		newNameSelected();
+		makeNewAudio(); // Make audio list for the first name
+		newNameSelected(); // Method to update attempt list
 
 	}
 
-
+	// Chooses a new name. 
 	public void handlePrevButton(ActionEvent actionEvent) {
 		if (selectedIndex == 0) {
-
 		} else {
-			selectedIndex--;
-			makeNewAudio();
+			selectedIndex--; // Changes current index
+			makeNewAudio(); // Creates new list of names to play
 			displayListView.scrollTo(selectedIndex);
 			displayListView.getSelectionModel().select(selectedIndex);
-			//        }
-			selectedName = displayListView.getSelectionModel().getSelectedItem();
+			selectedName = displayListView.getSelectionModel().getSelectedItem(); // Gets new selected name
 			playingLabel.setText(selectedName);
-			newNameSelected();
+			newNameSelected(); // Updates attemptlist
 		}
 	}
-
-
+	// Same functionality as handlePrevButton()
 	public void handleNextButton(ActionEvent actionEvent) {
 		if (selectedIndex == listToDisplay.size() - 1) {
-
 		} else {
 			selectedIndex++;
 			makeNewAudio();
@@ -167,17 +164,17 @@ public class PracticeMenu implements Initializable {
 		}
 	}
 
-
+	// Plays the names in the list of the selectedName
 	public void handlePlayButton(ActionEvent actionEvent) {
 		playAudio(listOfAudioCreated.get(selectedIndex));
 	}
 
-
+	// Gets the selected recording
 	public void handleArcListClicked(MouseEvent mouseEvent) {
 		selectedArchive = availableListView.getSelectionModel().getSelectedItem();
 	}
 
-
+	// Plays the selected recording
 	public void handlePlayArc(ActionEvent actionEvent) {
 		if (selectedArchive == null) {
 			noFileAlert();
@@ -189,7 +186,7 @@ public class PracticeMenu implements Initializable {
 
 	}
 
-
+	// Plays the files in the given list one at a time
 	private void playAudio(List<File> toPlay) {
 		new Thread() {
 			@Override
@@ -223,7 +220,7 @@ public class PracticeMenu implements Initializable {
 		}.start();
 	}
 
-
+	// Deletes the recording
 	public void handleDeleteArc(ActionEvent actionEvent) {
 		if (selectedArchive == null) {
 			noFileAlert();
@@ -308,7 +305,7 @@ public class PracticeMenu implements Initializable {
 		recorder.finishRecording();
 	}
 
-
+// Load test mic window
 	public void testMicBtnClicked() {
 		try {
 			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MicTest.fxml"));
@@ -326,7 +323,6 @@ public class PracticeMenu implements Initializable {
 		}
 	}
 
-
 	public void noFileAlert() {
 		Alert alert = new Alert(Alert.AlertType.INFORMATION);
 		alert.setTitle("ERROR");
@@ -335,7 +331,7 @@ public class PracticeMenu implements Initializable {
 		alert.showAndWait();
 	}
 
-
+// Fill the recording list with corresponding recordings
 	public void newNameSelected() {
 
 		fillAttemptList();
@@ -343,12 +339,12 @@ public class PracticeMenu implements Initializable {
 		selectedArchive = null;
 	}
 
-
+	// Gets the files in the creations folder as a list
 	public void initialiseAttemptDatabase() {
 		attemptDatabase = new ArrayList<String>(Arrays.asList(creations.list()));
 	}
 
-
+	// Finds corresponding names in creations folder and adds to recordinglist
 	public void fillAttemptList() {
 		for (String s : attemptDatabase) {
 			if (s.lastIndexOf("_") != -1) {
@@ -364,7 +360,7 @@ public class PracticeMenu implements Initializable {
 	}
 
 
-	// Update attempts list
+	// Update recording list
 	public void updateArchive() {
 		recordedList = FXCollections.observableArrayList(listOfAttempts);
 		if (recordedList.size() == 0) {
@@ -380,7 +376,7 @@ public class PracticeMenu implements Initializable {
 		availableListView.getSelectionModel().clearSelection();
 	}
 
-
+// Disable all buttons
 	private void setAllButtonsDisabled(boolean b) {
 		playButton.setDisable(b);
 		prevButton.setDisable(b);
@@ -389,9 +385,10 @@ public class PracticeMenu implements Initializable {
 		playArcButton.setDisable(b);
 		deleteArcButton.setDisable(b);
 		returnButton.setDisable(b);
+		displayListView.setMouseTransparent(b);
 	}
 
-
+// Goes back to name selection menu
 	public void returnToNameSelection() {
 		NameSelectionMenu.clearHasNone();
 		NameSelectionMenu ctrl = new NameSelectionMenu();
@@ -399,7 +396,7 @@ public class PracticeMenu implements Initializable {
 	}
 
 
-
+// Fills up the names to practice
 	public void getlistToDisplay() {
 		for (String[] s : namesToPractice) {
 			String displayName = String.join("", s);
@@ -408,15 +405,16 @@ public class PracticeMenu implements Initializable {
 	}
 
 
-
+// Creates a new list that has the file names of the names that needs to be concatenated
 	public void makeNewAudio() {
-		if(listOfAudioCreated.get(selectedIndex) == null) {
+		if(listOfAudioCreated.get(selectedIndex) == null) { // Checks if the selected name already has a list
 			String[] nameArray = namesToPractice.get(selectedIndex);
 			namesToPlay = new ArrayList<>();
-			for(String s : nameArray){
-				if(Collections.frequency(MainMenu.getListOfJustNames(), s) > 1) {
+			for(String s : nameArray){ // Goes through every name in the String array
+				if(Collections.frequency(MainMenu.getListOfJustNames(), s) > 1) { // Checks if there are more than one of the same name
+					// Adds all of the files to a temp list and randomly chooses a file from that list
 					List<File> duplicates = new ArrayList<>();
-					for (NameFile namefile : namesDatabase) {
+					for (NameFile namefile : namesDatabase) { // Goes through each name in the database to find corresponding name
 						if (namefile.getName().equals(s)) {
 							duplicates.add(new File("names/" + namefile.getFileName()));
 						}
@@ -437,7 +435,7 @@ public class PracticeMenu implements Initializable {
 		}
 	}
 
-
+// Gets new selected name from mouse click
 	public void handleDisplayListClicked(MouseEvent mouseEvent) {
 		selectedName = displayListView.getSelectionModel().getSelectedItem();
 		selectedIndex = listToDisplay.indexOf(selectedName);
@@ -446,7 +444,7 @@ public class PracticeMenu implements Initializable {
 		playingLabel.setText(selectedName);
 	}
 
-
+// Initialises lists by getting them from other menus
 	private void initialiseDatabases(){
 		namesDatabase = MainMenu.getAddedNames();
 		listOfJustNames = MainMenu.getListOfJustNames();
