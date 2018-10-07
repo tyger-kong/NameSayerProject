@@ -31,7 +31,6 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.TargetDataLine;
 
-
 public class PracticeMenu implements Initializable {
 
 	private String selectedName;
@@ -106,6 +105,8 @@ public class PracticeMenu implements Initializable {
 	private List<List> listOfAudioCreated;
 
 	private boolean btnIsRecord;
+	
+	private JavaSoundRecorder recorder = new JavaSoundRecorder();
 
 	private int numberToPractice;
 
@@ -212,13 +213,14 @@ public class PracticeMenu implements Initializable {
 
 
 	public void handlePlayArc(ActionEvent actionEvent) {
-		//		if (selectedArchive == null) {
-		//			noFileAlert();
-		//		} else {
-		//			toPlay = currentName;
-		//			String fileToPlay = toPlay.substring(0, toPlay.lastIndexOf("_")+1) + selectedArchive;
-		//			playAudio("Creations/" + fileToPlay + ".wav");
-		//		}
+		if (selectedArchive == null) {
+			noFileAlert();
+		} else {
+			toPlay = selectedName;
+			String fileToPlay = toPlay.substring(0, toPlay.lastIndexOf("_")+1) + selectedArchive;
+			//playAudio("Creations/" + fileToPlay + ".wav");
+		}
+
 	}
 
 
@@ -300,51 +302,15 @@ public class PracticeMenu implements Initializable {
 		recordButton.setDisable(false);
 		if (btnIsRecord) {
 
-			//        String recordCommand = "ffmpeg -f alsa -ac 1 -ar 44100 -i default -t 5 \"" + recordingName + "\".wav";
-			//        ProcessBuilder recordAudio = new ProcessBuilder("/bin/bash", "-c", recordCommand);
-			//        recordAudio.directory(creations);
-			//
-			//        try{
-			//            recordAudio.start();
-			//        } catch (IOException e){
-			//            e.printStackTrace();
-			//        }
-			//
-			//        setAllButtonsDisabled(true);
-			//        // Time 5 seconds and set progress bar accordingly
-			//        new Thread() {
-			//            @Override
-			//            public void run() {
-			//                long startTime = System.currentTimeMillis();
-			//                recordButton.setDisable(true);
-			//                while (System.currentTimeMillis() < (startTime + 5000)) {
-			//                    double recordingProgress = (System.currentTimeMillis() - startTime) / 5000.0;
-			//                    recordingIndicator.setProgress(recordingProgress);
-			//                }
-			//                recordButton.setDisable(false);
-			//                setAllButtonsDisabled(false);
-			//                return;
-			//            }
-			//        }.start();
-
-
-			//        new java.util.Timer().schedule(
-			//                new java.util.TimerTask() {
-			//                    @Override
-			//                    public void run() {
-			//                        recordingIndicator.setProgress(0);
-			//                    }
-			//                },
-			//                5000
-			//        );
-
-
-
-			capture(recordingName);
+			System.out.println("JUST ABOUT TO RECORD");
+			startRecording(recordingName);
+			System.out.println("JUST STARTED RECORDING");
 			recordButton.setText("STOP");
 			btnIsRecord = false;
+			
 		} else {
-			stopCapture();
+			System.out.println("RYAN LIM IS COOL");
+			finishRecording();
 			listOfAttempts.add(recordingName);
 			updateArchive();
 			setAllButtonsDisabled(false);
@@ -354,54 +320,29 @@ public class PracticeMenu implements Initializable {
 	}
 
 
-
-	private TargetDataLine targetDataLine;
-
-	private void capture(String recordingName) {
-
-		if (targetDataLine == null) {
-
-			try {
-				AudioFormat format = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 44100, 16, 2, 4, 44100, false);
-				DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
-				if (!AudioSystem.isLineSupported(info)) {
-					System.out.println("Line not supported");
-				}
-
-				targetDataLine = (TargetDataLine) AudioSystem.getLine(info);
-
-				targetDataLine.open();
-				targetDataLine.start();
-				Thread thread = new Thread() {
-					@Override
-					public void run() {
-						AudioInputStream audioStream = new AudioInputStream(targetDataLine);
-						File audioFile = new File(recordingName);
-
-						System.out.println("Recording is going to get saved in path :::: " + audioFile.getAbsolutePath());
-						try {
-							AudioSystem.write(audioStream, AudioFileFormat.Type.WAVE, audioFile);
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-						System.out.println("Stopped Recording");
-					}
-				};
-			} catch (LineUnavailableException e) {
-				System.err.println("Line unavailable: " + e);
-				System.exit(-2);
+	private void startRecording(String recordingName) {
+		selectedName = displayListView.getSelectionModel().getSelectedItem();
+		date = new Date();
+		String currentTime = formatter.format(date);
+		String fileName = "Creations/" + selectedName + "_" + currentTime + ".wav";
+		
+		File wavFile = new File(fileName);
+		System.out.println("ABOUT TO do recorder.startRecording(wavFile)");
+		new Thread() {
+			@Override
+			public void run() {
+			recorder.startRecording(wavFile);
 			}
-		} //else
+		}.start();
+		
+		// ********************************************************************************
+		// MIGHT NEED TO RETURN FROM THIS THREAD SOME HOW
+
 	}
 
 
-	private void stopCapture() {
-		if (targetDataLine != null) {
-			System.out.println("stop :: in stop");
-			targetDataLine.stop();
-			targetDataLine.close();
-			targetDataLine = null;
-		}
+	private void finishRecording() {
+		recorder.finishRecording();
 	}
 
 
@@ -430,9 +371,6 @@ public class PracticeMenu implements Initializable {
 		double averageMeanSquare = sumMeanSquare / audioData.length;
 		return (int) (Math.pow(averageMeanSquare, 0.5d) + 0.5);
 	}
-
-
-
 
 
 	public void newNameSelected() {
@@ -497,12 +435,15 @@ public class PracticeMenu implements Initializable {
 		returnButton.getScene().setRoot(ctrl.getControllerRoot());
 	}
 
+	
 	public void getlistToDisplay(){
 		for( String[] s : namesToPractice){
 			String displayName = String.join("", s);
 			listToDisplay.add(displayName);
 		}
 	}
+	
+	
 	public void makeNewAudio(){
 		if(listOfAudioCreated.get(selectedIndex) == null) {
 			String[] nameArray = namesToPractice.get(selectedIndex);
@@ -537,9 +478,8 @@ public class PracticeMenu implements Initializable {
 		selectedIndex = listToDisplay.indexOf(selectedName);
 		makeNewAudio();
 		playingLabel.setText(selectedName);
-		//        newNameSelected();
-
 	}
+
 
 	private void initialiseDatabases(){
 		namesDatabase = MainMenu.getAddedNames();
@@ -550,4 +490,5 @@ public class PracticeMenu implements Initializable {
 
 		initialiseAttemptDatabase();
 	}
+	
 }
