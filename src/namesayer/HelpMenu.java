@@ -1,7 +1,6 @@
 package namesayer;
 
 import java.io.File;
-import java.net.URL;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -11,22 +10,21 @@ import javafx.scene.web.WebView;
 
 
 public class HelpMenu {
-
 	@FXML
 	private WebView instructionsWebView;
-
 	@FXML
 	private Button mainMenuBtn;
 
+	
 	// Loads the webview with html file 
 	@FXML
-	private void initialize()
-	{
+	private void initialize() {
 		WebEngine engine = instructionsWebView.getEngine();
 		File file = new File("src/instructions.html");
 		engine.load(file.toURI().toString());
 	}
 
+	
 	// Goes back to main menu
 	public void mainMenuBtnClicked(ActionEvent actionEvent) {
 		mainMenuBtn.getScene().setRoot(MainMenu.getMainMenuRoot());

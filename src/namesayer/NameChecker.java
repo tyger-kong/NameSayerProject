@@ -17,7 +17,7 @@ public class NameChecker {
 		return MainMenu.getListOfJustNames().contains(name);
 	}
 	
-	
+	// Converts string into string array (for putting into NameListCell)
 	public static String[] nameAsArray(String name) {
 		List<String> list = new ArrayList<String>();
 		String singleName = "";

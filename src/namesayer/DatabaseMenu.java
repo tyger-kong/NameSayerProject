@@ -38,6 +38,7 @@ public class DatabaseMenu implements Initializable {
 	private NameFile currentName;
 	private String toPlay;
 
+	
 	public void mainMenuBtnClicked(ActionEvent actionEvent) {
 		mainMenuBtn.getScene().setRoot(MainMenu.getMainMenuRoot());
 	}
@@ -53,6 +54,7 @@ public class DatabaseMenu implements Initializable {
 		rateButton.setDisable(true);
 	}
 
+	
 	// Gets the selected item in the List view as a string and gets the corresponding name object
 	public void handleListClicked(MouseEvent mouseEvent) {
 		selectedName = databaseListView.getSelectionModel().getSelectedItem();
@@ -61,6 +63,7 @@ public class DatabaseMenu implements Initializable {
 		setRatingButton();
 	}
 
+	
 	// Calls the methods inside the name objects to change the rating
 	public void handleRateAction(ActionEvent actionEvent) {
 		Alert rateConfirm = new Alert(Alert.AlertType.CONFIRMATION, "Change " + selectedName + "'s rating?", ButtonType.YES, ButtonType.NO);
@@ -77,6 +80,8 @@ public class DatabaseMenu implements Initializable {
 			setRatingButton(); 
 		}
 	}
+	
+	
 	// Changes the colour and text of the rating button accordingly
 	private void setRatingButton() {
 		if (currentName.checkIfBadRating()) {
@@ -87,6 +92,7 @@ public class DatabaseMenu implements Initializable {
 			rateButton.setStyle("-fx-background-color: green;");
 		}
 	}
+	
 
 	// Gets the name object based on selected name in listview
 	public void getCurrentName(){
@@ -146,9 +152,11 @@ public class DatabaseMenu implements Initializable {
 			}
 		}.start();
 	}
+	
 
 	public void handlePlayButton(ActionEvent actionEvent) {
 		toPlay = currentName.getFileName();
 		playAudio("names/" + toPlay);
 	}
+	
 }
