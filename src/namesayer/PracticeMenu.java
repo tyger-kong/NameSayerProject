@@ -129,10 +129,6 @@ public class PracticeMenu implements Initializable {
 		initialiseDatabases(); // Initialises the database lists
 		listToDisplay = FXCollections.observableArrayList();
 		getlistToDisplay();
-		if(NameSelectionMenu.isShuffleSelected()){ // Checks if shuffle has been selected
-			Collections.shuffle(listToDisplay);
-		}
-
 		// Sets items to the listView
 		displayListView.setItems(listToDisplay);
 		displayListView.getSelectionModel().clearSelection();
@@ -433,6 +429,7 @@ public class PracticeMenu implements Initializable {
 
 	// Finds corresponding names in creations folder and adds to recordinglist
 	public void fillAttemptList() {
+		listOfAttempts = new ArrayList<>();
 		for (String s : attemptDatabase) {
 			if (s.lastIndexOf("_") != -1) {
 				String nameMatch = s.substring(0, s.lastIndexOf("_"));
@@ -541,6 +538,9 @@ public class PracticeMenu implements Initializable {
 	private void initialiseDatabases(){
 		namesDatabase = MainMenu.getAddedNames();
 		namesToPractice = NameSelectionMenu.getNamesObList();
+		if(NameSelectionMenu.isShuffleSelected()){ // Checks if shuffle has been selected
+			Collections.shuffle(namesToPractice);
+		}
 		numberToPractice = namesToPractice.size();
 		listOfAudioCreated = new ArrayList<List>(Collections.nCopies(numberToPractice, null));
 		initialiseAttemptDatabase();
