@@ -1,6 +1,7 @@
 package namesayer;
 
 
+import javafx.animation.PauseTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -19,6 +20,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import javafx.util.Duration;
 
 import java.io.File;
 import java.io.IOException;
@@ -196,44 +198,12 @@ public class PracticeMenu implements Initializable {
 
 	// Plays the selected recording
 	public void handlePlayArc(ActionEvent actionEvent) {
-
+		setAllButtonsDisabled(true);
 		if (selectedArchive == null) {
 			noFileAlert();
 
 		} else {
-			new Thread() {
-				@Override
-				public void start() {
-					System.out.println(".......");
-					setAllButtonsDisabled(true);
-					System.out.println("gaadasd");
-					toPlay = selectedName;
-					String fileToPlay = toPlay.substring(0, toPlay.lastIndexOf("_")+1) + selectedArchive;
-					File file = new File("Creations/" + fileToPlay + ".wav");
-					byte[] buffer = new byte[4096];
-
-					try {
-						setAllButtonsDisabled(true);
-						AudioInputStream is = AudioSystem.getAudioInputStream(file);
-						AudioFormat format = is.getFormat();
-						SourceDataLine line = AudioSystem.getSourceDataLine(format);
-						line.open(format);
-						line.start();
-						while (is.available() > 0) {
-							int len = is.read(buffer);
-							line.write(buffer, 0, len);
-						}
-						line.drain(); //**[DEIT]** wait for the buffer to empty before closing the line
-						line.close();
-						setAllButtonsDisabled(false);
-						System.out.println("i hate tyger");
-						return;
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-
-			}.start();		
+			playSingleAudio("Creations/"+ selectedArchive + ".wav");		
 
 
 		}
@@ -268,6 +238,54 @@ public class PracticeMenu implements Initializable {
 
 				} catch (Exception e) {
 
+				}
+			}
+		}.start();
+	}
+	
+	// Plays the files in the given list one at a time
+	private void playSingleAudio(String fileToPlay) {
+		new Thread() {
+			@Override
+			public void run() {
+				try {
+					AudioInputStream stream = AudioSystem.getAudioInputStream(new File(fileToPlay));
+					AudioFormat format = stream.getFormat();
+					DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
+					SourceDataLine sourceLine = (SourceDataLine) AudioSystem.getLine(info);
+					sourceLine.open(format);
+					sourceLine.start();
+
+					// Disable buttons while audio file plays
+					long frames = stream.getFrameLength();
+					long durationInSeconds = (frames / (long)format.getFrameRate());
+					setAllButtonsDisabled(true);
+					PauseTransition pause = new PauseTransition(Duration.seconds(durationInSeconds));
+					pause.setOnFinished(event -> {
+						setAllButtonsDisabled(false);
+						Thread.currentThread().interrupt();
+					});
+					pause.play();
+
+					int nBytesRead = 0;
+					int BUFFER_SIZE = 128000;
+					byte[] abData = new byte[BUFFER_SIZE];
+					while (nBytesRead != -1) {
+						try {
+							nBytesRead = stream.read(abData, 0, abData.length);
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+						if (nBytesRead >= 0) {
+							@SuppressWarnings("unused")
+							int nBytesWritten = sourceLine.write(abData, 0, nBytesRead);
+						}
+					}
+					sourceLine.drain();
+					sourceLine.close();
+				} catch (Exception e) {
+					System.out.println("FAILED TO PLAY FILE");
+					e.printStackTrace();
 				}
 			}
 		}.start();
