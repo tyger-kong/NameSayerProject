@@ -112,6 +112,8 @@ public class PracticeMenu implements Initializable {
 	private JavaSoundRecorder recorder = new JavaSoundRecorder();
 
 	private int numberToPractice;
+	
+	private String recordingName;
 
 
 
@@ -181,11 +183,32 @@ public class PracticeMenu implements Initializable {
 	public void handlePlayArc(ActionEvent actionEvent) {
 		if (selectedArchive == null) {
 			noFileAlert();
+			
 		} else {
 			toPlay = selectedName;
 			String fileToPlay = toPlay.substring(0, toPlay.lastIndexOf("_")+1) + selectedArchive;
-			//playAudio("Creations/" + fileToPlay + ".wav");
-		}
+			File file = new File("Creations/" + fileToPlay + ".wav");
+			byte[] buffer = new byte[4096];
+			setAllButtonsDisabled(true);
+			
+			try {
+				AudioInputStream is = AudioSystem.getAudioInputStream(file);
+				AudioFormat format = is.getFormat();
+				SourceDataLine line = AudioSystem.getSourceDataLine(format);
+				line.open(format);
+				line.start();
+				while (is.available() > 0) {
+					int len = is.read(buffer);
+					line.write(buffer, 0, len);
+				}
+				line.drain(); //**[DEIT]** wait for the buffer to empty before closing the line
+				line.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			setAllButtonsDisabled(false);
+		}			
+
 
 	}
 
@@ -261,13 +284,14 @@ public class PracticeMenu implements Initializable {
 
 
 	public void handleRecordAction(ActionEvent actionEvent) {
-		date = new Date();
-		String currentTime = formatter.format(date);
-		String recordingName = selectedName + "_" + currentTime;
-		setAllButtonsDisabled(true);
-		recordButton.setDisable(false);
-		if (btnIsRecord) {
 
+		if (btnIsRecord) {
+			date = new Date();
+			String currentTime = formatter.format(date);
+			recordingName = selectedName + "_" + currentTime;
+			
+			setAllButtonsDisabled(true);
+			recordButton.setDisable(false);
 			System.out.println("JUST ABOUT TO RECORD");
 			startRecording(recordingName);
 			System.out.println("JUST STARTED RECORDING");
@@ -286,13 +310,8 @@ public class PracticeMenu implements Initializable {
 	}
 
 
-	private void startRecording(String recordingName) {
-		selectedName = displayListView.getSelectionModel().getSelectedItem();
-		date = new Date();
-		String currentTime = formatter.format(date);
-		String fileName = "Creations/" + selectedName + "_" + currentTime + ".wav";
-
-		File wavFile = new File(fileName);
+	private void startRecording(String recordingName) {		
+		File wavFile = new File("Creations/" + recordingName + ".wav");
 		System.out.println("ABOUT TO do recorder.startRecording(wavFile)");
 		new Thread() {
 			@Override
@@ -314,7 +333,7 @@ public class PracticeMenu implements Initializable {
 
 	public void testMicBtnClicked() {
 		try {
-			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MicTest.fxml"));
+			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../fxml/MicTest.fxml"));
 			Parent root = fxmlLoader.load();
 			Stage parentStage = (Stage)testMicBtn.getScene().getWindow();
 			Stage stage = new Stage();
@@ -338,7 +357,7 @@ public class PracticeMenu implements Initializable {
 		alert.showAndWait();
 	}
 
-
+	
 	public void newNameSelected() {
 
 		fillAttemptList();
