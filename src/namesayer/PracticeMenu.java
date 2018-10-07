@@ -388,7 +388,7 @@ public class PracticeMenu implements Initializable {
 	// Load test microphone window
 	public void testMicBtnClicked() {
 		try {
-			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../fxml/MicTest.fxml"));
+			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MicTest.fxml"));
 			Parent root = fxmlLoader.load();
 			Stage parentStage = (Stage)testMicBtn.getScene().getWindow();
 			Stage stage = new Stage();

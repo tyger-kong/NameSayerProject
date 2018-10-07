@@ -30,7 +30,7 @@ public class NameListCell extends ListCell<String[]> {
 			}
 
 			if (loader == null) {
-				loader = new FXMLLoader(getClass().getResource("../fxml/NameListCell.fxml"));
+				loader = new FXMLLoader(getClass().getResource("NameListCell.fxml"));
 				loader.setController(this);
 
 				try {
