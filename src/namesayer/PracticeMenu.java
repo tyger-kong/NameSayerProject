@@ -5,7 +5,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -13,6 +16,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,6 +59,9 @@ public class PracticeMenu implements Initializable {
 	private Button returnButton;
 
 	@FXML
+	private Button testMicBtn;
+
+	@FXML
 	private Button prevButton;
 
 	@FXML
@@ -79,11 +88,6 @@ public class PracticeMenu implements Initializable {
 	@FXML
 	private ProgressBar recordingIndicator;
 
-
-
-	@FXML
-	private ProgressBar micBar = new ProgressBar();
-
 	@FXML
 	private Label playingLabel;
 
@@ -97,7 +101,6 @@ public class PracticeMenu implements Initializable {
 	private List<String> listOfAttempts = new ArrayList<String>();
 	private List<String> listOfJustNames;
 
-	private boolean closePractice = false;
 
 	private SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-HHmmss");
 	private Date date;
@@ -105,7 +108,7 @@ public class PracticeMenu implements Initializable {
 	private List<List> listOfAudioCreated;
 
 	private boolean btnIsRecord;
-	
+
 	private JavaSoundRecorder recorder = new JavaSoundRecorder();
 
 	private int numberToPractice;
@@ -129,43 +132,6 @@ public class PracticeMenu implements Initializable {
 		playingLabel.setText(selectedName);
 		makeNewAudio();
 		//        newNameSelected();
-
-		// Show microphone level on a ProgressBar
-		//        new Thread() {
-		//            @Override
-		//            public void run() {
-		//                micBar.setStyle("-fx-accent: red;");
-		//                // Taken from https://stackoverflow.com/questions/15870666/calculating-microphone-volume-trying-to-find-max
-		//                // Open a TargetDataLine for getting microphone input & sound level
-		//                TargetDataLine line = null;
-		//                AudioFormat format = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 44100, 16, 2, 4, 44100, false);
-		//                DataLine.Info info = new DataLine.Info(TargetDataLine.class, format); 	// format is an AudioFormat object
-		//                if (!AudioSystem.isLineSupported(info)) {
-		//                    System.out.println("The line is not supported.");
-		//                }
-		//                // Obtain and open the line.
-		//                try {
-		//                    line = (TargetDataLine) AudioSystem.getLine(info);
-		//                    line.open(format);
-		//                    line.start();
-		//                } catch (LineUnavailableException ex) {
-		//                    System.out.println("The TargetDataLine is Unavailable.");
-		//                }
-		//
-		//                while (true) {
-		//                    byte[] bytes = new byte[line.getBufferSize() / 5];
-		//                    line.read(bytes, 0, bytes.length);
-		//                    double prog = (double) calculateRMSLevel(bytes) / 65;
-		//                    micBar.setProgress(prog);
-		//
-		//                    if (closePractice || !micBar.getScene().getWindow().isShowing()) {
-		//                        line.close();
-		//                        return;
-		//                    }
-		//                }
-		//            }
-		//        }.start();
-
 	}
 
 
@@ -307,7 +273,7 @@ public class PracticeMenu implements Initializable {
 			System.out.println("JUST STARTED RECORDING");
 			recordButton.setText("STOP");
 			btnIsRecord = false;
-			
+
 		} else {
 			System.out.println("RYAN LIM IS COOL");
 			finishRecording();
@@ -325,16 +291,16 @@ public class PracticeMenu implements Initializable {
 		date = new Date();
 		String currentTime = formatter.format(date);
 		String fileName = "Creations/" + selectedName + "_" + currentTime + ".wav";
-		
+
 		File wavFile = new File(fileName);
 		System.out.println("ABOUT TO do recorder.startRecording(wavFile)");
 		new Thread() {
 			@Override
 			public void run() {
-			recorder.startRecording(wavFile);
+				recorder.startRecording(wavFile);
 			}
 		}.start();
-		
+
 		// ********************************************************************************
 		// MIGHT NEED TO RETURN FROM THIS THREAD SOME HOW
 
@@ -346,30 +312,30 @@ public class PracticeMenu implements Initializable {
 	}
 
 
+	public void testMicBtnClicked() {
+		try {
+			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MicTest.fxml"));
+			Parent root = fxmlLoader.load();
+			Stage parentStage = (Stage)testMicBtn.getScene().getWindow();
+			Stage stage = new Stage();
+			stage.initOwner(parentStage);
+			stage.initModality(Modality.WINDOW_MODAL);
+			stage.setScene(new Scene(root));
+			stage.setTitle("Mic Test");
+			stage.setResizable(false);
+			stage.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+
 	public void noFileAlert() {
 		Alert alert = new Alert(Alert.AlertType.INFORMATION);
 		alert.setTitle("ERROR");
 		alert.setHeaderText(null);
 		alert.setContentText("No file selected");
 		alert.showAndWait();
-	}
-
-
-	// Taken from https://stackoverflow.com/questions/15870666/calculating-microphone-volume-trying-to-find-max
-	protected static int calculateRMSLevel(byte[] audioData) {
-		// audioData might be buffered data read from a data line
-		long lSum = 0;
-		for (int i = 0; i < audioData.length; i++)
-			lSum = lSum + audioData[i];
-
-		double dAvg = lSum / audioData.length;
-
-		double sumMeanSquare = 0d;
-		for (int j = 0; j < audioData.length; j++)
-			sumMeanSquare = sumMeanSquare + Math.pow(audioData[j] - dAvg, 2d);
-
-		double averageMeanSquare = sumMeanSquare / audioData.length;
-		return (int) (Math.pow(averageMeanSquare, 0.5d) + 0.5);
 	}
 
 
@@ -425,26 +391,26 @@ public class PracticeMenu implements Initializable {
 		recordButton.setDisable(b);
 		playArcButton.setDisable(b);
 		deleteArcButton.setDisable(b);
+		returnButton.setDisable(b);
 	}
 
 
 	public void returnToNameSelection() {
 		NameSelectionMenu.clearHasNone();
-		closePractice = true;
 		NameSelectionMenu ctrl = new NameSelectionMenu();
 		returnButton.getScene().setRoot(ctrl.getControllerRoot());
 	}
 
-	
-	public void getlistToDisplay(){
-		for( String[] s : namesToPractice){
+
+	public void getlistToDisplay() {
+		for (String[] s : namesToPractice) {
 			String displayName = String.join("", s);
 			listToDisplay.add(displayName);
 		}
 	}
-	
-	
-	public void makeNewAudio(){
+
+
+	public void makeNewAudio() {
 		if(listOfAudioCreated.get(selectedIndex) == null) {
 			String[] nameArray = namesToPractice.get(selectedIndex);
 			namesToPlay = new ArrayList<>();
@@ -490,5 +456,5 @@ public class PracticeMenu implements Initializable {
 
 		initialiseAttemptDatabase();
 	}
-	
+
 }
