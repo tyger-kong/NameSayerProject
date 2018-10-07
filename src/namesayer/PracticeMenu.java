@@ -103,7 +103,7 @@ public class PracticeMenu implements Initializable {
 	private List<List> listOfAudioCreated;
 
 	private boolean btnIsRecord;
-	
+
 	private JavaSoundRecorder recorder = new JavaSoundRecorder();
 
 	private int numberToPractice;
@@ -127,7 +127,7 @@ public class PracticeMenu implements Initializable {
 		selectedName = displayListView.getSelectionModel().getSelectedItem();
 		playingLabel.setText(selectedName);
 		makeNewAudio();
-		//        newNameSelected();
+		newNameSelected();
 
 		// Show microphone level on a ProgressBar
 		//        new Thread() {
@@ -179,7 +179,7 @@ public class PracticeMenu implements Initializable {
 			//        }
 			selectedName = displayListView.getSelectionModel().getSelectedItem();
 			playingLabel.setText(selectedName);
-			//        newNameSelected();
+			newNameSelected();
 		}
 	}
 
@@ -196,7 +196,7 @@ public class PracticeMenu implements Initializable {
 			selectedName = displayListView.getSelectionModel().getSelectedItem();
 
 			playingLabel.setText(selectedName);
-			//
+			newNameSelected();
 		}
 	}
 
@@ -306,7 +306,7 @@ public class PracticeMenu implements Initializable {
 			System.out.println("JUST STARTED RECORDING");
 			recordButton.setText("STOP");
 			btnIsRecord = false;
-			
+
 		} else {
 			System.out.println("RYAN LIM IS COOL");
 			finishRecording();
@@ -324,16 +324,16 @@ public class PracticeMenu implements Initializable {
 		date = new Date();
 		String currentTime = formatter.format(date);
 		String fileName = "Creations/" + selectedName + "_" + currentTime + ".wav";
-		
+
 		File wavFile = new File(fileName);
 		System.out.println("ABOUT TO do recorder.startRecording(wavFile)");
 		new Thread() {
 			@Override
 			public void run() {
-			recorder.startRecording(wavFile);
+				recorder.startRecording(wavFile);
 			}
 		}.start();
-		
+
 		// ********************************************************************************
 		// MIGHT NEED TO RETURN FROM THIS THREAD SOME HOW
 
@@ -388,7 +388,7 @@ public class PracticeMenu implements Initializable {
 	public void fillAttemptList() {
 		for (String s : attemptDatabase) {
 			if (s.lastIndexOf("_") != -1) {
-				String nameMatch = s.substring(0, s.lastIndexOf("_")-1);
+				String nameMatch = s.substring(0, s.lastIndexOf("_"));
 				if (selectedName.equals(nameMatch)) {
 					String toAddToList = s.substring(0, s.lastIndexOf("."));
 					if (!listOfAttempts.contains(toAddToList)) {
@@ -434,15 +434,15 @@ public class PracticeMenu implements Initializable {
 		returnButton.getScene().setRoot(ctrl.getControllerRoot());
 	}
 
-	
+
 	public void getlistToDisplay(){
 		for( String[] s : namesToPractice){
 			String displayName = String.join("", s);
 			listToDisplay.add(displayName);
 		}
 	}
-	
-	
+
+
 	public void makeNewAudio(){
 		if(listOfAudioCreated.get(selectedIndex) == null) {
 			String[] nameArray = namesToPractice.get(selectedIndex);
@@ -475,6 +475,7 @@ public class PracticeMenu implements Initializable {
 	public void handleDisplayListClicked(MouseEvent mouseEvent) {
 		selectedName = displayListView.getSelectionModel().getSelectedItem();
 		selectedIndex = listToDisplay.indexOf(selectedName);
+		newNameSelected();
 		makeNewAudio();
 		playingLabel.setText(selectedName);
 	}
@@ -489,5 +490,5 @@ public class PracticeMenu implements Initializable {
 
 		initialiseAttemptDatabase();
 	}
-	
+
 }

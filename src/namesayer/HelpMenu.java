@@ -11,24 +11,25 @@ import javafx.scene.web.WebView;
 
 
 public class HelpMenu {
-	
+
 	@FXML
-    private WebView instructionsWebView;
-	
+	private WebView instructionsWebView;
+
 	@FXML
 	private Button mainMenuBtn;
 
-    @FXML
-    private void initialize()
-    {
-        WebEngine engine = instructionsWebView.getEngine();
-        File file = new File("instructions.html");
-        
-        engine.load(file.toURI().toString());
-    }
-    
-    public void mainMenuBtnClicked(ActionEvent actionEvent) {
-        mainMenuBtn.getScene().setRoot(MainMenu.getMainMenuRoot());
-    }
+	// Loads the webview with html file 
+	@FXML
+	private void initialize()
+	{
+		WebEngine engine = instructionsWebView.getEngine();
+		File file = new File("instructions.html");
+		engine.load(file.toURI().toString());
+	}
+
+	// Goes back to main menu
+	public void mainMenuBtnClicked(ActionEvent actionEvent) {
+		mainMenuBtn.getScene().setRoot(MainMenu.getMainMenuRoot());
+	}
 
 }

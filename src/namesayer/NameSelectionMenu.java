@@ -107,6 +107,7 @@ public class NameSelectionMenu implements Initializable {
         nameInputField.setPrefWidth(292);
         inputPane.getChildren().add(nameInputField);
 
+        // 
         namesSelectedListView.setItems(namesObsListFile);
         namesSelectedListView.setCellFactory(names -> new NameListCell());
 
@@ -139,15 +140,15 @@ public class NameSelectionMenu implements Initializable {
 
     }
 
-
+// Goes back to main menu
     public void mainMenuBtnClicked(ActionEvent actionEvent) {
         mainMenuBtn.getScene().setRoot(MainMenu.getMainMenuRoot());
     }
 
 
     public void addNameBtnClicked() {
-        if (selectedManual) {
-            if (((nameInputField.getText() == null) || nameInputField.getText().trim().equals(""))) {
+        if (selectedManual) { 
+            if (((nameInputField.getText() == null) || nameInputField.getText().trim().equals(""))) { // If no name is entered
                 Alert noInputAlert = new Alert(Alert.AlertType.INFORMATION);
                 noInputAlert.setTitle("ERROR - Please enter a name");
                 noInputAlert.setHeaderText(null);
@@ -157,11 +158,12 @@ public class NameSelectionMenu implements Initializable {
                 // Trim leading and trailing white space and hyphens, and replace multiple spaces/hyphens with single ones
                 String userInput = nameInputField.getText().trim().replaceAll(" +", " ").replaceAll("\\s*-\\s*", "-").replaceAll("-+", "-").replaceAll("^-", "").replaceAll("-$", "");
 
+                // Convert the name to a string array and 
                 if (!userInput.isEmpty()) {
                     String[] inputArray = NameChecker.nameAsArray(userInput);
 
                     boolean isInList = false;
-                    for (String[] s : namesObsListManual) {
+                    for (String[] s : namesObsListManual) { // Checks if the input has already been entered
                         if (Arrays.equals(s, inputArray)) {
                             Alert alreadyExistsAlert = new Alert(Alert.AlertType.INFORMATION);
                             alreadyExistsAlert.setTitle("ERROR - Name Already in List");
@@ -174,20 +176,21 @@ public class NameSelectionMenu implements Initializable {
                         }
 
                     }
-                    if (!isInList) {
-                        namesObsListManual.add(inputArray);
-                        listOfUserInput.add(userInput);
+                    if (!isInList) { // Adds the input to lists
+                        namesObsListManual.add(inputArray); // Fills listview corresponding to manual input
+                        listOfUserInput.add(userInput); // Used for exporting to .txt
                         nameInputField.setText(null);
                     }
                 }
             }
-        } else {
+        } else { // .txt Input
 
             listOfNamesFromFile.clear();
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Open txt file");
             File selectedFile = fileChooser.showOpenDialog(addNameBtn.getScene().getWindow());
 
+            // Reads .txt file line by line and adds it to the list
             if ((selectedFile != null) && (selectedFile.getPath().substring(selectedFile.getAbsolutePath().lastIndexOf('.')).equals(".txt"))) {
                 System.out.println(selectedFile.getPath().substring(selectedFile.getAbsolutePath().lastIndexOf('.')));
                 fileChosen = selectedFile.getAbsolutePath();
@@ -205,6 +208,7 @@ public class NameSelectionMenu implements Initializable {
                     e.printStackTrace();
                 }
 
+                // Fills the Listview corresponding to .txt input
                 namesObsListFile.clear();
                 for (String input : listOfNamesFromFile) {
                     input = input.trim().replaceAll(" +", " ").replaceAll("\\s*-\\s*", "-").replaceAll("-+", "-").replaceAll("^-", "").replaceAll("-$", "");
@@ -220,9 +224,9 @@ public class NameSelectionMenu implements Initializable {
 
 
     public void practiceBtnClicked(ActionEvent actionEvent) {
-        if (namesSelectedListView.getItems().isEmpty()) {
+        if (namesSelectedListView.getItems().isEmpty()) { // Checks if the selected list is empty
             showNoNamesEnteredAlert();
-        } else if (namesNotInDatabase.size() > 0) {
+        } else if (namesNotInDatabase.size() > 0) { // Checks if there are any names in the list that is not in database
             Alert nonSelectedAlert = new Alert(Alert.AlertType.INFORMATION);
             nonSelectedAlert.setTitle("ERROR - Name doesn't exist");
             nonSelectedAlert.setHeaderText(null);
@@ -230,12 +234,14 @@ public class NameSelectionMenu implements Initializable {
             nonSelectedAlert.showAndWait();
         } else {
 
+        	// Checks if shuffle is selected or not
             if (shuffleButton.isSelected()) {
                 shuffleSelected = true;
             } else {
                 shuffleSelected = false;
             }
-            try {
+           
+            try { // Loads practice menu
                 nameSelectionMenuRoot = practiceButton.getScene().getRoot();
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("PracticeMenu.fxml"));
                 Parent root = fxmlLoader.load();
@@ -250,10 +256,12 @@ public class NameSelectionMenu implements Initializable {
 
     public void deleteBtnClicked(ActionEvent actionEvent) {
         if (selectedNameArray != null) {
-            setDeleteShortcuts();
-            namesNotInDatabase.clear();
+            setDeleteShortcuts(); // Allows using delete/undo shortcuts
+            clearHasNone();// Clears the list of any names not in database
+            // Removes the name from lists
             namesSelectedListView.getItems().remove(selectedNameArray);
             listOfUserInput.remove(String.join("", selectedNameArray));
+            // For undo function
             singleDeleted = true;
             justDeletedSingle = selectedNameArray;
             selectedNameArray = null;
@@ -265,7 +273,8 @@ public class NameSelectionMenu implements Initializable {
 
     public void handleDeleteAll(ActionEvent actionEvent) {
         setDeleteShortcuts();
-        justDeletedList = FXCollections.observableArrayList(namesSelectedListView.getItems());
+        justDeletedList = FXCollections.observableArrayList(namesSelectedListView.getItems()); // Gets the list of names deleted for undo functionality
+        // Clear lists
         listOfUserInput.clear();
         singleDeleted = false;
         namesSelectedListView.getItems().clear();
@@ -295,11 +304,7 @@ public class NameSelectionMenu implements Initializable {
     }
 
 
-    public Parent getControllerRoot() {
-        return nameSelectionMenuRoot;
-    }
-
-
+// Manages the selection of manual or .txt input (Disable textfields, butons, etc)
     public void onInputSelected(ActionEvent actionEvent) {
         if (inputMethodChoice.getValue().equals("Manual input")) {
             justDeletedList = null;
@@ -325,41 +330,42 @@ public class NameSelectionMenu implements Initializable {
         }
     }
 
-
-    public static ObservableList<String[]> getNamesObList() {
+    public void handleListSelected(MouseEvent mouseEvent) {
+        selectedNameArray = namesSelectedListView.getSelectionModel().getSelectedItem();
+    }
+    
+    // Getters
+    public static ObservableList<String[]> getNamesObList() { // Returns the names to practice
         if (selectedManual) {
             return namesObsListManual;
         }
         return namesObsListFile;
     }
 
-
-    public void handleListSelected(MouseEvent mouseEvent) {
-        selectedNameArray = namesSelectedListView.getSelectionModel().getSelectedItem();
-    }
-
-
-    public static boolean isShuffleSelected() {
+    public static boolean isShuffleSelected() { // Returns if shuffle has been selected
         return shuffleSelected;
     }
+    
+    public Parent getControllerRoot() { // Allows for switching back to this scene
+        return nameSelectionMenuRoot;
+    }
 
 
-    public static void addToNoneList(String name) {
+    public static void addToNoneList(String name) { // Adds a name to list of names not in database
         namesNotInDatabase.add(name);
     }
 
-
-    public static void clearHasNone() {
-        namesNotInDatabase.clear();
-    }
-
-    
+    // Exports the list of selected names to a .txt file
     public void handleExportButton(ActionEvent actionEvent) {
-        if(!listOfUserInput.isEmpty()) {
+        if(!listOfUserInput.isEmpty()) { // Checks if the selection is empty or not
+        	
+        	// Creates folder if it doesn't already exist
             File savedFileFolder = new File("Saved Lists");
             if (!savedFileFolder.exists()) {
                 savedFileFolder.mkdirs();
             }
+            
+            //Checks if the .txt already exists. Number increases if yes
             int attempt = 0;
             String fileName = savedFolder + "savedList.txt";
             File currentFile = new File(fileName);
@@ -369,6 +375,7 @@ public class NameSelectionMenu implements Initializable {
                 currentFile = new File(fileName);
             }
 
+            // For every name the user inputed, Write to .txt
             try {
                 FileWriter fw = new FileWriter(fileName, true);
                 for (String name : listOfUserInput) {
@@ -378,7 +385,6 @@ public class NameSelectionMenu implements Initializable {
                 Alert alreadyExistsAlert = new Alert(Alert.AlertType.INFORMATION);
                 alreadyExistsAlert.setTitle("File Created");
                 alreadyExistsAlert.setHeaderText(null);
-
                 alreadyExistsAlert.setContentText(fileName.substring(12) + " has been created.");
                 alreadyExistsAlert.showAndWait();
             } catch (IOException e) {
@@ -391,11 +397,17 @@ public class NameSelectionMenu implements Initializable {
 
     }
 
+    // Shows alert notifying no names have been inputed
     public void showNoNamesEnteredAlert(){
         Alert nonSelectedAlert = new Alert(Alert.AlertType.INFORMATION);
         nonSelectedAlert.setTitle("ERROR - Please select some names");
         nonSelectedAlert.setHeaderText(null);
         nonSelectedAlert.setContentText("No name(s) have been entered. Please enter at least one name to practice");
         nonSelectedAlert.showAndWait();
+    }
+    
+    // Clears the list of names not in database
+    public static void clearHasNone() {
+        namesNotInDatabase.clear();
     }
 }
