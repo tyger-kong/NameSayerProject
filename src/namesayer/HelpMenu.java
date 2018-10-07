@@ -23,7 +23,7 @@ public class HelpMenu {
 	private void initialize()
 	{
 		WebEngine engine = instructionsWebView.getEngine();
-		File file = new File("instructions.html");
+		File file = new File("src/instructions.html");
 		engine.load(file.toURI().toString());
 	}
 

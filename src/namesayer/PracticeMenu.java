@@ -196,37 +196,47 @@ public class PracticeMenu implements Initializable {
 
 	// Plays the selected recording
 	public void handlePlayArc(ActionEvent actionEvent) {
-		setAllButtonsDisabled(true);
 
 		if (selectedArchive == null) {
 			noFileAlert();
 
 		} else {
+			new Thread() {
+				@Override
+				public void start() {
+					System.out.println(".......");
+					setAllButtonsDisabled(true);
+					System.out.println("gaadasd");
+					toPlay = selectedName;
+					String fileToPlay = toPlay.substring(0, toPlay.lastIndexOf("_")+1) + selectedArchive;
+					File file = new File("Creations/" + fileToPlay + ".wav");
+					byte[] buffer = new byte[4096];
 
-			toPlay = selectedName;
-			String fileToPlay = toPlay.substring(0, toPlay.lastIndexOf("_")+1) + selectedArchive;
-			File file = new File("Creations/" + fileToPlay + ".wav");
-			byte[] buffer = new byte[4096];
-
-			try {
-				AudioInputStream is = AudioSystem.getAudioInputStream(file);
-				AudioFormat format = is.getFormat();
-				SourceDataLine line = AudioSystem.getSourceDataLine(format);
-				line.open(format);
-				line.start();
-				while (is.available() > 0) {
-					int len = is.read(buffer);
-					line.write(buffer, 0, len);
+					try {
+						setAllButtonsDisabled(true);
+						AudioInputStream is = AudioSystem.getAudioInputStream(file);
+						AudioFormat format = is.getFormat();
+						SourceDataLine line = AudioSystem.getSourceDataLine(format);
+						line.open(format);
+						line.start();
+						while (is.available() > 0) {
+							int len = is.read(buffer);
+							line.write(buffer, 0, len);
+						}
+						line.drain(); //**[DEIT]** wait for the buffer to empty before closing the line
+						line.close();
+						setAllButtonsDisabled(false);
+						System.out.println("i hate tyger");
+						return;
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
-				line.drain(); //**[DEIT]** wait for the buffer to empty before closing the line
-				line.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}			
-		setAllButtonsDisabled(false);
+
+			}.start();		
 
 
+		}
 	}
 
 	// Plays the files in the given list one at a time
