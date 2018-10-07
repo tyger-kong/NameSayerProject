@@ -15,14 +15,15 @@ public class HelpMenu {
 	@FXML
 	private Button mainMenuBtn;
 
-	
-	// Loads the webview with html file 
-	@FXML
-	private void initialize() {
-		WebEngine engine = instructionsWebView.getEngine();
-		File file = new File("src/instructions.html");
-		engine.load(file.toURI().toString());
-	}
+
+//	// Loads the webview with html file
+//	@FXML
+//	private void initialize() {
+//		WebEngine engine = instructionsWebView.getEngine();
+//		String fileloc = "/src/instructions.html";
+//		String fullLink = getClass().getResource(fileloc).toExternalForm();
+//		engine.load(fullLink);
+//	}
 
 	
 	// Goes back to main menu
