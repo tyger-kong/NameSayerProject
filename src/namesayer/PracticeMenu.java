@@ -198,7 +198,6 @@ public class PracticeMenu implements Initializable {
 
 	// Plays the selected recording
 	public void handlePlayArc(ActionEvent actionEvent) {
-		setAllButtonsDisabled(true);
 		if (selectedArchive == null) {
 			noFileAlert();
 		} else {
