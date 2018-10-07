@@ -24,7 +24,7 @@ public class MainMenu implements Initializable {
     @FXML
     private Button namesBtn;
     @FXML
-    private Button settingsBtn;
+    private Button helpBtn;
     @FXML
     private Button quitBtn;
 
@@ -100,7 +100,15 @@ public class MainMenu implements Initializable {
     }
     
     
-    public void settingsBtnClicked(ActionEvent actionEvent) {
+    public void helpBtnClicked(ActionEvent actionEvent) {
+    	try {
+            mainMenuRoot = helpBtn.getScene().getRoot();
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("HelpMenu.fxml"));
+            Parent root = fxmlLoader.load();
+            helpBtn.getScene().setRoot(root);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     	
     }
 
