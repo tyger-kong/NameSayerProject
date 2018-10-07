@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="169.0" prefWidth="362.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="namesayer.MicTest">
+   <children>
+      <Label text="Microphone Level">
+         <VBox.margin>
+            <Insets top="50.0" />
+         </VBox.margin>
+         <font>
+            <Font size="21.0" />
+         </font>
+      </Label>
+      <ProgressBar fx:id="micBar" prefHeight="18.0" prefWidth="320.0" progress="0.0">
+         <VBox.margin>
+            <Insets left="5.0" top="10.0" />
+         </VBox.margin>
+      </ProgressBar>
+   </children>
+</VBox>
