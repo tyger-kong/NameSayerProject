@@ -357,8 +357,7 @@ public class NameSelectionMenu implements Initializable {
 
 	// Exports the list of selected names to a .txt file
 	public void handleExportButton(ActionEvent actionEvent) {
-		if(!listOfUserInput.isEmpty()) { // Checks if the selection is empty or not
-
+		if (!namesObsListManual.isEmpty()) {
 			// Creates folder if it doesn't already exist
 			File savedFileFolder = new File("Saved Lists");
 			if (!savedFileFolder.exists()) {
@@ -378,7 +377,11 @@ public class NameSelectionMenu implements Initializable {
 			// For every name the user inputed, Write to .txt
 			try {
 				FileWriter fw = new FileWriter(fileName, true);
-				for (String name : listOfUserInput) {
+				for (String[] nameArr : namesObsListManual) {
+					String name = "";
+					for (String n : nameArr) {
+						name += n;
+					}
 					fw.write(name + "\n");
 				}
 				fw.close();
