@@ -95,7 +95,7 @@ public class NameSelectionMenu implements Initializable {
 				if (k.getCode().equals(KeyCode.ENTER)) {
 					addNameBtnClicked();
 				}
-				if (k.getCode().equals(KeyCode.BACK_SPACE) && (nameInputField.getText() != null || !nameInputField.getText().isEmpty() || !nameInputField.getText().trim().equals(""))) {
+				if (k.getCode().equals(KeyCode.BACK_SPACE) && (nameInputField.getText() != null) && !nameInputField.getText().isEmpty()) {
 					nameInputField.setText(nameInputField.getText().substring(0, nameInputField.getText().length() - 1));
 					nameInputField.positionCaret(nameInputField.getText().length());
 				}
