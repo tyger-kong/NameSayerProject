@@ -247,7 +247,7 @@ public class NameSelectionMenu implements Initializable {
 
 			try { // Loads practice menu
 				nameSelectionMenuRoot = practiceButton.getScene().getRoot();
-				FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../fxml/PracticeMenu.fxml"));
+				FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("PracticeMenu.fxml"));
 				Parent root = fxmlLoader.load();
 				namesSelectedListView.getScene().setRoot(root);
 			} catch (IOException e) {
