@@ -21,6 +21,7 @@ import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import javax.naming.Name;
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -30,12 +31,13 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.TargetDataLine;
 
-
 public class PracticeMenu implements Initializable {
 
 	private String selectedName;
 
 	private int selectedIndex = 0;
+	private Random r = new Random();
+
 
 	private ObservableList<String> listToDisplay;
 
@@ -90,28 +92,30 @@ public class PracticeMenu implements Initializable {
 
 	private File creations = new File("./Creations");
 
-	private String currentName;
 
 	private List<String> attemptDatabase;
 	private List<String> listOfAttempts = new ArrayList<String>();
+	private List<String> listOfJustNames;
 
 	private boolean closePractice = false;
 
 	private SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-HHmmss");
 	private Date date;
 	private List<File> namesToPlay;
+	private List<List> listOfAudioCreated;
 
 	private boolean btnIsRecord;
 	
 	private JavaSoundRecorder recorder = new JavaSoundRecorder();
+
+	private int numberToPractice;
 
 
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		btnIsRecord = true;
-		namesDatabase = MainMenu.getAddedNames();
-		namesToPractice = NameSelectionMenu.getNamesObList();
+		initialiseDatabases();
 		listToDisplay = FXCollections.observableArrayList();
 		getlistToDisplay();
 		if(NameSelectionMenu.isShuffleSelected()){
@@ -167,8 +171,7 @@ public class PracticeMenu implements Initializable {
 
 	public void handlePrevButton(ActionEvent actionEvent) {
 		if (selectedIndex == 0) {
-			//            displayListView.scrollTo(selectedIndex);
-			//            displayListView.getSelectionModel().selectFirst();
+
 		} else {
 			selectedIndex--;
 			makeNewAudio();
@@ -184,8 +187,7 @@ public class PracticeMenu implements Initializable {
 
 	public void handleNextButton(ActionEvent actionEvent) {
 		if (selectedIndex == listToDisplay.size() - 1) {
-			//            displayListView.scrollTo(selectedIndex);
-			//            displayListView.getSelectionModel().selectLast();
+
 		} else {
 			selectedIndex++;
 			makeNewAudio();
@@ -201,7 +203,7 @@ public class PracticeMenu implements Initializable {
 
 
 	public void handlePlayButton(ActionEvent actionEvent) {
-		playAudio();
+		playAudio(listOfAudioCreated.get(selectedIndex));
 	}
 
 
@@ -214,21 +216,22 @@ public class PracticeMenu implements Initializable {
 		if (selectedArchive == null) {
 			noFileAlert();
 		} else {
-			toPlay = currentName;
+			toPlay = selectedName;
 			String fileToPlay = toPlay.substring(0, toPlay.lastIndexOf("_")+1) + selectedArchive;
 			//playAudio("Creations/" + fileToPlay + ".wav");
 		}
+
 	}
 
 
-	private void playAudio() {
+	private void playAudio(List<File> toPlay) {
 		new Thread() {
 			@Override
 			public void run() {
 				try {
 					byte[] buffer = new byte[4096];
 					setAllButtonsDisabled(true);
-					for (File file : namesToPlay) {
+					for (File file : toPlay) {
 						try {
 							AudioInputStream is = AudioSystem.getAudioInputStream(file);
 							AudioFormat format = is.getFormat();
@@ -246,43 +249,9 @@ public class PracticeMenu implements Initializable {
 						}
 					}
 					setAllButtonsDisabled(false);
-					//                    AudioInputStream stream = AudioSystem.getAudioInputStream(new File(fileToPlay));
-					//                    AudioFormat format = stream.getFormat();
-					//                    DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
-					//                    SourceDataLine sourceLine = (SourceDataLine) AudioSystem.getLine(info);
-					//                    sourceLine.open(format);
-					//                    sourceLine.start();
-					//
-					//                    // Disable buttons while audio file plays
-					//                    long frames = stream.getFrameLength();
-					//                    long durationInSeconds = (frames / (long)format.getFrameRate());
-					//                    setAllButtonsDisabled(true);
-					//                    PauseTransition pause = new PauseTransition(Duration.seconds(durationInSeconds));
-					//                    pause.setOnFinished(event -> {
-					//                        setAllButtonsDisabled(false);
-					//                        Thread.currentThread().interrupt();
-					//                    });
-					//                    pause.play();
-					//
-					//                    int nBytesRead = 0;
-					//                    int BUFFER_SIZE = 128000;
-					//                    byte[] abData = new byte[BUFFER_SIZE];
-					//                    while (nBytesRead != -1) {
-					//                        try {
-					//                            nBytesRead = stream.read(abData, 0, abData.length);
-					//                        } catch (IOException e) {
-					//                            e.printStackTrace();
-					//                        }
-					//                        if (nBytesRead >= 0) {
-					//                            @SuppressWarnings("unused")
-					//                            int nBytesWritten = sourceLine.write(abData, 0, nBytesRead);
-					//                        }
-					//                    }
-					//                    sourceLine.drain();
-					//                    sourceLine.close();
+
 				} catch (Exception e) {
-					//                    System.out.println("FAILED TO PLAY FILE");
-					//                    e.printStackTrace();
+
 				}
 			}
 		}.start();
@@ -293,7 +262,7 @@ public class PracticeMenu implements Initializable {
 		if (selectedArchive == null) {
 			noFileAlert();
 		} else {
-			toPlay = currentName;
+			toPlay = selectedName;
 			String fileToDelete = toPlay.substring(0, toPlay.lastIndexOf("_")+1) + selectedArchive;
 			String fileString = "Creations/" + fileToDelete + ".wav";
 			File toDelete = new File(fileString);
@@ -328,48 +297,10 @@ public class PracticeMenu implements Initializable {
 	public void handleRecordAction(ActionEvent actionEvent) {
 		date = new Date();
 		String currentTime = formatter.format(date);
-		String recordingName = currentName + " " + currentTime;
+		String recordingName = selectedName + "_" + currentTime;
 		setAllButtonsDisabled(true);
 		recordButton.setDisable(false);
 		if (btnIsRecord) {
-			
-			//        String recordCommand = "ffmpeg -f alsa -ac 1 -ar 44100 -i default -t 5 \"" + recordingName + "\".wav";
-			//        ProcessBuilder recordAudio = new ProcessBuilder("/bin/bash", "-c", recordCommand);
-			//        recordAudio.directory(creations);
-			//
-			//        try{
-			//            recordAudio.start();
-			//        } catch (IOException e){
-			//            e.printStackTrace();
-			//        }
-			//
-			//        setAllButtonsDisabled(true);
-			//        // Time 5 seconds and set progress bar accordingly
-			//        new Thread() {
-			//            @Override
-			//            public void run() {
-			//                long startTime = System.currentTimeMillis();
-			//                recordButton.setDisable(true);
-			//                while (System.currentTimeMillis() < (startTime + 5000)) {
-			//                    double recordingProgress = (System.currentTimeMillis() - startTime) / 5000.0;
-			//                    recordingIndicator.setProgress(recordingProgress);
-			//                }
-			//                recordButton.setDisable(false);
-			//                setAllButtonsDisabled(false);
-			//                return;
-			//            }
-			//        }.start();
-
-
-			//        new java.util.Timer().schedule(
-			//                new java.util.TimerTask() {
-			//                    @Override
-			//                    public void run() {
-			//                        recordingIndicator.setProgress(0);
-			//                    }
-			//                },
-			//                5000
-			//        );
 
 			System.out.println("JUST ABOUT TO RECORD");
 			startRecording(recordingName);
@@ -406,6 +337,7 @@ public class PracticeMenu implements Initializable {
 		
 		// ********************************************************************************
 		// MIGHT NEED TO RETURN FROM THIS THREAD SOME HOW
+
 	}
 
 
@@ -442,16 +374,10 @@ public class PracticeMenu implements Initializable {
 
 
 	public void newNameSelected() {
-		getCurrentName();
-		initialiseAttemptDatabase();
+
 		fillAttemptList();
 		updateArchive();
 		selectedArchive = null;
-	}
-
-
-	public void getCurrentName() {
-		currentName = selectedName;
 	}
 
 
@@ -462,9 +388,9 @@ public class PracticeMenu implements Initializable {
 
 	public void fillAttemptList() {
 		for (String s : attemptDatabase) {
-			if (s.lastIndexOf(" ") != -1) {
-				String nameMatch = s.substring(0, s.lastIndexOf(" ")-1);
-				if (currentName.equals(nameMatch)) {
+			if (s.lastIndexOf("_") != -1) {
+				String nameMatch = s.substring(0, s.lastIndexOf("_")-1);
+				if (selectedName.equals(nameMatch)) {
 					String toAddToList = s.substring(0, s.lastIndexOf("."));
 					if (!listOfAttempts.contains(toAddToList)) {
 						listOfAttempts.add(toAddToList);
@@ -519,15 +445,30 @@ public class PracticeMenu implements Initializable {
 	
 	
 	public void makeNewAudio(){
-
-		String[] nameArray = namesToPractice.get(selectedIndex);
-		namesToPlay = new ArrayList<>();
-		for(String s : nameArray){
-			for(NameFile namefile : namesDatabase){
-				if(namefile.toString().equals(s)){
-					namesToPlay.add(new File("names/"+namefile.getFileName()));
+		if(listOfAudioCreated.get(selectedIndex) == null) {
+			String[] nameArray = namesToPractice.get(selectedIndex);
+			namesToPlay = new ArrayList<>();
+			for(String s : nameArray){
+				if(Collections.frequency(MainMenu.getListOfJustNames(), s) > 1) {
+					List<File> duplicates = new ArrayList<>();
+					for (NameFile namefile : namesDatabase) {
+						if (namefile.getName().equals(s)) {
+							duplicates.add(new File("names/" + namefile.getFileName()));
+						}
+					}
+					int index = r.nextInt(duplicates.size());
+					System.out.println(index);
+					System.out.println("Size"+duplicates.size());
+					namesToPlay.add(duplicates.get(index));
+				} else {
+					for (NameFile namefile : namesDatabase) {
+						if (namefile.toString().equals(s)) {
+							namesToPlay.add(new File("names/" + namefile.getFileName()));
+						}
+					}
 				}
 			}
+			listOfAudioCreated.set(selectedIndex, namesToPlay);
 		}
 	}
 
@@ -537,6 +478,17 @@ public class PracticeMenu implements Initializable {
 		selectedIndex = listToDisplay.indexOf(selectedName);
 		makeNewAudio();
 		playingLabel.setText(selectedName);
+	}
+
+
+	private void initialiseDatabases(){
+		namesDatabase = MainMenu.getAddedNames();
+		listOfJustNames = MainMenu.getListOfJustNames();
+		namesToPractice = NameSelectionMenu.getNamesObList();
+		numberToPractice = namesToPractice.size();
+		listOfAudioCreated = new ArrayList<List>(Collections.nCopies(numberToPractice, null));
+
+		initialiseAttemptDatabase();
 	}
 	
 }

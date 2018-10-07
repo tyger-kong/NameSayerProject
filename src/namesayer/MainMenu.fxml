@@ -26,7 +26,7 @@
             <Font size="20.0" />
          </font>
       </Button>
-      <Button fx:id="settingsBtn" mnemonicParsing="false" onAction="#settingsBtnClicked" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #c0b283;" text="Settings" textFill="#373737">
+      <Button fx:id="helpBtn" mnemonicParsing="false" onAction="#helpBtnClicked" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #c0b283;" text="Help" textFill="#373737">
          <font>
             <Font size="20.0" />
          </font>

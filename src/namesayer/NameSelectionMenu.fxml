@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="vBoxRoot" alignment="TOP_CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="700.0" style="-fx-background-color: #373737;" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="namesayer.NameSelectionMenu">
+<VBox fx:id="vBoxRoot" alignment="TOP_CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="700.0" style="-fx-background-color: #373737;" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="namesayer.NameSelectionMenu">
    <children>
       <HBox prefHeight="37.0" prefWidth="700.0">
          <children>
@@ -51,7 +51,7 @@
                   <Insets top="5.0" />
                </HBox.margin>
             </Button>
-            <Button fx:id="deleteAllButton" mnemonicParsing="false" onAction="#handleDeleteAll" prefWidth="70.0" style="-fx-background-color: #c0b283;" text="Delete All">
+            <Button fx:id="deleteAllButton" maxWidth="70.0" minWidth="70.0" mnemonicParsing="false" onAction="#handleDeleteAll" prefWidth="70.0" style="-fx-background-color: #c0b283;" text="Delete All">
                <HBox.margin>
                   <Insets left="25.0" top="5.0" />
                </HBox.margin>
@@ -59,6 +59,7 @@
             <Pane prefHeight="200.0" prefWidth="200.0">
                <children>
                   <RadioButton fx:id="shuffleButton" layoutX="116.0" layoutY="2.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="70.0" style="-fx-text-fill: #c0b283;" text="Shuffle" />
+                  <Button fx:id="exportButton" layoutX="48.0" layoutY="2.0" maxWidth="50.0" minWidth="50.0" mnemonicParsing="false" onAction="#handleExportButton" prefWidth="50.0" text="Export" />
                </children>
             </Pane>
             <Pane nodeOrientation="RIGHT_TO_LEFT" prefHeight="200.0" prefWidth="200.0">
