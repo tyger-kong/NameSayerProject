@@ -21,13 +21,12 @@
 ----------------------------
 	1. Choose either to import from an existing .txt file or manually input the names.
   
-    * .txt File: 
-        1.Browse to the .txt file and open using the button
-    * Manual Input
-        1.Enter the names you want to practice
-        2.You may wish to export the manual list as a .txt. This will be saved in the Saved List folder
+	.txt File: 
+        	1.Browse to the .txt file and open using the button
+	Manual Input:
+        	1.Enter the names you want to practice
+        	2.You may wish to export the manual list as a .txt. This will be saved in the Saved List folder
 
-	
 	2. Remove names from the selection using the delete buttons
 	
 	3. You can randomise the names by selecting Shuffle at the bottom of the screen.
