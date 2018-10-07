@@ -78,7 +78,7 @@ public class MainMenu implements Initializable {
 	public void practiceBtnClicked(ActionEvent actionEvent) {
 		try {
 			mainMenuRoot = practiceBtn.getScene().getRoot();
-			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("NameSelectionMenu.fxml"));
+			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../fxml/NameSelectionMenu.fxml"));
 			Parent root = fxmlLoader.load();
 			practiceBtn.getScene().setRoot(root);
 		} catch (IOException e) {
@@ -90,7 +90,7 @@ public class MainMenu implements Initializable {
 	public void namesBtnClicked(ActionEvent actionEvent) {
 		try {
 			mainMenuRoot = practiceBtn.getScene().getRoot();
-			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("DatabaseMenu.fxml"));
+			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../fxml/DatabaseMenu.fxml"));
 			Parent root = fxmlLoader.load();
 			practiceBtn.getScene().setRoot(root);
 		} catch (IOException e) {
@@ -102,7 +102,7 @@ public class MainMenu implements Initializable {
 	public void helpBtnClicked(ActionEvent actionEvent) {
 		try {
 			mainMenuRoot = helpBtn.getScene().getRoot();
-			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("HelpMenu.fxml"));
+			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../fxml/HelpMenu.fxml"));
 			Parent root = fxmlLoader.load();
 			helpBtn.getScene().setRoot(root);
 		} catch (IOException e) {
@@ -126,8 +126,6 @@ public class MainMenu implements Initializable {
 	public static List<NameFile> getAddedNames() {
 		return namesListArray;
 	}
-
-
 
 
 	public static List<String> getAddedList() {
