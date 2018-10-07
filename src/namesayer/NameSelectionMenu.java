@@ -355,7 +355,7 @@ public class NameSelectionMenu implements Initializable {
 
 
 	public void handleExportButton(ActionEvent actionEvent) {
-		if(!listOfUserInput.isEmpty()) {
+		if (!namesObsListManual.isEmpty()) {
 			File savedFileFolder = new File("Saved Lists");
 			if (!savedFileFolder.exists()) {
 				savedFileFolder.mkdirs();
@@ -371,7 +371,11 @@ public class NameSelectionMenu implements Initializable {
 
 			try {
 				FileWriter fw = new FileWriter(fileName, true);
-				for (String name : listOfUserInput) {
+				for (String[] nameArr : namesObsListManual) {
+					String name = "";
+					for (String n : nameArr) {
+						name += n;
+					}
 					fw.write(name + "\n");
 				}
 				fw.close();
