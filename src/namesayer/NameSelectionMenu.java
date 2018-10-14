@@ -85,6 +85,7 @@ public class NameSelectionMenu implements Initializable {
 		inputMethodChoice.setItems(rateList);
 		inputMethodChoice.setValue("Browse for text file");
 		exportButton.setDisable(true);
+		selectedManual = false;
 
 		nameInputField = new AutoCompleteTextField();
 
