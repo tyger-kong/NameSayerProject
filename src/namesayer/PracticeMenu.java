@@ -414,6 +414,7 @@ public class PracticeMenu implements Initializable {
 
 	// Fill the recording list with corresponding recordings
 	public void newNameSelected() {
+		initialiseAttemptDatabase();
 		fillAttemptList();
 		updateArchive();
 		selectedArchive = null;
