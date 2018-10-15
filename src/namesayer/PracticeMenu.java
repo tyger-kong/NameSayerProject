@@ -117,6 +117,8 @@ public class PracticeMenu implements Initializable {
     private int numberOfRecords;
     private int numberOfRecordsTimes;
     private String recordingName;
+    private List<String> recordingNameList;
+
 
 
     @Override
@@ -333,7 +335,7 @@ public class PracticeMenu implements Initializable {
         if (btnIsRecord) {
             date = new Date();
             String currentTime = formatter.format(date);
-            recordingName = selectedName + "_" + currentTime;
+            recordingName = recordingNameList.get(selectedIndex) + "_" + currentTime;
 
             setAllButtonsDisabled(true);
             recordButton.setDisable(false);
@@ -433,7 +435,7 @@ public class PracticeMenu implements Initializable {
         for (String s : attemptDatabase) {
             if (s.lastIndexOf("_") != -1) {
                 String nameMatch = s.substring(0, s.lastIndexOf("_"));
-                if (selectedName.equals(nameMatch.toLowerCase())) {
+                if (selectedName.toLowerCase().equals(nameMatch.toLowerCase())) {
                     String toAddToList = s.substring(0, s.lastIndexOf("."));
                     if (!listOfAttempts.contains(toAddToList)) {
                         listOfAttempts.add(toAddToList);
@@ -496,30 +498,19 @@ public class PracticeMenu implements Initializable {
     // Creates a new list that has the file names of the names that needs to be concatenated
     public void makeNewAudio() {
         if (listOfAudioCreated.get(selectedIndex) == null) { // Checks if the selected name already has a list
+            String tempName = "";
             String[] nameArray = namesToPractice.get(selectedIndex);
             namesToPlay = new ArrayList<>();
             for (String s : nameArray) { // Goes through every name in the String array
-//				if(Collections.frequency(MainMenu.getListOfJustNames(), s) > 1) { // Checks if there are more than one of the same name
-//					// Adds all of the files to a temp list and randomly chooses a file from that list
-//					List<File> duplicates = new ArrayList<>();
-//					for (NameFile namefile : namesDatabase) { // Goes through each name in the database to find corresponding name
-//						if (namefile.getName().equals(s)) {
-//							duplicates.add(new File("names/" + namefile.getFileName()));
-//						}
-//					}
-//					int index = r.nextInt(duplicates.size());
-//					System.out.println(index);
-//					System.out.println("Size"+duplicates.size());
-//					namesToPlay.add(duplicates.get(index));
-//				} else {
                 for (NameFile namefile : namesDatabase) {
                     if (namefile.toString().toLowerCase().equals(s.toLowerCase())) {
                         namesToPlay.add(new File("names/" + namefile.getFileName()));
+                        tempName = tempName + " " +namefile.toString();
                     }
                 }
-//				}
             }
             listOfAudioCreated.set(selectedIndex, namesToPlay);
+            recordingNameList.set(selectedIndex,tempName.trim());
         }
     }
 
@@ -543,6 +534,7 @@ public class PracticeMenu implements Initializable {
         }
         numberToPractice = namesToPractice.size();
         listOfAudioCreated = new ArrayList<List>(Collections.nCopies(numberToPractice, null));
+        recordingNameList = new ArrayList<String>(Collections.nCopies(numberToPractice, null));
         initialiseAttemptDatabase();
     }
 
