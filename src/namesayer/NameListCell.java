@@ -1,6 +1,7 @@
 package namesayer;
 
 import java.io.IOException;
+import java.util.List;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,6 +15,7 @@ public class NameListCell extends ListCell<String[]> {
 	HBox cellHBox;
 
 	private FXMLLoader loader;
+	private List<NameFile> dataBase = MainMenu.getAddedNames();
 
 	@Override
 	protected void updateItem(String[] names, boolean empty) {
@@ -42,15 +44,22 @@ public class NameListCell extends ListCell<String[]> {
 
 			// Add strings to the cell and set background colours
 			for (String n : names) {
+
 				Label nameLabel = new Label(n);
 				nameLabel.setId("cellLabel");
+
 
 				// Set background color of the label appropriately
 				// Green = one occurrence, orange = more than one occurrence, red = no occurrences in database
 				if ((n != "-") && (n != " ")) {
-					if (NameChecker.checkNameDuplicates(n)) {
+//					for(NameFile name : dataBase){
+//						if(n.equals(name.toString())){
+//
+//						}
+//					}
+					if (NameChecker.checkNameDuplicates(n.toLowerCase())) {
 						nameLabel.setStyle("-fx-background-color: #ffd633;");
-					} else if (NameChecker.checkNameExists(n)) {
+					} else if (NameChecker.checkNameExists(n.toLowerCase())) {
 						nameLabel.setStyle("-fx-background-color: #34ff35;");
 						// MAYBE SHOW HOW MANY NAMES OF SAME SPELLING THERE ARE?
 					} else {

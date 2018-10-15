@@ -50,19 +50,19 @@ public class MainMenu implements Initializable {
 
 		for (String currentFile : listOfNamesInDatabase) {
 			String justName = currentFile.substring((currentFile.lastIndexOf("_") + 1), currentFile.lastIndexOf("."));
-			listOfJustNames.add(justName); // List of just the names used for AutoCompleteTextfield
+			listOfJustNames.add(justName.toLowerCase()); // List of just the names used for AutoCompleteTextfield
 			String listName = justName;
 
 			int attempt = 0;
 			// Handle duplicate names by numbering them
 			while (listOfNamesAdded.contains(listName)) {
 				attempt++;
-				listName = justName + "-" + attempt;
+				listName = justName + "(" + attempt+")";
 			}
 
 			listOfNamesAdded.add(listName); 
 
-			NameFile name = new NameFile(currentFile, listName);
+			NameFile name = new NameFile(currentFile, listName, justName.toLowerCase());
 			if (name.checkIfBadRating()) {
 				name.setBadRatingField(true);
 			}
