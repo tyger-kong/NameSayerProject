@@ -4,7 +4,11 @@ package namesayer;
 import javafx.animation.PauseTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -93,10 +97,14 @@ public class PracticeMenu implements Initializable {
     @FXML
     private Label playingLabel;
 
+    @FXML
+    private Service<Void> backgroundThread;
+
     private List<String[]> namesToPractice;
     private List<NameFile> namesDatabase;
 
-    private File creations = new File("./Creations");
+    private File creationsFile = new File("./Creations");
+    private File databaseFile = new File("./names");
 
 
     private List<String> attemptDatabase;
@@ -425,7 +433,7 @@ public class PracticeMenu implements Initializable {
 
     // Gets the files in the creations folder as a list
     public void initialiseAttemptDatabase() {
-        attemptDatabase = new ArrayList<String>(Arrays.asList(creations.list()));
+        attemptDatabase = new ArrayList<String>(Arrays.asList(creationsFile.list()));
     }
 
 
@@ -536,6 +544,48 @@ public class PracticeMenu implements Initializable {
         listOfAudioCreated = new ArrayList<List>(Collections.nCopies(numberToPractice, null));
         recordingNameList = new ArrayList<String>(Collections.nCopies(numberToPractice, null));
         initialiseAttemptDatabase();
+    }
+
+    private void processRecordings() {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("ProcessingMenu.fxml"));
+            Stage processingStage = new Stage();
+            processingStage.setTitle("NameSayer - Main Menu");
+            processingStage.setScene(new Scene(root, 700, 500));
+            processingStage.setResizable(false);
+            processingStage.show();
+        }catch (IOException e){
+        }
+
+        backgroundThread = new Service<Void>() {
+            @Override
+            protected Task<Void> createTask() {
+                return new Task<Void>() {
+                    @Override
+                    protected Void call() throws Exception {
+
+                        for (File f : namesToPlay) {
+                            String fileName = f.toString();
+                            String trimCommand = "ffmpeg -y -i \"" + fileName + "\" -af silenceremove=1:0:-50dB \""+ fileName+ "\"";
+                            ProcessBuilder trimProcess = new ProcessBuilder(trimCommand);
+                            trimProcess.directory(databaseFile);
+                            trimProcess.start();
+//    		String normaliseCommand =
+                        }
+
+                        return null;
+                    }
+                };
+            }
+        };
+
+        backgroundThread.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+            @Override
+            public void handle(WorkerStateEvent event) {
+
+            }
+        });
+
     }
 
 }
