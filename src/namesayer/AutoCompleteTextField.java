@@ -48,6 +48,8 @@ public class AutoCompleteTextField extends TextField {
 					} else {
 						txt = getText();
 					}
+					
+					txt = txt.toLowerCase();
 
 					if (txt.length() == 0) {
 						entriesPopup.hide();
@@ -95,7 +97,7 @@ public class AutoCompleteTextField extends TextField {
 		int maxEntries = 15;
 		int count = Math.min(searchResult.size(), maxEntries);
 		for (int i = 0; i < count; i++) {
-			final String result = searchResult.get(i);
+			final String result = searchResult.get(i).toLowerCase();
 			Label entryLabel = new Label(result);
 			CustomMenuItem item = new CustomMenuItem(entryLabel, true);
 

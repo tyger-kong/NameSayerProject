@@ -25,15 +25,15 @@
                     </HBox.margin></Button>
             </children>
         </HBox>
-      <VBox alignment="TOP_CENTER" maxHeight="470.0" maxWidth="700.0" minHeight="470.0" minWidth="700.0" prefHeight="470.0" prefWidth="700.0">
-         <children>
-            <Label text="Instructions:">
-               <font>
-                  <Font name="System Bold" size="20.0" />
-               </font>
-            </Label>
-            <WebView fx:id="instructionsWebView" maxHeight="400.0" maxWidth="500.0" minHeight="400.0" minWidth="500.0" prefHeight="400.0" prefWidth="500.0" />
-         </children>
-      </VBox>
+        <VBox alignment="TOP_CENTER" maxHeight="470.0" maxWidth="700.0" minHeight="470.0" minWidth="700.0" prefHeight="470.0" prefWidth="700.0">
+            <children>
+                <Label text="Instructions:">
+                    <font>
+                        <Font name="System Bold" size="20.0" />
+                    </font>
+                </Label>
+                <WebView fx:id="instructionsWebView" maxHeight="400.0" maxWidth="500.0" minHeight="400.0" minWidth="500.0" prefHeight="400.0" prefWidth="500.0" />
+            </children>
+        </VBox>
     </children>
 </VBox>

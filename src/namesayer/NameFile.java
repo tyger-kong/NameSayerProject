@@ -20,11 +20,13 @@ public class NameFile {
     private boolean _rating = false;
     private List<String> attemptList = new ArrayList<String>();
     private List<String> attemptListNameOnly = new ArrayList<String>();
+    private SimpleStringProperty _justName;
 
 
-    public NameFile(String fileName, String listName) {
+    public NameFile(String fileName, String listName, String justName) {
         _fileName= new SimpleStringProperty(fileName);
         _listName = new SimpleStringProperty(listName);
+        _justName = new SimpleStringProperty(justName);
     }
 
 
@@ -156,5 +158,8 @@ public class NameFile {
         attemptListNameOnly.remove(nameInListNameOnly);
     }
 
+    public String getJustName(){
+        return _justName.get();
+    }
 
 }

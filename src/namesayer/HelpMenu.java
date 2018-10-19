@@ -1,6 +1,8 @@
 package namesayer;
 
 import java.io.File;
+import java.net.URISyntaxException;
+import java.net.URL;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -15,13 +17,17 @@ public class HelpMenu {
 	@FXML
 	private Button mainMenuBtn;
 
-	
-	// Loads the webview with html file 
+
+	// Loads the webview with html file
 	@FXML
 	private void initialize() {
+
 		WebEngine engine = instructionsWebView.getEngine();
-		File file = new File("src/instructions.html");
-		engine.load(file.toURI().toString());
+		try {
+            String s = getClass().getResource("/namesayer/instructions.html").toURI().toString();
+            engine.load(s);
+        } catch (URISyntaxException e){
+        }
 	}
 
 	

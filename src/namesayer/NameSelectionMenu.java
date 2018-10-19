@@ -85,6 +85,7 @@ public class NameSelectionMenu implements Initializable {
 		inputMethodChoice.setItems(rateList);
 		inputMethodChoice.setValue("Browse for text file");
 		exportButton.setDisable(true);
+		selectedManual = false;
 
 		nameInputField = new AutoCompleteTextField();
 
@@ -103,7 +104,8 @@ public class NameSelectionMenu implements Initializable {
 
 		});
 
-		nameInputField.getEntries().addAll(MainMenu.getListOfJustNames());
+		nameInputField.getEntries().addAll(MainMenu.getAddedList());
+		
 		String prompt = (fileChosen != null) ? fileChosen : "Browse for a text file by clicking the button -->";
 		nameInputField.setPromptText(prompt);
 		nameInputField.setDisable(true);
@@ -167,8 +169,8 @@ public class NameSelectionMenu implements Initializable {
 					String[] inputArray = NameChecker.nameAsArray(userInput);
 
 					boolean isInList = false;
-					for (String[] s : namesObsListManual) { // Checks if the input has already been entered
-						if (Arrays.equals(s, inputArray)) {
+					for (String s : listOfUserInput) { // Checks if the input has already been entered
+						if (userInput.toLowerCase().equals(s.toLowerCase())) {
 							Alert alreadyExistsAlert = new Alert(Alert.AlertType.INFORMATION);
 							alreadyExistsAlert.setTitle("ERROR - Name Already in List");
 							alreadyExistsAlert.setHeaderText(null);
