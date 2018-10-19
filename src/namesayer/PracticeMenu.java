@@ -106,7 +106,7 @@ public class PracticeMenu implements Initializable {
     private List<NameFile> namesDatabase;
 
     private File creationsFile = new File("./Creations");
-    private File databaseFile = new File("./names");
+
 
 
     private List<String> attemptDatabase;
@@ -122,10 +122,6 @@ public class PracticeMenu implements Initializable {
     private JavaSoundRecorder recorder = new JavaSoundRecorder();
 
     private int numberToPractice;
-    private int numberOfListens;
-    private int numberOfListenTimes;
-    private int numberOfRecords;
-    private int numberOfRecordsTimes;
     private String recordingName;
     private List<String> recordingNameList;
 
@@ -133,10 +129,6 @@ public class PracticeMenu implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         recordingIndicator.setProgress(0);
-        numberOfListens = 0;
-        numberOfRecords = 0;
-        numberOfListenTimes = 1;
-        numberOfRecordsTimes = 1;
         btnIsRecord = true;
         initialiseDatabases(); // Initialises the database lists
         listToDisplay = FXCollections.observableArrayList();
@@ -187,18 +179,8 @@ public class PracticeMenu implements Initializable {
 
     // Plays the names in the list of the selectedName
     public void handlePlayButton(ActionEvent actionEvent) {
-        numberOfListens++;
         playAudio(listOfAudioCreated.get(selectedIndex));
-        if (numberOfListens >= 5) {
-            numberOfListens = 0;
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("CONGRATULATIONS");
-            alert.setHeaderText(null);
-            alert.setContentText("You have listened: " + numberOfListenTimes * 5 + " times!!!");
-            alert.showAndWait();
-            numberOfListenTimes++;
 
-        }
     }
 
 
@@ -355,7 +337,7 @@ public class PracticeMenu implements Initializable {
             System.out.println("JUST STARTED RECORDING");
             recordButton.setText("STOP");
             btnIsRecord = false;
-            numberOfRecords++;
+
 
         } else {
             System.out.println("RYAN LIM IS COOL");
