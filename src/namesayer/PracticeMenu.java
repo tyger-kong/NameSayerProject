@@ -23,6 +23,7 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 import java.io.File;
@@ -131,6 +132,7 @@ public class PracticeMenu implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        recordingIndicator.setProgress(0);
         numberOfListens = 0;
         numberOfRecords = 0;
         numberOfListenTimes = 1;
@@ -348,6 +350,7 @@ public class PracticeMenu implements Initializable {
             setAllButtonsDisabled(true);
             recordButton.setDisable(false);
             System.out.println("JUST ABOUT TO RECORD");
+            recordingIndicator.setProgress(ProgressBar.INDETERMINATE_PROGRESS);
             startRecording(recordingName);
             System.out.println("JUST STARTED RECORDING");
             recordButton.setText("STOP");
@@ -356,6 +359,7 @@ public class PracticeMenu implements Initializable {
 
         } else {
             System.out.println("RYAN LIM IS COOL");
+            recordingIndicator.setProgress(0);
             finishRecording();
             listOfAttempts.add(recordingName);
             updateArchive();
@@ -364,16 +368,6 @@ public class PracticeMenu implements Initializable {
             btnIsRecord = true;
         }
 
-        if (numberOfRecords >= 5) {
-            numberOfRecords = 0;
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("CONGRATULATIONS");
-            alert.setHeaderText(null);
-            alert.setContentText("You have practiced: " + numberOfRecordsTimes * 5 + " times!!!");
-            alert.showAndWait();
-            numberOfRecordsTimes++;
-
-        }
     }
 
 
@@ -548,59 +542,56 @@ public class PracticeMenu implements Initializable {
     }
 
     private void processRecordings() {
-//        try {
-//            Parent root = FXMLLoader.load(getClass().getResource("ProcessingMenu.fxml"));
-//            Stage processingStage = new Stage();
-//            processingStage.setTitle("NameSayer - Main Menu");
-//            processingStage.setScene(new Scene(root, 700, 500));
-//            processingStage.setResizable(false);
-//            processingStage.show();
-//        }catch (IOException e){
-//        }
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("ProcessingMenu.fxml"));
+            Stage processingStage = new Stage();
+            processingStage.setTitle("Working Hard");
+            processingStage.setScene(new Scene(root, 200, 50));
+            processingStage.setResizable(false);
+            processingStage.initStyle(StageStyle.UNDECORATED);
+            processingStage.show();
 
-//        backgroundThread = new Service<Void>() {
-//            @Override
-//            protected Task<Void> createTask() {
-//                return new Task<Void>() {
-//                    @Override
-//                    protected Void call() throws Exception {
 
-        for (File f : namesToPlay) {
-            String fileName = f.toString();
-            String trimCommand = "ffmpeg -y "+fileName+" -af silenceremove=1:0:-50dB "+fileName;
-            ProcessBuilder trimProcess = new ProcessBuilder("/bin/bash", "-c",trimCommand);
+            backgroundThread = new Service<Void>() {
+                @Override
+                protected Task<Void> createTask() {
+                    return new Task<Void>() {
+                        @Override
+                        protected Void call() throws Exception {
 
-            try {
-                Process trim = trimProcess.start();
-                trim.waitFor();
-                InputStream error = trim.getErrorStream();
-                for(int i = 0; i < error.available(); i++ ){
-                    System.out.println(error.read());
+                            for (File f : namesToPlay) {
+                                String fileName = f.toString();
+                                String trimCommand = "ffmpeg -y -i " + fileName + " -af silenceremove=1:0:-50dB " + fileName; // names/se206................wav
+                                ProcessBuilder trimProcess = new ProcessBuilder("/bin/bash", "-c", trimCommand);
+
+                                try {
+                                    Process trim = trimProcess.start();
+                                    trim.waitFor();
+
+                                } catch (IOException e) {
+                                    System.out.println("trim error");
+
+                                } catch (InterruptedException e) {
+                                    System.out.println("waiterror");
+                                }
+                            }
+
+                            return null;
+                        }
+                    };
                 }
-            } catch (IOException e) {
-                System.out.println("trim error");
+            };
 
-            } catch(InterruptedException e){
-                System.out.println("waiterror");
-            }
+            backgroundThread.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+                @Override
+                public void handle(WorkerStateEvent event) {
+                    processingStage.close();
+                }
+            });
+
+            backgroundThread.start();
+        } catch (IOException e) {
         }
-////    		String normaliseCommand =
-//                        }
-//
-//                        return null;
-//                    }
-//                };
-//            }
-//        };
-
-//        backgroundThread.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-//            @Override
-//            public void handle(WorkerStateEvent event) {
-//
-//            }
-//        });
-//
-//        backgroundThread.start();
 
     }
 
