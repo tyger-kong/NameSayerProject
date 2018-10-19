@@ -27,6 +27,7 @@ import javafx.util.Duration;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
@@ -126,7 +127,6 @@ public class PracticeMenu implements Initializable {
     private int numberOfRecordsTimes;
     private String recordingName;
     private List<String> recordingNameList;
-
 
 
     @Override
@@ -513,12 +513,13 @@ public class PracticeMenu implements Initializable {
                 for (NameFile namefile : namesDatabase) {
                     if (namefile.toString().toLowerCase().equals(s.toLowerCase())) {
                         namesToPlay.add(new File("names/" + namefile.getFileName()));
-                        tempName = tempName + " " +namefile.toString();
+                        tempName = tempName + " " + namefile.toString();
                     }
                 }
             }
             listOfAudioCreated.set(selectedIndex, namesToPlay);
-            recordingNameList.set(selectedIndex,tempName.trim());
+            recordingNameList.set(selectedIndex, tempName.trim());
+            processRecordings();
         }
     }
 
@@ -547,44 +548,59 @@ public class PracticeMenu implements Initializable {
     }
 
     private void processRecordings() {
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource("ProcessingMenu.fxml"));
-            Stage processingStage = new Stage();
-            processingStage.setTitle("NameSayer - Main Menu");
-            processingStage.setScene(new Scene(root, 700, 500));
-            processingStage.setResizable(false);
-            processingStage.show();
-        }catch (IOException e){
+//        try {
+//            Parent root = FXMLLoader.load(getClass().getResource("ProcessingMenu.fxml"));
+//            Stage processingStage = new Stage();
+//            processingStage.setTitle("NameSayer - Main Menu");
+//            processingStage.setScene(new Scene(root, 700, 500));
+//            processingStage.setResizable(false);
+//            processingStage.show();
+//        }catch (IOException e){
+//        }
+
+//        backgroundThread = new Service<Void>() {
+//            @Override
+//            protected Task<Void> createTask() {
+//                return new Task<Void>() {
+//                    @Override
+//                    protected Void call() throws Exception {
+
+        for (File f : namesToPlay) {
+            String fileName = f.toString();
+            String trimCommand = "ffmpeg -y "+fileName+" -af silenceremove=1:0:-50dB "+fileName;
+            ProcessBuilder trimProcess = new ProcessBuilder("/bin/bash", "-c",trimCommand);
+
+            try {
+                Process trim = trimProcess.start();
+                trim.waitFor();
+                InputStream error = trim.getErrorStream();
+                for(int i = 0; i < error.available(); i++ ){
+                    System.out.println(error.read());
+                }
+            } catch (IOException e) {
+                System.out.println("trim error");
+
+            } catch(InterruptedException e){
+                System.out.println("waiterror");
+            }
         }
+////    		String normaliseCommand =
+//                        }
+//
+//                        return null;
+//                    }
+//                };
+//            }
+//        };
 
-        backgroundThread = new Service<Void>() {
-            @Override
-            protected Task<Void> createTask() {
-                return new Task<Void>() {
-                    @Override
-                    protected Void call() throws Exception {
-
-                        for (File f : namesToPlay) {
-                            String fileName = f.toString();
-                            String trimCommand = "ffmpeg -y -i \"" + fileName + "\" -af silenceremove=1:0:-50dB \""+ fileName+ "\"";
-                            ProcessBuilder trimProcess = new ProcessBuilder(trimCommand);
-                            trimProcess.directory(databaseFile);
-                            trimProcess.start();
-//    		String normaliseCommand =
-                        }
-
-                        return null;
-                    }
-                };
-            }
-        };
-
-        backgroundThread.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-            @Override
-            public void handle(WorkerStateEvent event) {
-
-            }
-        });
+//        backgroundThread.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+//            @Override
+//            public void handle(WorkerStateEvent event) {
+//
+//            }
+//        });
+//
+//        backgroundThread.start();
 
     }
 
