@@ -320,9 +320,10 @@ public class NameSelectionMenu implements Initializable {
 			nameInputField.clear();
 			nameInputField.setPromptText("Enter a name");
 			nameInputField.setDisable(false);
+			nameInputField.requestFocus();
 			namesSelectedListView.setItems(namesObsListManual);
 			exportButton.setDisable(false);
-
+			
 
 		} else if (inputMethodChoice.getValue().equals("Browse for text file")) {
 			justDeletedList = null;

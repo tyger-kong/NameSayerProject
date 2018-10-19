@@ -49,7 +49,6 @@ public class AutoCompleteTextField extends TextField {
 						txt = getText();
 					}
 					
-					txt = txt.toLowerCase();
 
 					if (txt.length() == 0) {
 						entriesPopup.hide();
@@ -89,7 +88,7 @@ public class AutoCompleteTextField extends TextField {
 
 
 	/**
-	 * Populate the entry set with the given search results.  Display is limited to 10 entries, for performance.
+	 * Populate the entry set with the given search results.  Display is limited to maxEntries entries, for performance.
 	 * @param searchResult The set of matching strings.
 	 */
 	private void populatePopup(List<String> searchResult) {
@@ -97,7 +96,7 @@ public class AutoCompleteTextField extends TextField {
 		int maxEntries = 15;
 		int count = Math.min(searchResult.size(), maxEntries);
 		for (int i = 0; i < count; i++) {
-			final String result = searchResult.get(i).toLowerCase();
+			final String result = searchResult.get(i);
 			Label entryLabel = new Label(result);
 			CustomMenuItem item = new CustomMenuItem(entryLabel, true);
 
