@@ -34,6 +34,7 @@ import java.util.ResourceBundle;
 public class NameSelectionMenu implements Initializable {
 
 	private static final String PRACTICE_MENU = "/namesayer/frontend/fxml/PracticeMenu.fxml";
+	private static final String SAVED_FOLDER = "src/namesayer/resources/saved_lists/";
 
 	@FXML
 	private VBox vBoxRoot;
@@ -48,7 +49,6 @@ public class NameSelectionMenu implements Initializable {
 	private Button addNameBtn;
 	@FXML
 	private ListView<String[]> namesSelectedListView;
-
 	@FXML
 	private Button deleteBtn;
 	@FXML
@@ -59,8 +59,8 @@ public class NameSelectionMenu implements Initializable {
 	private Button exportBtn;
 	@FXML
 	private Button practiceBtn;
+
 	
-	private String savedFolder = "Saved Lists/";
 
 	private static List<String> listOfNamesFromFile = new ArrayList<String>();
 	private static Parent nameSelectionMenuRoot;
@@ -95,7 +95,31 @@ public class NameSelectionMenu implements Initializable {
 
 		nameInputField = new AutoCompleteTextField();
 
-		// Handle keyboard buttons being pressed
+		List<String> popupList = new ArrayList<String>();
+		popupList.addAll(MainMenu.getAddedList());
+		popupList.replaceAll(String::toLowerCase);
+		nameInputField.getEntries().addAll(popupList);
+
+		String prompt = (fileChosen != null) ? fileChosen : "Browse for a text file by clicking the button -->";
+		nameInputField.setPromptText(prompt);
+		nameInputField.setDisable(true);
+		nameInputField.setPrefWidth(292);
+		inputPane.getChildren().add(nameInputField);
+
+		namesSelectedListView.setItems(namesObsListFile);
+		namesSelectedListView.setCellFactory(names -> new NameListCell());
+		namesSelectedListView.setMouseTransparent(false);
+		namesSelectedListView.setFocusTraversable(true);
+
+		setShortcuts();
+	}
+
+
+	/**
+	 * Set keyboard shortcuts for the user input TextField and ListView
+	 */
+	private void setShortcuts() {
+		// Handle enter and backspace keys being pressed in the user input TextField
 		nameInputField.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent k) {
@@ -110,29 +134,10 @@ public class NameSelectionMenu implements Initializable {
 
 		});
 
-		List<String> popupList = new ArrayList<String>();
-		popupList.addAll(MainMenu.getAddedList());
-		popupList.replaceAll(String::toLowerCase);
-		nameInputField.getEntries().addAll(popupList);
-
-		String prompt = (fileChosen != null) ? fileChosen : "Browse for a text file by clicking the button -->";
-		nameInputField.setPromptText(prompt);
-		nameInputField.setDisable(true);
-		nameInputField.setPrefWidth(292);
-		inputPane.getChildren().add(nameInputField);
-
-		// 
-		namesSelectedListView.setItems(namesObsListFile);
-		namesSelectedListView.setCellFactory(names -> new NameListCell());
-
-		namesSelectedListView.setMouseTransparent(false);
-		namesSelectedListView.setFocusTraversable(true);
-
 		// Shortcuts to delete and undo previous delete
 		namesSelectedListView.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			final KeyCombination delete = new KeyCodeCombination(KeyCode.D, KeyCombination.CONTROL_DOWN);
 			final KeyCombination undo = new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN);
-
 			@Override
 			public void handle(KeyEvent k) {
 				if (delete.match(k) || k.getCode().equals(KeyCode.DELETE)) {
@@ -151,16 +156,20 @@ public class NameSelectionMenu implements Initializable {
 			}
 
 		});
-
 	}
 
 
-	// Goes back to main menu
+	/**
+	 * Go back to main menu
+	 */
 	public void mainMenuBtnClicked(ActionEvent actionEvent) {
 		mainMenuBtn.getScene().setRoot(MainMenu.getMainMenuRoot());
 	}
 
-
+	
+	/**
+	 * 
+	 */
 	public void addNameBtnClicked() {
 		if (selectedManual) { 
 			if (((nameInputField.getText() == null) || nameInputField.getText().trim().equals(""))) { // If no name is entered
@@ -234,7 +243,6 @@ public class NameSelectionMenu implements Initializable {
 			}
 
 		}
-
 	}
 
 
@@ -373,18 +381,18 @@ public class NameSelectionMenu implements Initializable {
 	public void exportBtnClicked(ActionEvent actionEvent) {
 		if (!namesObsListManual.isEmpty()) {
 			// Creates folder if it doesn't already exist
-			File savedFileFolder = new File("Saved Lists");
+			File savedFileFolder = new File(SAVED_FOLDER);
 			if (!savedFileFolder.exists()) {
 				savedFileFolder.mkdirs();
 			}
 
 			//Checks if the .txt already exists. Number increases if yes
 			int attempt = 0;
-			String fileName = savedFolder + "savedList.txt";
+			String fileName = SAVED_FOLDER + "savedList.txt";
 			File currentFile = new File(fileName);
 			while (currentFile.exists()) {
 				attempt++;
-				fileName = savedFolder + "savedList_" + attempt + ".txt";
+				fileName = SAVED_FOLDER + "savedList_" + attempt + ".txt";
 				currentFile = new File(fileName);
 			}
 
