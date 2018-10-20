@@ -21,6 +21,10 @@ public class NameFile {
     private List<String> attemptList = new ArrayList<String>();
     private List<String> attemptListNameOnly = new ArrayList<String>();
     private SimpleStringProperty _justName;
+    
+    enum rating {
+    	BAD, GOOD;
+    }
 
 
     public NameFile(String fileName, String listName, String justName) {

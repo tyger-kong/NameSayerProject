@@ -9,4 +9,14 @@ public class ButtonHandler {
 			btn.setDisable(bool);
 		}
 	}
+
+	public void setRatingButton(Button btn, NameFile.rating rating) {
+		if (rating.equals(NameFile.rating.GOOD)) {
+			btn.setText("Rate Bad");
+			btn.setStyle("-fx-background-color: green;");
+		} else {
+			btn.setText("Rate Good");
+			btn.setStyle("-fx-background-color: red;");
+		}
+	}
 }

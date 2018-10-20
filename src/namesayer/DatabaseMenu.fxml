@@ -30,7 +30,7 @@
             <Pane maxHeight="90.0" maxWidth="700.0" minHeight="90.0" minWidth="700.0" prefHeight="90.0" prefWidth="700.0">
                <children>
                   <Button fx:id="playBtn" layoutX="175.0" layoutY="30.0" mnemonicParsing="false" onAction="#playBtnClicked" prefHeight="30.0" prefWidth="70.0" text="Play" />
-                  <Button fx:id="rateButton" layoutX="455.0" layoutY="30.0" mnemonicParsing="false" onAction="#handleRateAction" prefHeight="30.0" prefWidth="75.0" text="Rate" />
+                  <Button fx:id="rateBtn" layoutX="455.0" layoutY="30.0" mnemonicParsing="false" onAction="#rateBtnClicked" prefHeight="30.0" prefWidth="75.0" text="Rate" />
                </children>
             </Pane>
          </children>
