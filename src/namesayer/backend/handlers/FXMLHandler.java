@@ -1,4 +1,4 @@
-package namesayer;
+package namesayer.backend.handlers;
 
 import java.io.IOException;
 
@@ -20,6 +20,7 @@ public class FXMLHandler {
 			btn.getScene().setRoot(root);
 		} catch (IOException e) {
 			e.printStackTrace();
+			System.out.println("FAILED TO OPEN THIS MENU");
 		}
 	}
 

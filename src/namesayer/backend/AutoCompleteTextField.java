@@ -1,4 +1,4 @@
-package namesayer;
+package namesayer.backend;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;

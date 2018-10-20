@@ -1,4 +1,4 @@
-package namesayer;
+package namesayer.backend;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -10,7 +10,8 @@ import java.io.File;
 import java.io.IOException;
 
 public class Main extends Application {
-
+	
+	private static final String MAIN_MENU = "/namesayer/frontend/fxml/MainMenu.fxml";
 
     public static void main(String[] args) {
         initialise();
@@ -20,7 +21,7 @@ public class Main extends Application {
 	
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("MainMenu.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource(MAIN_MENU));
         primaryStage.setTitle("NameSayer - Main Menu");
         primaryStage.setScene(new Scene(root, 700, 500));
         primaryStage.setResizable(false);
@@ -37,7 +38,7 @@ public class Main extends Application {
                 e.printStackTrace();
             }
         }
-        File ratingFile = new File("Bad_Ratings.txt");
+        File ratingFile = new File("src/namesayer/resources/Bad_Ratings.txt");
         if(!ratingFile.exists()) {
             try {
                 ratingFile.createNewFile();

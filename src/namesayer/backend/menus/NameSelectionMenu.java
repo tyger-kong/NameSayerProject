@@ -1,11 +1,10 @@
-package namesayer;
+package namesayer.backend.menus;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
@@ -17,7 +16,10 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
-
+import namesayer.backend.AutoCompleteTextField;
+import namesayer.backend.NameListCell;
+import namesayer.backend.handlers.FXMLHandler;
+import namesayer.backend.handlers.NameChecker;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -25,37 +27,39 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
 
 public class NameSelectionMenu implements Initializable {
+
+	private static final String PRACTICE_MENU = "/namesayer/frontend/fxml/PracticeMenu.fxml";
+
 	@FXML
 	private VBox vBoxRoot;
 	@FXML
 	private Button mainMenuBtn;
 	@FXML
 	private ComboBox<String> inputMethodChoice;
-
 	@FXML
 	private AnchorPane inputPane;
 	private AutoCompleteTextField nameInputField;
-
 	@FXML
 	private Button addNameBtn;
 	@FXML
 	private ListView<String[]> namesSelectedListView;
-	@FXML
-	private Button practiceButton;
+
 	@FXML
 	private Button deleteBtn;
 	@FXML
-	private Button deleteAllButton;
+	private Button deleteAllButn;
 	@FXML
-	private RadioButton shuffleButton;
+	private RadioButton shuffleBtn;
 	@FXML
-	private Button exportButton;
+	private Button exportBtn;
+	@FXML
+	private Button practiceBtn;
+	
 	private String savedFolder = "Saved Lists/";
 
 	private static List<String> listOfNamesFromFile = new ArrayList<String>();
@@ -78,13 +82,15 @@ public class NameSelectionMenu implements Initializable {
 
 	private static String fileChosen;
 
+	private FXMLHandler fxmlHandler = new FXMLHandler();
+
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		ObservableList<String> rateList = FXCollections.observableArrayList("Browse for text file", "Manual input");
 		inputMethodChoice.setItems(rateList);
 		inputMethodChoice.setValue("Browse for text file");
-		exportButton.setDisable(true);
+		exportBtn.setDisable(true);
 		selectedManual = false;
 
 		nameInputField = new AutoCompleteTextField();
@@ -103,12 +109,12 @@ public class NameSelectionMenu implements Initializable {
 			}
 
 		});
-		
+
 		List<String> popupList = new ArrayList<String>();
 		popupList.addAll(MainMenu.getAddedList());
 		popupList.replaceAll(String::toLowerCase);
 		nameInputField.getEntries().addAll(popupList);
-		
+
 		String prompt = (fileChosen != null) ? fileChosen : "Browse for a text file by clicking the button -->";
 		nameInputField.setPromptText(prompt);
 		nameInputField.setDisable(true);
@@ -244,21 +250,14 @@ public class NameSelectionMenu implements Initializable {
 		} else {
 
 			// Checks if shuffle is selected or not
-			if (shuffleButton.isSelected()) {
+			if (shuffleBtn.isSelected()) {
 				shuffleSelected = true;
 			} else {
 				shuffleSelected = false;
 			}
 
-			try { // Loads practice menu
-				nameSelectionMenuRoot = practiceButton.getScene().getRoot();
-				FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("PracticeMenu.fxml"));
-				Parent root = fxmlLoader.load();
-				namesSelectedListView.getScene().setRoot(root);
-			} catch (IOException e) {
-				e.printStackTrace();
-				System.out.println("Failed to open practice menu");
-			}
+			nameSelectionMenuRoot = practiceBtn.getScene().getRoot();
+			fxmlHandler.load(PRACTICE_MENU, practiceBtn);
 		}
 	}
 
@@ -280,7 +279,7 @@ public class NameSelectionMenu implements Initializable {
 	}
 
 
-	public void handleDeleteAll(ActionEvent actionEvent) {
+	public void deleteAllBtnClicked(ActionEvent actionEvent) {
 		setDeleteShortcuts();
 		justDeletedList = FXCollections.observableArrayList(namesSelectedListView.getItems()); // Gets the list of names deleted for undo functionality
 		// Clear lists
@@ -325,8 +324,8 @@ public class NameSelectionMenu implements Initializable {
 			nameInputField.setDisable(false);
 			nameInputField.requestFocus();
 			namesSelectedListView.setItems(namesObsListManual);
-			exportButton.setDisable(false);
-			
+			exportBtn.setDisable(false);
+
 
 		} else if (inputMethodChoice.getValue().equals("Browse for text file")) {
 			justDeletedList = null;
@@ -336,7 +335,7 @@ public class NameSelectionMenu implements Initializable {
 			nameInputField.setPromptText(prompt);
 			nameInputField.setDisable(true);
 			namesSelectedListView.setItems(namesObsListFile);
-			exportButton.setDisable(true);
+			exportBtn.setDisable(true);
 		}
 	}
 
@@ -371,7 +370,7 @@ public class NameSelectionMenu implements Initializable {
 
 
 	// Exports the list of selected names to a .txt file
-	public void handleExportButton(ActionEvent actionEvent) {
+	public void exportBtnClicked(ActionEvent actionEvent) {
 		if (!namesObsListManual.isEmpty()) {
 			// Creates folder if it doesn't already exist
 			File savedFileFolder = new File("Saved Lists");
@@ -413,7 +412,7 @@ public class NameSelectionMenu implements Initializable {
 		}
 	}
 
-	
+
 	// Shows alert notifying no names have been inputed
 	public void showNoNamesEnteredAlert(){
 		Alert nonSelectedAlert = new Alert(Alert.AlertType.INFORMATION);
@@ -423,10 +422,10 @@ public class NameSelectionMenu implements Initializable {
 		nonSelectedAlert.showAndWait();
 	}
 
-	
+
 	// Clears the list of names not in database
 	public static void clearHasNone() {
 		namesNotInDatabase.clear();
 	}
-	
+
 }

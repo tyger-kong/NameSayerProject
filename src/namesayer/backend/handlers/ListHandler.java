@@ -1,7 +1,10 @@
-package namesayer;
+package namesayer.backend.handlers;
 
 import java.util.Collections;
 import java.util.List;
+
+import namesayer.backend.NameFile;
+import namesayer.backend.SortIgnoreCase;
 
 public class ListHandler {
 	
@@ -29,9 +32,6 @@ public class ListHandler {
 			listOfNamesAdded.add(listName); 
 
 			NameFile name = new NameFile(currentFile, listName, justName.toLowerCase());
-			if (name.checkIfBadRating()) {
-				name.setBadRatingField(true);
-			}
 			namesListArray.add(name);
 		}
 		Collections.sort(listOfNamesAdded, new SortIgnoreCase());
