@@ -40,7 +40,7 @@ public class AutoCompleteTextField extends TextField {
 
 		textProperty().addListener(new ChangeListener<String>() {
 			@Override
-			public void changed(ObservableValue<? extends String> observableValue, String s, String s2) {
+			public void changed(ObservableValue<? extends String> observableValue, String s, String s2) {	
 				if (getText() != null) {
 					String txt = null;
 					// Check if there are spaces or hyphens before the name (when typed by user)

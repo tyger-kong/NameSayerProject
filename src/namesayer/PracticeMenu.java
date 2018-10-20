@@ -1,6 +1,5 @@
 package namesayer;
 
-
 import javafx.animation.PauseTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -28,7 +27,6 @@ import javafx.util.Duration;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
@@ -51,7 +49,6 @@ public class PracticeMenu implements Initializable {
     private String selectedName;
 
     private int selectedIndex = 0;
-    private Random r = new Random();
 
     private ObservableList<String> listToDisplay;
 

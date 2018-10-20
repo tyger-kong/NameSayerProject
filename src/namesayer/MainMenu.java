@@ -18,6 +18,10 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class MainMenu implements Initializable {
+	
+	private static final String NAME_SELECTION_MENU = "NameSelectionMenu.fxml";
+	private static final String DATABASE_MENU = "DatabaseMenu.fxml";
+	private static final String HELP_MENU = "HelpMenu.fxml";
 
 	@FXML
 	private Button practiceBtn;
@@ -32,101 +36,74 @@ public class MainMenu implements Initializable {
 	private static List<String> listOfJustNames;
 	private static List<NameFile> namesListArray = new ArrayList<NameFile>();
 	private static Parent mainMenuRoot;
+	private ListHandler listHandler = new ListHandler();
+	private FXMLHandler fxmlHandler = new FXMLHandler();
 
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		initialiseListNotSelected();
+		initialiseLists();
 	}
 
-	
-	// Goes through the database folder and converts each name into a NameFile object and stores it in namesListArray
-	public void initialiseListNotSelected() {
+
+	/**
+	 * Goes through the database folder and converts each name into a NameFile object and stores it in namesListArray
+	 */
+	public void initialiseLists() {
 		listOfNamesAdded = new ArrayList<>();
 		listOfJustNames = new ArrayList<>();
-
 		File nameFolder = new File("names");
-		List<String> listOfNamesInDatabase = new ArrayList<String>(Arrays.asList(nameFolder.list())); // Gets all files in the folder as a List
-
-		for (String currentFile : listOfNamesInDatabase) {
-			String justName = currentFile.substring((currentFile.lastIndexOf("_") + 1), currentFile.lastIndexOf("."));
-			listOfJustNames.add(justName.toLowerCase()); // List of just the names used for AutoCompleteTextfield
-			String listName = justName;
-
-			int attempt = 0;
-			// Handle duplicate names by numbering them
-			while (listOfNamesAdded.contains(listName)) {
-				attempt++;
-				listName = justName + "(" + attempt+")";
-			}
-
-			listOfNamesAdded.add(listName); 
-
-			NameFile name = new NameFile(currentFile, listName, justName.toLowerCase());
-			if (name.checkIfBadRating()) {
-				name.setBadRatingField(true);
-			}
-			namesListArray.add(name);
-		}
-
-		Collections.sort(listOfNamesAdded);
+		
+		// Get all files in the folder as a List
+		List<String> listOfNamesInDatabase = new ArrayList<String>(Arrays.asList(nameFolder.list())); 
+		listHandler.fillNameList(listOfNamesInDatabase, listOfJustNames, listOfNamesAdded, namesListArray);
 	}
 
 
-	//Starts practicing menu
+	/**
+	 * Starts practicing menu
+	 */
 	public void practiceBtnClicked(ActionEvent actionEvent) {
-		try {
-			mainMenuRoot = practiceBtn.getScene().getRoot();
-			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("NameSelectionMenu.fxml"));
-			Parent root = fxmlLoader.load();
-			practiceBtn.getScene().setRoot(root);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		mainMenuRoot = practiceBtn.getScene().getRoot();
+		fxmlHandler.load(NAME_SELECTION_MENU, practiceBtn);
 	}
-	
 
-	// Loads database menu
+
+	/** 
+	 * Loads database menu
+	 */
 	public void namesBtnClicked(ActionEvent actionEvent) {
-		try {
-			mainMenuRoot = practiceBtn.getScene().getRoot();
-			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("DatabaseMenu.fxml"));
-			Parent root = fxmlLoader.load();
-			practiceBtn.getScene().setRoot(root);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		mainMenuRoot = practiceBtn.getScene().getRoot();
+		fxmlHandler.load(DATABASE_MENU, namesBtn);
 	}
 
-	
-	// Loads the instructions menu
+
+	/**
+	 * Loads the instructions menu
+	 */
 	public void helpBtnClicked(ActionEvent actionEvent) {
-		try {
-			mainMenuRoot = helpBtn.getScene().getRoot();
-			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("HelpMenu.fxml"));
-			Parent root = fxmlLoader.load();
-			helpBtn.getScene().setRoot(root);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
+		mainMenuRoot = helpBtn.getScene().getRoot();
+		fxmlHandler.load(HELP_MENU, helpBtn);
 	}
 
-	
-	// Exits the app
+
+	/**
+	 * Exits the application
+	 */
 	public void quitBtnClicked(ActionEvent actionEvent) {
 		Stage stage = (Stage)quitBtn.getScene().getWindow();
 		stage.close();
 	}
 
-	
-	// Allows switching scene back to main menu
+
+	/**
+	 * Allows switching scene back to main menu
+	 */
 	public static Parent getMainMenuRoot() {
 		return mainMenuRoot;
 	}
 
-	
-	// Getters for different lists
+
 	public static List<NameFile> getAddedNames() {
 		return namesListArray;
 	}
