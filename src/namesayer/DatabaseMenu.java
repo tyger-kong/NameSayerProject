@@ -28,23 +28,25 @@ public class DatabaseMenu implements Initializable {
 	@FXML
 	private ListView<String> databaseListView;
 	@FXML
-	private Button playDatabaseButton;
+	private Button playBtn;
 
 	private ObservableList<String> namesList;
 	private List<NameFile> nameDatabase;
 
 	private String selectedName;
-
 	private NameFile currentName;
 	private String toPlay;
+	private AudioPlayHandler audioPlayHandler = new AudioPlayHandler();
 
-	
+
 	public void mainMenuBtnClicked(ActionEvent actionEvent) {
 		mainMenuBtn.getScene().setRoot(MainMenu.getMainMenuRoot());
 	}
 
 
-	// Initialises the listview
+	/**
+	 * Initialises the listview
+	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		nameDatabase = MainMenu.getAddedNames(); // Gets the list of name objects
@@ -54,8 +56,10 @@ public class DatabaseMenu implements Initializable {
 		rateButton.setDisable(true);
 	}
 
-	
-	// Gets the selected item in the List view as a string and gets the corresponding name object
+
+	/**
+	 * Gets the selected item in the List view as a string and gets the corresponding name object
+	 */
 	public void handleListClicked(MouseEvent mouseEvent) {
 		selectedName = databaseListView.getSelectionModel().getSelectedItem();
 		getCurrentName();
@@ -63,8 +67,10 @@ public class DatabaseMenu implements Initializable {
 		setRatingButton();
 	}
 
-	
-	// Calls the methods inside the name objects to change the rating
+
+	/**
+	 * Calls the methods inside the name objects to change the rating
+	 */
 	public void handleRateAction(ActionEvent actionEvent) {
 		Alert rateConfirm = new Alert(Alert.AlertType.CONFIRMATION, "Change " + selectedName + "'s rating?", ButtonType.YES, ButtonType.NO);
 		rateConfirm.showAndWait();
@@ -80,9 +86,11 @@ public class DatabaseMenu implements Initializable {
 			setRatingButton(); 
 		}
 	}
-	
-	
-	// Changes the colour and text of the rating button accordingly
+
+
+	/**
+	 * Changes the colour and text of the rating button accordingly
+	 */
 	private void setRatingButton() {
 		if (currentName.checkIfBadRating()) {
 			rateButton.setText("Rate Good");
@@ -92,10 +100,12 @@ public class DatabaseMenu implements Initializable {
 			rateButton.setStyle("-fx-background-color: green;");
 		}
 	}
-	
 
-	// Gets the name object based on selected name in listview
-	public void getCurrentName(){
+
+	/**
+	 * Gets the name object based on selected name in listview
+	 */
+	public void getCurrentName() {
 		for (NameFile n : nameDatabase) { // Searches through whole names database for the corresponding name
 			if (n.toString().equals(selectedName)) {
 				currentName = n;
@@ -105,58 +115,18 @@ public class DatabaseMenu implements Initializable {
 	}
 
 
-	// Plays the audio
+	/**
+	 * Plays the audio
+	 * @param fileToPlay
+	 */
 	private void playAudio(String fileToPlay) {
-		new Thread() {
-			@Override
-			public void run() {
-				try {
-					AudioInputStream stream = AudioSystem.getAudioInputStream(new File(fileToPlay));
-					AudioFormat format = stream.getFormat();
-					DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
-					SourceDataLine sourceLine = (SourceDataLine) AudioSystem.getLine(info);
-					sourceLine.open(format);
-					sourceLine.start();
-
-					// Disable buttons while audio file plays
-					long frames = stream.getFrameLength();
-					long durationInSeconds = (frames / (long)format.getFrameRate());
-					playDatabaseButton.setDisable(true);
-					PauseTransition pause = new PauseTransition(Duration.seconds(durationInSeconds));
-					pause.setOnFinished(event -> {
-						playDatabaseButton.setDisable(false);
-						Thread.currentThread().interrupt();
-					});
-					pause.play();
-
-					int nBytesRead = 0;
-					int BUFFER_SIZE = 128000;
-					byte[] abData = new byte[BUFFER_SIZE];
-					while (nBytesRead != -1) {
-						try {
-							nBytesRead = stream.read(abData, 0, abData.length);
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-						if (nBytesRead >= 0) {
-							@SuppressWarnings("unused")
-							int nBytesWritten = sourceLine.write(abData, 0, nBytesRead);
-						}
-					}
-					sourceLine.drain();
-					sourceLine.close();
-				} catch (Exception e) {
-					System.out.println("FAILED TO PLAY FILE");
-					e.printStackTrace();
-				}
-			}
-		}.start();
+		audioPlayHandler.play(fileToPlay, playBtn);
 	}
-	
 
-	public void handlePlayButton(ActionEvent actionEvent) {
+
+	public void playBtnClicked(ActionEvent actionEvent) {
 		toPlay = currentName.getFileName();
 		playAudio("names/" + toPlay);
 	}
-	
+
 }
