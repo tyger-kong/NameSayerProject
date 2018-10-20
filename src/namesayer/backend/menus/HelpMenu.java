@@ -13,11 +13,13 @@ import javafx.scene.web.WebView;
 
 
 public class HelpMenu implements Initializable {
-	
+
 	@FXML
 	private WebView instructionsWebView;
 	@FXML
 	private Button mainMenuBtn;
+
+	private final static String INSTRUCTIONS = "/namesayer/resources/instructions.html";
 
 
 	/**
@@ -27,14 +29,14 @@ public class HelpMenu implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		WebEngine engine = instructionsWebView.getEngine();
 		try {
-            String s = getClass().getResource("/namesayer/instructions.html").toURI().toString();
-            engine.load(s);
-        } catch (URISyntaxException e){
-        	e.printStackTrace();
-        }
+			String s = getClass().getResource(INSTRUCTIONS).toURI().toString();
+			engine.load(s);
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
 	}
 
-	
+
 	/**
 	 * Goes back to main menu
 	 */

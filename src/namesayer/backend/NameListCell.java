@@ -35,7 +35,7 @@ public class NameListCell extends ListCell<String[]> {
 			}
 
 			if (loader == null) {
-				loader = new FXMLLoader(getClass().getResource("NameListCell.fxml"));
+				loader = new FXMLLoader(getClass().getResource("/namesayer/frontend/fxml/NameListCell.fxml"));
 				loader.setController(this);
 
 				try {
@@ -64,16 +64,10 @@ public class NameListCell extends ListCell<String[]> {
 						nameLabel.setStyle("-fx-background-color: #ffd633;");
 					} else if (NameChecker.checkNameExists(n.toLowerCase())) {
 						nameLabel.setStyle("-fx-background-color: #34ff35;");
-						// MAYBE SHOW HOW MANY NAMES OF SAME SPELLING THERE ARE?
 					} else {
 						nameLabel.setStyle("-fx-background-color: #ff3524;");
 							NameSelectionMenu.addToNoneList(n);
 
-
-						// ADD SUGGESTIONS FOR SIMILAR NAMES THAT EXIST???//
-						// 												;  //
-						//												  //
-						////////////////////////////////////////////////////
 					}
 				}
 

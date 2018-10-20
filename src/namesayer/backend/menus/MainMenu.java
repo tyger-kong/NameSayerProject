@@ -22,9 +22,9 @@ import java.util.ResourceBundle;
 
 public class MainMenu implements Initializable {
 	
-	private static final String NAME_SELECTION_MENU = "/namesayer/frontend/NameSelectionMenu.fxml";
-	private static final String DATABASE_MENU = "/namesayer/frontend/DatabaseMenu.fxml";
-	private static final String HELP_MENU = "/namesayer/frontend/HelpMenu.fxml";
+	private static final String NAME_SELECTION_MENU = "/namesayer/frontend/fxml/NameSelectionMenu.fxml";
+	private static final String DATABASE_MENU = "/namesayer/frontend/fxml/DatabaseMenu.fxml";
+	private static final String HELP_MENU = "/namesayer/frontend/fxml/HelpMenu.fxml";
 
 	@FXML
 	private Button practiceBtn;
