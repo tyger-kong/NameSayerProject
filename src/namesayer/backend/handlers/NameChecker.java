@@ -1,8 +1,10 @@
-package namesayer;
+package namesayer.backend.handlers;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import namesayer.backend.menus.MainMenu;
 
 // Class for checking user if user inputs are names in the database. Also for changing strings into string arrays
 // to make it compatible with the custom ListView cells.

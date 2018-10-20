@@ -1,4 +1,4 @@
-package namesayer;
+package namesayer.backend.menus;
 
 import javafx.animation.PauseTransition;
 import javafx.collections.FXCollections;
@@ -24,6 +24,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
+import namesayer.backend.JavaSoundRecorder;
+import namesayer.backend.NameFile;
 
 import java.io.File;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package namesayer;
+package namesayer.backend.menus;
 
 import java.net.URISyntaxException;
 import java.net.URL;

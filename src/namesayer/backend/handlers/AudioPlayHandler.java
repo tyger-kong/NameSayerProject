@@ -1,4 +1,4 @@
-package namesayer;
+package namesayer.backend.handlers;
 
 import java.io.File;
 import java.io.IOException;

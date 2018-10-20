@@ -1,4 +1,4 @@
-package namesayer;
+package namesayer.backend.menus;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,6 +17,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import namesayer.backend.AutoCompleteTextField;
+import namesayer.backend.NameListCell;
+import namesayer.backend.handlers.NameChecker;
 
 import java.io.BufferedReader;
 import java.io.File;

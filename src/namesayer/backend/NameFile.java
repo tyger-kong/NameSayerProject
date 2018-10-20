@@ -1,4 +1,4 @@
-package namesayer;
+package namesayer.backend;
 
 import javafx.beans.property.SimpleStringProperty;
 
@@ -17,12 +17,11 @@ import java.util.List;
 public class NameFile {
     private SimpleStringProperty _fileName;
     private SimpleStringProperty _listName;
-    private boolean _rating = false;
     private List<String> attemptList = new ArrayList<String>();
     private List<String> attemptListNameOnly = new ArrayList<String>();
     private SimpleStringProperty _justName;
     
-    enum rating {
+    public enum rating {
     	BAD, GOOD;
     }
 
@@ -72,13 +71,12 @@ public class NameFile {
     }
 
 
-    public void setBadRatingField(boolean rating) {
-        _rating = rating;
-    }
-
-    // This method sets rating field as well as writes to Bad_ratings.txt
+    /**
+     * Sets rating field as well as writes to Bad_ratings.txt
+     * 
+     * @param rating - true if rating to be set is bad and false if good
+     */
     public void setBadRating(boolean rating) {
-        _rating = rating;
         if (rating) {
             addBadRating();
         } else {

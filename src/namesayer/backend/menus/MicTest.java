@@ -1,4 +1,4 @@
-package namesayer;
+package namesayer.backend.menus;
 
 import java.net.URL;
 import java.util.ResourceBundle;

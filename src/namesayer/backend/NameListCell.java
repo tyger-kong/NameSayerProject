@@ -1,4 +1,4 @@
-package namesayer;
+package namesayer.backend;
 
 import java.io.IOException;
 import java.util.List;
@@ -8,6 +8,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.HBox;
+import namesayer.backend.handlers.NameChecker;
+import namesayer.backend.menus.MainMenu;
+import namesayer.backend.menus.NameSelectionMenu;
 
 // Based on https://www.turais.de/how-to-custom-listview-cell-in-javafx/
 public class NameListCell extends ListCell<String[]> {
