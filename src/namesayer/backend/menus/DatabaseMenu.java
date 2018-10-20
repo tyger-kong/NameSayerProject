@@ -11,7 +11,6 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
 import javafx.scene.input.MouseEvent;
 import namesayer.backend.NameFile;
-import namesayer.backend.NameFile.rating;
 import namesayer.backend.handlers.AudioPlayHandler;
 import namesayer.backend.handlers.ButtonHandler;
 

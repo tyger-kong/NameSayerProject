@@ -38,7 +38,7 @@ public class Main extends Application {
                 e.printStackTrace();
             }
         }
-        File ratingFile = new File("Bad_Ratings.txt");
+        File ratingFile = new File("src/namesayer/resources/Bad_Ratings.txt");
         if(!ratingFile.exists()) {
             try {
                 ratingFile.createNewFile();

@@ -95,15 +95,13 @@ public class PracticeMenu implements Initializable {
 
 	private File creationsFile = new File("./Creations");
 
-
-
 	private List<String> attemptDatabase;
 	private List<String> listOfAttempts = new ArrayList<String>();
 
 	private SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-HHmmss");
 	private Date date;
 	private List<File> namesToPlay;
-	private List<List> listOfAudioCreated;
+	private List<List<File>> listOfAudioCreated;
 
 	private boolean btnIsRecord;
 
@@ -506,7 +504,7 @@ public class PracticeMenu implements Initializable {
 			Collections.shuffle(namesToPractice);
 		}
 		numberToPractice = namesToPractice.size();
-		listOfAudioCreated = new ArrayList<List>(Collections.nCopies(numberToPractice, null));
+		listOfAudioCreated = new ArrayList<List<File>>(Collections.nCopies(numberToPractice, null));
 		recordingNameList = new ArrayList<String>(Collections.nCopies(numberToPractice, null));
 		initialiseAttemptDatabase();
 	}

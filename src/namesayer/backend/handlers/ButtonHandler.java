@@ -2,7 +2,6 @@ package namesayer.backend.handlers;
 
 import javafx.scene.control.Button;
 import namesayer.backend.NameFile;
-import namesayer.backend.NameFile.rating;
 
 public class ButtonHandler {
 

@@ -1,7 +1,6 @@
 package namesayer.backend;
 
 import javafx.beans.property.SimpleStringProperty;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -15,6 +14,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class NameFile {
+	private static final String BAD_RATINGS_TXT = "src/namesayer/resources/Bad_Ratings.txt";
     private SimpleStringProperty _fileName;
     private SimpleStringProperty _listName;
     private List<String> attemptList = new ArrayList<String>();
@@ -50,11 +50,13 @@ public class NameFile {
     }
 
 
-    // Checks Bad_Ratings.txt file
+    /**
+     *  Checks Bad_Ratings.txt file
+     */
     public boolean checkIfBadRating() {
         List<String> ratingsList = new ArrayList<String>();
         try {
-            FileInputStream stream = new FileInputStream("Bad_Ratings.txt");
+            FileInputStream stream = new FileInputStream(BAD_RATINGS_TXT);
             BufferedReader br = new BufferedReader(new InputStreamReader(stream));
             String ratedFile;
 
@@ -87,7 +89,7 @@ public class NameFile {
 
     private void addBadRating() {
         try {
-            FileWriter fw = new FileWriter("Bad_Ratings.txt", true);
+            FileWriter fw = new FileWriter(BAD_RATINGS_TXT, true);
             fw.write(this.getFileName() + "\n");
             fw.close();
         } catch(IOException e){
@@ -98,7 +100,7 @@ public class NameFile {
 
     private void removeBadRating() {
         try {
-            File ratingsFile = new File("Bad_Ratings.txt");
+            File ratingsFile = new File(BAD_RATINGS_TXT);
             File tempFile = new File("temp.txt");
             tempFile.createNewFile();
 
@@ -160,6 +162,7 @@ public class NameFile {
         attemptListNameOnly.remove(nameInListNameOnly);
     }
 
+    
     public String getJustName(){
         return _justName.get();
     }

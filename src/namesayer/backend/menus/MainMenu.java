@@ -2,7 +2,6 @@ package namesayer.backend.menus;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -10,13 +9,10 @@ import javafx.stage.Stage;
 import namesayer.backend.NameFile;
 import namesayer.backend.handlers.FXMLHandler;
 import namesayer.backend.handlers.ListHandler;
-
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 
