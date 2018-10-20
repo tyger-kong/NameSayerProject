@@ -33,10 +33,12 @@ public class NameChecker {
 		String singleName = "";
 		for (int i = 0; i < name.length(); i++) {
 			if (name.charAt(i) == ' ') {
+				singleName = (char)(singleName.charAt(0) - 32) + singleName.substring(1);
 				list.add(singleName);
 				singleName = "";
 				list.add(" ");
 			} else if (name.charAt(i) == '-') {
+				singleName = (char)(singleName.charAt(0) - 32) + singleName.substring(1);
 				list.add(singleName);
 				singleName = "";
 				list.add("-");
@@ -44,6 +46,7 @@ public class NameChecker {
 				singleName += name.charAt(i);
 			}
 		}
+		singleName = (char)(singleName.charAt(0) - 32) + singleName.substring(1);
 		list.add(singleName);
 		return list.toArray(new String[0]);
 	}

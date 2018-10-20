@@ -103,8 +103,11 @@ public class NameSelectionMenu implements Initializable {
 			}
 
 		});
-
-		nameInputField.getEntries().addAll(MainMenu.getAddedList());
+		
+		List<String> popupList = new ArrayList<String>();
+		popupList.addAll(MainMenu.getAddedList());
+		popupList.replaceAll(String::toLowerCase);
+		nameInputField.getEntries().addAll(popupList);
 		
 		String prompt = (fileChosen != null) ? fileChosen : "Browse for a text file by clicking the button -->";
 		nameInputField.setPromptText(prompt);
@@ -128,7 +131,7 @@ public class NameSelectionMenu implements Initializable {
 			public void handle(KeyEvent k) {
 				if (delete.match(k) || k.getCode().equals(KeyCode.DELETE)) {
 					deleteBtnClicked(null);
-				}
+				} 
 				if (undo.match(k)) {
 					if (singleDeleted && (justDeletedSingle != null)) {
 						namesSelectedListView.getItems().add(justDeletedSingle);
@@ -162,7 +165,7 @@ public class NameSelectionMenu implements Initializable {
 				noInputAlert.showAndWait();
 			} else {
 				// Trim leading and trailing white space and hyphens, and replace multiple spaces/hyphens with single ones
-				String userInput = nameInputField.getText().trim().replaceAll(" +", " ").replaceAll("\\s*-\\s*", "-").replaceAll("-+", "-").replaceAll("^-", "").replaceAll("-$", "");
+				String userInput = nameInputField.getText().toLowerCase().trim().replaceAll(" +", " ").replaceAll("\\s*-\\s*", "-").replaceAll("-+", "-").replaceAll("^-", "").replaceAll("-$", "");
 
 				// Convert the name to a string array and 
 				if (!userInput.isEmpty()) {

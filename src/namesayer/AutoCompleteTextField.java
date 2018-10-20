@@ -27,6 +27,9 @@ public class AutoCompleteTextField extends TextField {
 
 	/** The popup used to select an entry. */
 	private ContextMenu entriesPopup;
+	
+	/** Max number of entries that the popup list can show */
+	private final int MAX_ENTRIES = 15;
 
 
 	/** Construct a new AutoCompleteTextField. */
@@ -49,6 +52,7 @@ public class AutoCompleteTextField extends TextField {
 						txt = getText();
 					}
 					
+					txt = txt.toLowerCase();
 
 					if (txt.length() == 0) {
 						entriesPopup.hide();
@@ -88,13 +92,12 @@ public class AutoCompleteTextField extends TextField {
 
 
 	/**
-	 * Populate the entry set with the given search results.  Display is limited to maxEntries entries, for performance.
+	 * Populate the entry set with the given search results.  Display is limited to MAX_ENTRIES entries, for performance.
 	 * @param searchResult The set of matching strings.
 	 */
 	private void populatePopup(List<String> searchResult) {
 		List<CustomMenuItem> menuItems = new LinkedList<>();
-		int maxEntries = 15;
-		int count = Math.min(searchResult.size(), maxEntries);
+		int count = Math.min(searchResult.size(), MAX_ENTRIES);
 		for (int i = 0; i < count; i++) {
 			final String result = searchResult.get(i);
 			Label entryLabel = new Label(result);
