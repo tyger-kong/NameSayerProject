@@ -25,8 +25,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
@@ -121,6 +120,7 @@ public class PracticeMenu implements Initializable {
     private int numberToPractice;
     private String recordingName;
     private List<String> recordingNameList;
+    private final int TARGET_DECIBEL = -35;
 
 
     @Override
@@ -540,7 +540,8 @@ public class PracticeMenu implements Initializable {
 
                             for (File f : namesToPlay) {
                                 String fileName = f.toString();
-                                String trimCommand = "ffmpeg -y -i " + fileName + " -af silenceremove=1:0:-50dB " + fileName; // names/se206................wav
+                                normaliseAudio(fileName);
+                                String trimCommand = "ffmpeg -y -i " + fileName + " -af silenceremove=1:0:-35dB " + fileName; // names/se206................wav
                                 ProcessBuilder trimProcess = new ProcessBuilder("/bin/bash", "-c", trimCommand);
 
                                 try {
@@ -571,6 +572,35 @@ public class PracticeMenu implements Initializable {
             backgroundThread.start();
         } catch (IOException e) {
         }
+
+    }
+
+    public void normaliseAudio(String fileName){
+        String getVolumeCommand = "ffmpeg -i " + fileName+ " -filter:a volumedetect -f null /dev/null 2>&1 | grep mean_volume";
+        ProcessBuilder getVolumeBuilder = new ProcessBuilder("/bin/bash", "-c", getVolumeCommand);
+        try{
+            Process getVolumeProcess = getVolumeBuilder.start();
+            getVolumeProcess.waitFor();
+            InputStream stdOut = getVolumeProcess.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(stdOut));
+
+            String line = reader.readLine();
+            int first = line.lastIndexOf("-");
+            int last = line.lastIndexOf(".");
+            String meanVolume = line.substring(first, last);
+            int change = TARGET_DECIBEL - Integer.parseInt(meanVolume);
+
+            String adjustVolumeCommand = "ffmpeg -y -i \"" + fileName +"\" -filter:a \"volume=" + Integer.toString(change) +"dB\" " + fileName;
+            ProcessBuilder adjustVolumeBuilder = new ProcessBuilder("/bin/bash", "-c", adjustVolumeCommand);
+            Process adjustVolumeProcess = adjustVolumeBuilder.start();
+            adjustVolumeProcess.waitFor();
+
+        }catch(IOException e){
+            e.printStackTrace();
+        } catch(InterruptedException e){
+            e.printStackTrace();
+        }
+
 
     }
 
