@@ -54,22 +54,36 @@
       <ListView fx:id="namesSelectedListView" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mouseTransparent="true" onMouseClicked="#handleListSelected" prefHeight="300.0" prefWidth="580.0" style="-fx-background-color: #dcd0c0;" />
       <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="582.0">
          <children>
-            <Button fx:id="deleteBtn" mnemonicParsing="false" onAction="#deleteBtnClicked" prefWidth="70.0" style="-fx-background-color: #c0b283;" text="Delete">
+            <Button fx:id="deleteBtn" mnemonicParsing="false" onAction="#deleteBtnClicked" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #c0b283;" text="Delete">
                <HBox.margin>
                   <Insets top="5.0" />
                </HBox.margin>
+               <graphic>
+                  <ImageView fitHeight="32.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../resources/img_trash.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
             </Button>
-            <Button fx:id="deleteAllBtn" maxWidth="70.0" minWidth="70.0" mnemonicParsing="false" onAction="#deleteAllBtnClicked" prefWidth="70.0" style="-fx-background-color: #c0b283;" text="Delete All">
+            <Button fx:id="deleteAllBtn" mnemonicParsing="false" onAction="#deleteAllBtnClicked" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #c0b283;" text="Delete All">
                <HBox.margin>
                   <Insets left="25.0" top="5.0" />
                </HBox.margin>
+               <graphic>
+                  <ImageView fitHeight="32.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../resources/img_trash.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
             </Button>
-            <Button fx:id="exportBtn" maxWidth="105.0" minWidth="70.0" mnemonicParsing="false" onAction="#exportBtnClicked" prefHeight="28.0" prefWidth="81.0" text="Export">
+            <Button fx:id="exportBtn" mnemonicParsing="false" onAction="#exportBtnClicked" prefHeight="30.0" prefWidth="100.0" text="Export">
                <HBox.margin>
-                  <Insets left="110.0" top="5.0" />
+                  <Insets left="25.0" top="5.0" />
                </HBox.margin>
                <graphic>
-                  <ImageView fitHeight="20.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="22.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../../resources/img_file.png" />
                      </image>
@@ -78,13 +92,20 @@
             </Button>
             <RadioButton fx:id="shuffleBtn" mnemonicParsing="false" prefHeight="25.0" prefWidth="70.0" style="-fx-text-fill: #c0b283;" text="Shuffle">
                <HBox.margin>
-                  <Insets left="50.0" top="5.0" />
+                  <Insets left="40.0" top="5.0" />
                </HBox.margin>
             </RadioButton>
             <Button fx:id="practiceBtn" mnemonicParsing="false" onAction="#practiceBtnClicked" prefHeight="30.0" prefWidth="120.0" style="-fx-background-color: #c0b283;" text="Practice">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
+               <graphic>
+                  <ImageView fitHeight="21.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../resources/img_tick.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
             </Button>
          </children>
          <VBox.margin>
