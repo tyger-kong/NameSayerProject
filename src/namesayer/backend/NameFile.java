@@ -14,7 +14,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class NameFile {
-	private static final String BAD_RATINGS_TXT = "src/namesayer/resources/Bad_Ratings.txt";
+	private static final String BAD_RATINGS_TXT = "Bad_Ratings.txt";
     private SimpleStringProperty _fileName;
     private SimpleStringProperty _listName;
     private List<String> attemptList = new ArrayList<String>();
