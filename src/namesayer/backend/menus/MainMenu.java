@@ -30,6 +30,7 @@ public class MainMenu implements Initializable {
 	private Button quitBtn;
 
 	private static List<String> listOfNamesAdded;
+	private static List<String> listOfNamesLowered;
 	private static List<String> listOfJustNames;
 	private static List<NameFile> namesListArray = new ArrayList<NameFile>();
 	private static Parent mainMenuRoot;
@@ -49,13 +50,14 @@ public class MainMenu implements Initializable {
 	public void initialiseLists() {
 		listOfNamesAdded = new ArrayList<>();
 		listOfJustNames = new ArrayList<>();
+		listOfNamesLowered = new ArrayList<>();
 		File nameFolder = new File("names");
 		
 		// Get all files in the folder as a List
 		List<String> listOfNamesInDatabase = new ArrayList<String>(Arrays.asList(nameFolder.list()));
 		Collections.sort(listOfNamesInDatabase, new SortIgnoreCase());
 
-		listHandler.fillNameList(listOfNamesInDatabase, listOfJustNames, listOfNamesAdded, namesListArray);
+		listHandler.fillNameList(listOfNamesInDatabase, listOfJustNames, listOfNamesAdded, namesListArray, listOfNamesLowered);
 	}
 
 
@@ -115,6 +117,10 @@ public class MainMenu implements Initializable {
 
 	public static List<String> getListOfJustNames() {
 		return listOfJustNames;
+	}
+
+	public static List<String> getListOfAddedLower(){
+		return listOfNamesLowered;
 	}
 
 }

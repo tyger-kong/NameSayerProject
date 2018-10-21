@@ -130,7 +130,7 @@ public class AutoCompleteTextField extends TextField {
 	
 	@Override
 	public void replaceText(int start, int end, String text) {
-		if (text.matches("[a-zA-Z -]")) {
+		if (text.matches("[a-zA-Z0-9\\(\\) -]")) {
 			super.replaceText(start, end, text);
 		}
 	}
@@ -138,9 +138,9 @@ public class AutoCompleteTextField extends TextField {
 	
 	@Override
 	public void replaceSelection(String text) {
-		if (text.matches("[a-zA-Z -]")) {
+		if (text.matches("[a-zA-Z0-9\\(\\) -]")) {
 			super.replaceSelection(text);
 		}
 	}
-
+//0-9\(\)
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import namesayer.backend.Main;
 import namesayer.backend.menus.MainMenu;
 
 /**
@@ -18,19 +19,19 @@ public class NameChecker {
 		int open = name.lastIndexOf("(");
 		if(open != -1) {
 			System.out.println(name.substring(0, open));
-			return Collections.frequency(MainMenu.getListOfJustNames(), name.substring(0, open)) > 1;
+			return (Collections.frequency(MainMenu.getListOfJustNames(), name.substring(0, open)) > 1) && MainMenu.getListOfAddedLower().contains(name);
 		}
-		return Collections.frequency(MainMenu.getListOfJustNames(), name) > 1;
+		return (Collections.frequency(MainMenu.getListOfJustNames(), name) > 1) && MainMenu.getListOfAddedLower().contains(name);
 	}
 	
 	
 	public static boolean checkNameExists(String name) {
-		int open = name.lastIndexOf("(");
-		if(open != -1) {
-			System.out.println(name.substring(0, open));
-			return MainMenu.getListOfJustNames().contains(name.substring(0, open));
-		}
-		return MainMenu.getListOfJustNames().contains(name);
+//		int open = name.lastIndexOf("(");
+//		if(open != -1) {
+//			System.out.println(name.substring(0, open));
+//			return MainMenu.getListOfAddedLower().contains(name.substring(0, open));
+//		}
+		return MainMenu.getListOfAddedLower().contains(name);
 	}
 	
 	// Converts string into string array (for putting into NameListCell)

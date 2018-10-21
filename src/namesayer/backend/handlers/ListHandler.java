@@ -20,7 +20,7 @@ public class ListHandler {
  * @param listOfNamesAdded - Names to use when choosing names to practice (handles multiple names using numbers).
  * @param namesListArray - List of actual NameFile objects representing each name.
  */
-	public void fillNameList(List<String> listOfNamesInDatabase, List<String> listOfJustNames, List<String> listOfNamesAdded, List<NameFile> namesListArray) {
+	public void fillNameList(List<String> listOfNamesInDatabase, List<String> listOfJustNames, List<String> listOfNamesAdded, List<NameFile> namesListArray, List<String> listOfNamesLowered) {
 		for (String currentFile : listOfNamesInDatabase) {
 			String justName = currentFile.substring((currentFile.lastIndexOf("_") + 1), currentFile.lastIndexOf("."));
 			listOfJustNames.add(justName.toLowerCase()); // List of just the names used for AutoCompleteTextfield
@@ -37,7 +37,8 @@ public class ListHandler {
 				listName = justName + "(" + number + ")";
 			}
 
-			listOfNamesAdded.add(listName); 
+			listOfNamesAdded.add(listName);
+			listOfNamesLowered.add(listName.toLowerCase());
 
 			NameFile name = new NameFile(currentFile, listName, justName.toLowerCase());
 			namesListArray.add(name);

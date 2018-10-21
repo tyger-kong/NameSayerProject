@@ -51,11 +51,7 @@ public class NameListCell extends ListCell<String[]> {
 				// Set background color of the label appropriately
 				// Green = one occurrence, orange = more than one occurrence, red = no occurrences in database
 				if ((n != "-") && (n != " ")) {
-//					for(NameFile name : dataBase){
-//						if(n.equals(name.toString())){
-//
-//						}
-//					}
+
 					if (NameChecker.checkNameDuplicates(n.toLowerCase())) {
 						nameLabel.setStyle("-fx-background-color: #ffd633;");
 					} else if (NameChecker.checkNameExists(n.toLowerCase())) {
