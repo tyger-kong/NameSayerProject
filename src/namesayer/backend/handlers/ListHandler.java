@@ -1,5 +1,9 @@
 package namesayer.backend.handlers;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
@@ -41,5 +45,39 @@ public class ListHandler {
 		Collections.sort(listOfNamesAdded, new SortIgnoreCase());
 	}
 	
+	
+	/**
+	 * Checks if a name is already in the specified list representing a ListView
+	 * 
+	 * @param str - String to check
+	 * @param list - List being checked
+	 */
+	public boolean checkDuplicate(String str, List<String> list) {
+		for (String s : list) {
+			if (str.toLowerCase().equals(s.toLowerCase())) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	
+	/**
+	 * Reads lines from the specified text file and adds them to the specified list (ignores duplicate lines)
+	 */
+	public void readFromFileToList(File selectedFile, List<String> list) {
+		try (BufferedReader br = new BufferedReader(new FileReader(selectedFile))) {
+			String line;
+			while ((line = br.readLine()) != null) {
+				if (!line.trim().equals("")) {
+					if (!list.contains(line)) {
+						list.add(line);
+					}
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
 }

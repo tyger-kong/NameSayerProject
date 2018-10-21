@@ -21,10 +21,9 @@ import javafx.stage.FileChooser;
 import namesayer.backend.AutoCompleteTextField;
 import namesayer.backend.NameListCell;
 import namesayer.backend.handlers.FXMLHandler;
+import namesayer.backend.handlers.ListHandler;
 import namesayer.backend.handlers.NameChecker;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
@@ -34,9 +33,12 @@ import java.util.ResourceBundle;
 
 
 public class NameSelectionMenu implements Initializable {
-
 	private static final String PRACTICE_MENU = "/namesayer/frontend/fxml/PracticeMenu.fxml";
 	private static final String SAVED_FOLDER = "USER_SAVED_LISTS";
+	private static final String IMAGE_ENTER = "/namesayer/resources/img_enter.png";
+	private static final String IMAGE_BROWSE = "/namesayer/resources/img_folder.png";
+	private static final String OPTION_BROWSE = "Browse for text file";
+	private static final String OPTION_MANUAL = "Manual input";
 
 	@FXML
 	private VBox vBoxRoot;
@@ -85,13 +87,14 @@ public class NameSelectionMenu implements Initializable {
 	private static String fileChosen;
 
 	private FXMLHandler fxmlHandler = new FXMLHandler();
+	private ListHandler listHandler = new ListHandler();
 
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		ObservableList<String> rateList = FXCollections.observableArrayList("Browse for text file", "Manual input");
+		ObservableList<String> rateList = FXCollections.observableArrayList(OPTION_BROWSE, OPTION_MANUAL);
 		inputMethodChoice.setItems(rateList);
-		inputMethodChoice.setValue("Browse for text file");
+		inputMethodChoice.setValue(OPTION_MANUAL);
 		exportBtn.setDisable(true);
 		selectedManual = false;
 
@@ -129,11 +132,10 @@ public class NameSelectionMenu implements Initializable {
 					addNameBtnClicked();
 				}
 				if (k.getCode().equals(KeyCode.BACK_SPACE) && (nameInputField.getText() != null) && !nameInputField.getText().isEmpty()) {
-					nameInputField.setText(nameInputField.getText().substring(0, nameInputField.getText().length() - 1));
+					nameInputField.setText(nameInputField.getText().substring(0, nameInputField.getText().length()-1));
 					nameInputField.positionCaret(nameInputField.getText().length());
 				}
 			}
-
 		});
 
 		// Shortcuts to delete and undo previous delete
@@ -156,7 +158,6 @@ public class NameSelectionMenu implements Initializable {
 					}
 				}
 			}
-
 		});
 	}
 
@@ -170,105 +171,81 @@ public class NameSelectionMenu implements Initializable {
 
 
 	/**
-	 * 
+	 * Either adds a name to the ListView or launches a FileChooser to choose a text file based on the input choice
 	 */
 	public void addNameBtnClicked() {
 		if (selectedManual) {
-			if (((nameInputField.getText() == null) || nameInputField.getText().trim().equals(""))) { // If no name is entered
-				Alert noInputAlert = new Alert(Alert.AlertType.INFORMATION);
-				noInputAlert.setTitle("ERROR - Please enter a name");
-				noInputAlert.setHeaderText(null);
-				noInputAlert.setContentText("No name entered. Please enter a name to practice");
-				noInputAlert.showAndWait();
+			if (((nameInputField.getText() == null) || nameInputField.getText().trim().equals(""))) {
+				showAlert(false, "ERROR - Please enter a name", "No name entered. Please enter a name to practice");
+
 			} else {
-				// Trim leading and trailing white space and hyphens, and replace multiple spaces/hyphens with single ones
-				String userInput = nameInputField.getText().toLowerCase().trim().replaceAll(" +", " ").replaceAll("\\s*-\\s*", "-").replaceAll("-+", "-").replaceAll("^-", "").replaceAll("-$", "");
-
-				// Convert the name to a string array and 
+				String userInput = trimInput(nameInputField.getText().toLowerCase());
+				
 				if (!userInput.isEmpty()) {
-					String[] inputArray = NameChecker.nameAsArray(userInput);
-
-					boolean isInList = false;
-					for (String s : listOfUserInput) { // Checks if the input has already been entered
-						if (userInput.toLowerCase().equals(s.toLowerCase())) {
-							Alert alreadyExistsAlert = new Alert(Alert.AlertType.INFORMATION);
-							alreadyExistsAlert.setTitle("ERROR - Name Already in List");
-							alreadyExistsAlert.setHeaderText(null);
-							alreadyExistsAlert.setContentText("The name has already been selected. Please enter another name to practice");
-							alreadyExistsAlert.showAndWait();
-							nameInputField.setText(null);
-							isInList = true;
-							break;
-						}
-
-					}
-					if (!isInList) { // Adds the input to lists
-						namesObsListManual.add(inputArray); // Fills listview corresponding to manual input
+					if (listHandler.checkDuplicate(userInput, listOfUserInput)) {
+						showAlert(false, "ERROR - Name Already in List", "The name has already been selected. Please enter another name to practice");
+					} else {
+						// Adds the input to lists and fills the ListView corresponding to manual input
+						namesObsListManual.add(NameChecker.nameAsArray(userInput)); 
 						listOfUserInput.add(userInput); // Used for exporting to .txt
-						nameInputField.setText(null);
 					}
+					nameInputField.setText(null);
 				}
 			}
-		} else { // .txt Input
 
+		} else { // .txt Input
 			listOfNamesFromFile.clear();
-			FileChooser fileChooser = new FileChooser();
-			fileChooser.setTitle("Choose a txt file");
-			fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
+			FileChooser fileChooser = createFileChooser();
 			File selectedFile = fileChooser.showOpenDialog(addNameBtn.getScene().getWindow());
 
 			// Reads .txt file line by line and adds it to the list
 			if ((selectedFile != null) && (selectedFile.getPath().substring(selectedFile.getAbsolutePath().lastIndexOf('.')).equals(".txt"))) {
-				System.out.println(selectedFile.getPath().substring(selectedFile.getAbsolutePath().lastIndexOf('.')));
 				fileChosen = selectedFile.getAbsolutePath();
 				nameInputField.setText(fileChosen);
-				try (BufferedReader br = new BufferedReader(new FileReader(selectedFile))) {
-					String line;
-					while ((line = br.readLine()) != null) {
-						if (!line.trim().equals("")) {
-							if (!listOfNamesFromFile.contains(line)) {
-								listOfNamesFromFile.add(line);
-							}
-						}
-					}
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-
+				listHandler.readFromFileToList(selectedFile, listOfNamesFromFile);
+				
 				// Fills the Listview corresponding to .txt input
 				namesObsListFile.clear();
 				for (String input : listOfNamesFromFile) {
-					input = input.trim().replaceAll(" +", " ").replaceAll("\\s*-\\s*", "-").replaceAll("-+", "-").replaceAll("^-", "").replaceAll("-$", "");
-					String[] inputArray = NameChecker.nameAsArray(input);
-					namesObsListFile.add(inputArray);
+					input = trimInput(input);
+					namesObsListFile.add(NameChecker.nameAsArray(input));
 				}
-
 			}
-
 		}
+		
 	}
 
 
+	/**
+	 * Trim leading and trailing white space and hyphens, and replace multiple spaces/hyphens with single ones
+	 *  
+	 * @param in - String to trim
+	 */
+	private String trimInput(String in) {
+		return in.trim().replaceAll(" +", " ").replaceAll("\\s*-\\s*", "-").replaceAll("-+", "-").replaceAll("^-", "").replaceAll("-$", "");
+	}
+	
+	
+	/**
+	 * Returns a FileChooser that launches from the current working directory
+	 */
+	private FileChooser createFileChooser() {
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle("Choose a txt file");
+		fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
+		return fileChooser;
+	}
+
+	
 	public void practiceBtnClicked(ActionEvent actionEvent) {
 		if (namesSelectedListView.getItems().isEmpty()) {
-			showAlert(false, "ERROR - Please select some names", "No name(s) have been entered. Please enter at least one name to practice");	
+			showAlert(false, "ERROR - Please select some names", "No name(s) have been entered. Please enter at least one name to practice");
 			
 		} else if (namesNotInDatabase.size() > 0) {
-			// Check if there are any names in the list that are not in database
-			Alert nonSelectedAlert = new Alert(Alert.AlertType.INFORMATION);
-			nonSelectedAlert.setTitle("ERROR - Name doesn't exist");
-			nonSelectedAlert.setHeaderText(null);
-			nonSelectedAlert.setContentText("There is at least one name entered that is not in the database. Please delete it and enter another name.");
-			nonSelectedAlert.showAndWait();
+			showAlert(false, "ERROR - Name doesn't exist", "There is at least one name entered that is not in the database. Please delete it and enter another name.");
+		
 		} else {
-
-			// Checks if shuffle is selected or not
-			if (shuffleBtn.isSelected()) {
-				shuffleSelected = true;
-			} else {
-				shuffleSelected = false;
-			}
-
+			shuffleSelected = shuffleBtn.isSelected();
 			nameSelectionMenuRoot = practiceBtn.getScene().getRoot();
 			fxmlHandler.load(PRACTICE_MENU, practiceBtn);
 		}
@@ -277,16 +254,14 @@ public class NameSelectionMenu implements Initializable {
 
 	public void deleteBtnClicked(ActionEvent actionEvent) {
 		if (selectedNameArray != null) {
-			setDeleteShortcuts(); // Allows using delete/undo shortcuts
+			setDeleteShortcuts();
 			clearHasNone();// Clears the list of any names not in database
-			// Removes the name from lists
 			namesSelectedListView.getItems().remove(selectedNameArray);
 			listOfUserInput.remove(String.join("", selectedNameArray));
 			// For undo function
 			singleDeleted = true;
 			justDeletedSingle = selectedNameArray;
 			selectedNameArray = null;
-
 		}
 		namesSelectedListView.getSelectionModel().clearSelection();
 	}
@@ -294,7 +269,7 @@ public class NameSelectionMenu implements Initializable {
 
 	public void deleteAllBtnClicked(ActionEvent actionEvent) {
 		setDeleteShortcuts();
-		justDeletedList = FXCollections.observableArrayList(namesSelectedListView.getItems()); // Gets the list of names deleted for undo functionality
+		justDeletedList = FXCollections.observableArrayList(namesSelectedListView.getItems());
 		// Clear lists
 		listOfUserInput.clear();
 		singleDeleted = false;
@@ -325,11 +300,11 @@ public class NameSelectionMenu implements Initializable {
 	}
 
 
-	// Manages the selection of manual or .txt input (Disable textfields, butons, etc)
+	/**
+	 * Manages the selection of manual or .txt input (Disable textfields, butons, etc)
+	 */
 	public void onInputSelected(ActionEvent actionEvent) {
-		if (inputMethodChoice.getValue().equals("Manual input")) {
-			justDeletedList = null;
-			justDeletedSingle = null;
+		if (inputMethodChoice.getValue().equals(OPTION_MANUAL)) {
 			listOfNamesFromFile.clear();
 			selectedManual = true;
 			nameInputField.clear();
@@ -338,19 +313,19 @@ public class NameSelectionMenu implements Initializable {
 			nameInputField.requestFocus();
 			namesSelectedListView.setItems(namesObsListManual);
 			exportBtn.setDisable(false);
-			imgView.setImage(new Image("/namesayer/resources/img_enter.png"));
-
-		} else if (inputMethodChoice.getValue().equals("Browse for text file")) {
-			justDeletedList = null;
-			justDeletedSingle = null;
+			imgView.setImage(new Image(IMAGE_ENTER));
+			
+		} else if (inputMethodChoice.getValue().equals(OPTION_BROWSE)) {
 			selectedManual = false;
 			String prompt = (fileChosen != null) ? fileChosen : "Browse for a .txt file by clicking the button -->";
 			nameInputField.setPromptText(prompt);
 			nameInputField.setDisable(true);
 			namesSelectedListView.setItems(namesObsListFile);
 			exportBtn.setDisable(true);
-			imgView.setImage(new Image("/namesayer/resources/img_folder.png"));
+			imgView.setImage(new Image(IMAGE_BROWSE));
 		}
+		justDeletedList = null;
+		justDeletedSingle = null;
 	}
 
 
