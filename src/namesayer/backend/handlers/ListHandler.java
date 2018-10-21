@@ -23,10 +23,14 @@ public class ListHandler {
 
 			String listName = justName;
 			// Handle duplicate names by numbering them
-			int attempt = 0;
-			while (listOfNamesAdded.contains(listName)) {
-				attempt++;
-				listName = justName + "("+attempt+")";
+//			int attempt = 0;
+//			while (listOfNamesAdded.contains(listName)) {
+//				attempt++;
+//				listName = justName + "("+attempt+")";
+//			}
+			int number = Collections.frequency(listOfJustNames, justName.toLowerCase());
+			if(number > 1){
+				listName = justName + "(" + number + ")";
 			}
 
 			listOfNamesAdded.add(listName); 

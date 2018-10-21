@@ -7,14 +7,12 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import namesayer.backend.NameFile;
+import namesayer.backend.SortIgnoreCase;
 import namesayer.backend.handlers.FXMLHandler;
 import namesayer.backend.handlers.ListHandler;
 import java.io.File;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class MainMenu implements Initializable {
 	
@@ -54,7 +52,9 @@ public class MainMenu implements Initializable {
 		File nameFolder = new File("names");
 		
 		// Get all files in the folder as a List
-		List<String> listOfNamesInDatabase = new ArrayList<String>(Arrays.asList(nameFolder.list())); 
+		List<String> listOfNamesInDatabase = new ArrayList<String>(Arrays.asList(nameFolder.list()));
+		Collections.sort(listOfNamesInDatabase, new SortIgnoreCase());
+
 		listHandler.fillNameList(listOfNamesInDatabase, listOfJustNames, listOfNamesAdded, namesListArray);
 	}
 
