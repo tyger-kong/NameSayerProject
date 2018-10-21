@@ -94,7 +94,7 @@ public class NameSelectionMenu implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		ObservableList<String> rateList = FXCollections.observableArrayList(OPTION_BROWSE, OPTION_MANUAL);
 		inputMethodChoice.setItems(rateList);
-		inputMethodChoice.setValue(OPTION_MANUAL);
+		inputMethodChoice.setValue(OPTION_BROWSE);
 		exportBtn.setDisable(true);
 		selectedManual = false;
 
