@@ -8,6 +8,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -47,6 +49,8 @@ public class NameSelectionMenu implements Initializable {
 	private AutoCompleteTextField nameInputField;
 	@FXML
 	private Button addNameBtn;
+	@FXML
+	private ImageView imgView;
 	@FXML
 	private ListView<String[]> namesSelectedListView;
 	@FXML
@@ -334,17 +338,18 @@ public class NameSelectionMenu implements Initializable {
 			nameInputField.requestFocus();
 			namesSelectedListView.setItems(namesObsListManual);
 			exportBtn.setDisable(false);
-
+			imgView.setImage(new Image("/namesayer/resources/img_enter.png"));
 
 		} else if (inputMethodChoice.getValue().equals("Browse for text file")) {
 			justDeletedList = null;
 			justDeletedSingle = null;
 			selectedManual = false;
-			String prompt = (fileChosen != null) ? fileChosen : "Browse for a text file by clicking the button -->";
+			String prompt = (fileChosen != null) ? fileChosen : "Browse for a .txt file by clicking the button -->";
 			nameInputField.setPromptText(prompt);
 			nameInputField.setDisable(true);
 			namesSelectedListView.setItems(namesObsListFile);
 			exportBtn.setDisable(true);
+			imgView.setImage(new Image("/namesayer/resources/img_folder.png"));
 		}
 	}
 
