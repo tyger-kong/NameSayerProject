@@ -34,7 +34,7 @@ import java.util.ResourceBundle;
 public class NameSelectionMenu implements Initializable {
 
 	private static final String PRACTICE_MENU = "/namesayer/frontend/fxml/PracticeMenu.fxml";
-	private static final String SAVED_FOLDER = "src/namesayer/resources/saved_lists/";
+	private static final String SAVED_FOLDER = "USER_SAVED_LISTS";
 
 	@FXML
 	private VBox vBoxRoot;
@@ -52,15 +52,13 @@ public class NameSelectionMenu implements Initializable {
 	@FXML
 	private Button deleteBtn;
 	@FXML
-	private Button deleteAllButn;
+	private Button deleteAllBtn;
 	@FXML
 	private RadioButton shuffleBtn;
 	@FXML
 	private Button exportBtn;
 	@FXML
 	private Button practiceBtn;
-
-	
 
 	private static List<String> listOfNamesFromFile = new ArrayList<String>();
 	private static Parent nameSelectionMenuRoot;
@@ -166,12 +164,12 @@ public class NameSelectionMenu implements Initializable {
 		mainMenuBtn.getScene().setRoot(MainMenu.getMainMenuRoot());
 	}
 
-	
+
 	/**
 	 * 
 	 */
 	public void addNameBtnClicked() {
-		if (selectedManual) { 
+		if (selectedManual) {
 			if (((nameInputField.getText() == null) || nameInputField.getText().trim().equals(""))) { // If no name is entered
 				Alert noInputAlert = new Alert(Alert.AlertType.INFORMATION);
 				noInputAlert.setTitle("ERROR - Please enter a name");
@@ -211,7 +209,8 @@ public class NameSelectionMenu implements Initializable {
 
 			listOfNamesFromFile.clear();
 			FileChooser fileChooser = new FileChooser();
-			fileChooser.setTitle("Open txt file");
+			fileChooser.setTitle("Choose a txt file");
+			fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
 			File selectedFile = fileChooser.showOpenDialog(addNameBtn.getScene().getWindow());
 
 			// Reads .txt file line by line and adds it to the list
@@ -247,9 +246,11 @@ public class NameSelectionMenu implements Initializable {
 
 
 	public void practiceBtnClicked(ActionEvent actionEvent) {
-		if (namesSelectedListView.getItems().isEmpty()) { // Checks if the selected list is empty
-			showNoNamesEnteredAlert();
-		} else if (namesNotInDatabase.size() > 0) { // Checks if there are any names in the list that is not in database
+		if (namesSelectedListView.getItems().isEmpty()) {
+			showAlert(false, "ERROR - Please select some names", "No name(s) have been entered. Please enter at least one name to practice");	
+			
+		} else if (namesNotInDatabase.size() > 0) {
+			// Check if there are any names in the list that are not in database
 			Alert nonSelectedAlert = new Alert(Alert.AlertType.INFORMATION);
 			nonSelectedAlert.setTitle("ERROR - Name doesn't exist");
 			nonSelectedAlert.setHeaderText(null);
@@ -353,8 +354,10 @@ public class NameSelectionMenu implements Initializable {
 	}
 
 
-	// Getters
-	public static ObservableList<String[]> getNamesObList() { // Returns the names to practice
+	/**
+	 *  Returns the names to practice
+	 */
+	public static ObservableList<String[]> getNamesObList() { 
 		if (selectedManual) {
 			return namesObsListManual;
 		}
@@ -362,17 +365,26 @@ public class NameSelectionMenu implements Initializable {
 	}
 
 
-	public static boolean isShuffleSelected() { // Returns if shuffle has been selected
+	/**
+	 *  Returns if shuffle has been selected
+	 */
+	public static boolean isShuffleSelected() { 
 		return shuffleSelected;
 	}
 
 
-	public Parent getControllerRoot() { // Allows for switching back to this scene
+	/**
+	 *  Allows for switching back to this scene
+	 */
+	public Parent getControllerRoot() { 
 		return nameSelectionMenuRoot;
 	}
 
 
-	public static void addToNoneList(String name) { // Adds a name to list of names not in database
+	/**
+	 *  Adds a name to list of names not in database
+	 */
+	public static void addToNoneList(String name) {
 		namesNotInDatabase.add(name);
 	}
 
@@ -388,11 +400,11 @@ public class NameSelectionMenu implements Initializable {
 
 			//Checks if the .txt already exists. Number increases if yes
 			int attempt = 0;
-			String fileName = SAVED_FOLDER + "savedList.txt";
+			String fileName = SAVED_FOLDER + "/savedList.txt";
 			File currentFile = new File(fileName);
 			while (currentFile.exists()) {
 				attempt++;
-				fileName = SAVED_FOLDER + "savedList_" + attempt + ".txt";
+				fileName = SAVED_FOLDER + "/savedList_" + attempt + ".txt";
 				currentFile = new File(fileName);
 			}
 
@@ -407,26 +419,32 @@ public class NameSelectionMenu implements Initializable {
 					fw.write(name + "\n");
 				}
 				fw.close();
-				Alert alreadyExistsAlert = new Alert(Alert.AlertType.INFORMATION);
-				alreadyExistsAlert.setTitle("File Created");
-				alreadyExistsAlert.setHeaderText(null);
-				alreadyExistsAlert.setContentText(fileName.substring(12) + " has been created.");
-				alreadyExistsAlert.showAndWait();
+				showAlert(true, "File Created", fileName);
+
 			} catch (IOException e) {
-				e.printStackTrace();
+				showAlert(false, "ERROR: Failed to create file", "An error occured while trying to export");
 			}
 		} else {
-			showNoNamesEnteredAlert();
+			showAlert(false, "ERROR - Please select some names", "No name(s) have been entered. Please enter at least one name before exporting");
 		}
 	}
 
 
-	// Shows alert notifying no names have been inputed
-	public void showNoNamesEnteredAlert(){
+	/**
+	 * Shows alert notifying no names have been inputed
+	 * 
+	 * @param isSuccess - Whether exporting was successful or not
+	 * @param title - Title of the alert window
+	 * @param message - If successful then this is the fileName that was created, otherwise it is an error message
+	 */
+	private void showAlert(boolean isSuccess, String title, String message) {
+		String content = (isSuccess) 
+				? message.substring(SAVED_FOLDER.length()+1)+" has been created in the "+SAVED_FOLDER +" folder." 
+						: message;
 		Alert nonSelectedAlert = new Alert(Alert.AlertType.INFORMATION);
-		nonSelectedAlert.setTitle("ERROR - Please select some names");
+		nonSelectedAlert.setTitle(title);
 		nonSelectedAlert.setHeaderText(null);
-		nonSelectedAlert.setContentText("No name(s) have been entered. Please enter at least one name to practice");
+		nonSelectedAlert.setContentText(content);
 		nonSelectedAlert.showAndWait();
 	}
 
