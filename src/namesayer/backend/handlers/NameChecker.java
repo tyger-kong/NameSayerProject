@@ -3,8 +3,6 @@ package namesayer.backend.handlers;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import namesayer.backend.Main;
 import namesayer.backend.menus.MainMenu;
 
 /**

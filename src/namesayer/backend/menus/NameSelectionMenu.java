@@ -24,7 +24,6 @@ import namesayer.backend.handlers.FXMLHandler;
 import namesayer.backend.handlers.ListHandler;
 import namesayer.backend.handlers.NameChecker;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -141,12 +140,26 @@ public class NameSelectionMenu implements Initializable {
 		// Shortcuts to delete and undo previous delete
 		namesSelectedListView.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			final KeyCombination delete = new KeyCodeCombination(KeyCode.D, KeyCombination.CONTROL_DOWN);
-			final KeyCombination undo = new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN);
 			@Override
 			public void handle(KeyEvent k) {
 				if (delete.match(k) || k.getCode().equals(KeyCode.DELETE)) {
 					deleteBtnClicked(null);
 				} 
+				setDeleteShortcuts();
+			}
+		});
+	}
+	
+	
+	/**
+	 * Shortcuts to a deletion based on if it's a single deletion, or deletion of the whole list
+	 */
+	private void setDeleteShortcuts() {
+		vBoxRoot.getScene().setOnKeyPressed(new EventHandler<KeyEvent>() {
+			final KeyCombination undo = new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN);
+
+			@Override
+			public void handle(KeyEvent k) {
 				if (undo.match(k)) {
 					if (singleDeleted && (justDeletedSingle != null)) {
 						namesSelectedListView.getItems().add(justDeletedSingle);
@@ -281,28 +294,6 @@ public class NameSelectionMenu implements Initializable {
 	}
 
 
-	private void setDeleteShortcuts() {
-		// Shortcuts to delete and undo previous delete
-		vBoxRoot.getScene().setOnKeyPressed(new EventHandler<KeyEvent>() {
-			final KeyCombination undo = new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN);
-
-			@Override
-			public void handle(KeyEvent k) {
-				if (undo.match(k)) {
-					if (singleDeleted && (justDeletedSingle != null)) {
-						namesSelectedListView.getItems().add(justDeletedSingle);
-						justDeletedSingle = null;
-
-					} else if (!singleDeleted && (justDeletedList != null)) {
-						namesSelectedListView.getItems().addAll(justDeletedList);
-						justDeletedList = null;
-					}
-				}
-			}
-		});
-	}
-
-
 	/**
 	 * Manages the selection of manual or .txt input (Disable textfields, butons, etc)
 	 */
@@ -372,41 +363,17 @@ public class NameSelectionMenu implements Initializable {
 	}
 
 
-	// Exports the list of selected names to a .txt file
+	/**
+	 * Exports the list of selected names to a .txt file
+	 */
 	public void exportBtnClicked(ActionEvent actionEvent) {
 		if (!namesObsListManual.isEmpty()) {
-			// Creates folder if it doesn't already exist
-			File savedFileFolder = new File(SAVED_FOLDER);
-			if (!savedFileFolder.exists()) {
-				savedFileFolder.mkdirs();
-			}
-
-			//Checks if the .txt already exists. Number increases if yes
-			int attempt = 0;
-			String fileName = SAVED_FOLDER + "/savedList.txt";
-			File currentFile = new File(fileName);
-			while (currentFile.exists()) {
-				attempt++;
-				fileName = SAVED_FOLDER + "/savedList_" + attempt + ".txt";
-				currentFile = new File(fileName);
-			}
-
-			// For every name the user inputed, Write to .txt
 			try {
-				FileWriter fw = new FileWriter(fileName, true);
-				for (String[] nameArr : namesObsListManual) {
-					String name = "";
-					for (String n : nameArr) {
-						name += n;
-					}
-					fw.write(name + "\n");
-				}
-				fw.close();
+				String fileName = listHandler.exportList(namesObsListManual, SAVED_FOLDER);
 				showAlert(true, "File Created", fileName);
-
 			} catch (IOException e) {
 				showAlert(false, "ERROR: Failed to create file", "An error occured while trying to export");
-			}
+			}	
 		} else {
 			showAlert(false, "ERROR - Please select some names", "No name(s) have been entered. Please enter at least one name before exporting");
 		}
@@ -432,7 +399,9 @@ public class NameSelectionMenu implements Initializable {
 	}
 
 
-	// Clears the list of names not in database
+	/**
+	 * Clears the list of names not in database
+	 */
 	public static void clearHasNone() {
 		namesNotInDatabase.clear();
 	}
