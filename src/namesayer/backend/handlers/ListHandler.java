@@ -23,23 +23,25 @@ public class ListHandler {
 	 */
 	public void fillNameList(List<String> listOfNamesInDatabase, List<String> listOfJustNames, List<String> listOfNamesAdded, List<NameFile> namesListArray, List<String> listOfNamesLowered) {
 		for (String currentFile : listOfNamesInDatabase) {
-			String justName = currentFile.substring((currentFile.lastIndexOf("_") + 1), currentFile.lastIndexOf("."));
-			listOfJustNames.add(justName.toLowerCase()); // List of just the names used for AutoCompleteTextfield
+			if (currentFile.endsWith(".wav")) {
+				String justName = currentFile.substring((currentFile.lastIndexOf("_") + 1), currentFile.lastIndexOf("."));
+				listOfJustNames.add(justName.toLowerCase()); // List of just the names used for AutoCompleteTextfield
 
-			String listName = justName;
-			// Handle duplicate names by numbering them
-			int number = Collections.frequency(listOfJustNames, justName.toLowerCase());
-			if (number > 1) {
-				listName = justName + "(" + number + ")";
+				String listName = justName;
+				// Handle duplicate names by numbering them
+				int number = Collections.frequency(listOfJustNames, justName.toLowerCase());
+				if (number > 1) {
+					listName = justName + "(" + number + ")";
+				}
+
+				listOfNamesAdded.add(listName);
+				listOfNamesLowered.add(listName.toLowerCase());
+
+				NameFile name = new NameFile(currentFile, listName, justName.toLowerCase());
+				namesListArray.add(name);
 			}
-
-			listOfNamesAdded.add(listName);
-			listOfNamesLowered.add(listName.toLowerCase());
-
-			NameFile name = new NameFile(currentFile, listName, justName.toLowerCase());
-			namesListArray.add(name);
+			Collections.sort(listOfNamesAdded, new SortIgnoreCase());
 		}
-		Collections.sort(listOfNamesAdded, new SortIgnoreCase());
 	}
 
 
