@@ -182,12 +182,12 @@ public class NameSelectionMenu implements Initializable {
 				String userInput = trimInput(nameInputField.getText().toLowerCase());
 				
 				if (!userInput.isEmpty()) {
-					if (listHandler.checkDuplicate(userInput, listOfUserInput)) {
+					if (listHandler.checkDuplicate(userInput.toLowerCase(), listOfUserInput)) {
 						showAlert(false, "ERROR - Name Already in List", "The name has already been selected. Please enter another name to practice");
 					} else {
 						// Adds the input to lists and fills the ListView corresponding to manual input
 						namesObsListManual.add(NameChecker.nameAsArray(userInput)); 
-						listOfUserInput.add(userInput); // Used for exporting to .txt
+						listOfUserInput.add(userInput.toLowerCase()); // Used for exporting to .txt
 					}
 					nameInputField.setText(null);
 				}
@@ -210,6 +210,9 @@ public class NameSelectionMenu implements Initializable {
 					input = trimInput(input);
 					namesObsListFile.add(NameChecker.nameAsArray(input));
 				}
+			} else {
+				showAlert(false, "ERROR - Not a valid file", "Please choose a .txt file to import");
+
 			}
 		}
 		
@@ -257,7 +260,7 @@ public class NameSelectionMenu implements Initializable {
 			setDeleteShortcuts();
 			clearHasNone();// Clears the list of any names not in database
 			namesSelectedListView.getItems().remove(selectedNameArray);
-			listOfUserInput.remove(String.join("", selectedNameArray));
+			listOfUserInput.remove(String.join("", selectedNameArray).toLowerCase());
 			// For undo function
 			singleDeleted = true;
 			justDeletedSingle = selectedNameArray;
