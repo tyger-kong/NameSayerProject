@@ -96,17 +96,17 @@
                 </HBox>
                 <HBox prefHeight="37.0" prefWidth="400.0" spacing="5.0">
                     <children>
-                        <Label maxHeight="30.0" maxWidth="80.0" minHeight="30.0" minWidth="80.0" text="Practicing:" textFill="#c0b283">
+                        <Label maxHeight="30.0" maxWidth="100.0" minHeight="30.0" minWidth="100.0" text="Practicing:" textFill="#c0b283">
                             <font>
                                 <Font name="System Bold" size="15.0" />
                             </font>
                         </Label>
                         <Label fx:id="playingLabel" text="--" textFill="#c0b283">
                             <font>
-                                <Font size="14.0" />
+                                <Font size="12.0" />
                             </font>
                      <padding>
-                        <Insets top="6.0" />
+                        <Insets top="7.5" />
                      </padding>
                      <HBox.margin>
                         <Insets />
