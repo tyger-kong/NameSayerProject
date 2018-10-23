@@ -100,7 +100,7 @@
                                 <Font size="10.0" />
                             </font>
                      <padding>
-                        <Insets top="10.0" />
+                        <Insets top="2.5" />
                      </padding>
                         </Label>
                     </children>
