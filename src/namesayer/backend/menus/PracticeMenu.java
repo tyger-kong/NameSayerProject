@@ -20,7 +20,7 @@ import namesayer.backend.NameFile;
 import namesayer.backend.handlers.AudioDeleteHandler;
 import namesayer.backend.handlers.AudioPlayHandler;
 import namesayer.backend.handlers.AudioProcessingHandler;
-import namesayer.backend.handlers.AudioRecordHandler;
+import namesayer.backend.handlers.AudioRecordingHandler;
 import namesayer.backend.handlers.ButtonHandler;
 import java.io.File;
 import java.io.IOException;
@@ -33,18 +33,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 
+/**
+ * Controller for PracticeMenu.fxml
+ */
 public class PracticeMenu implements Initializable {
 
 	private static final String PROCESSING_MENU = "/namesayer/frontend/fxml/ProcessingMenu.fxml";
 	private static final String MIC_TEST = "/namesayer/frontend/fxml/MicTest.fxml";
-
-	private String selectedName;
-	private int selectedIndex = 0;
-	private ObservableList<String> listToDisplay;
-	private ObservableList<String> recordedList;
-	private String selectedArchive;
-	private boolean contains;
-	private String toPlay;
 
 	@FXML
 	private Button returnButton;
@@ -77,22 +72,30 @@ public class PracticeMenu implements Initializable {
 	private List<String> attemptDatabase;
 	private List<String> listOfAttempts = new ArrayList<String>();
 
+	private String selectedName;
+	private int selectedIndex = 0;
+	private ObservableList<String> listToDisplay;
+	private ObservableList<String> recordedList;
+	private String selectedArchive;
+	private boolean contains;
+	private String toPlay;
 	private SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-HHmmss");
 	private Date date;
 	private List<File> namesToPlay;
 	private List<List<File>> listOfAudioCreated;
 
 	private boolean btnIsRecord;
-	private AudioRecordHandler recorder = new AudioRecordHandler();
+	private AudioRecordingHandler recorder = new AudioRecordingHandler();
 	private int numberToPractice;
 	private String recordingName;
 	private List<String> recordingNameList;
-
+	
 	ButtonHandler btnHandler = new ButtonHandler();
 	AudioPlayHandler audioPlayHandler = new AudioPlayHandler();
 	AudioDeleteHandler audioDeleteHandler = new AudioDeleteHandler();
 	AudioProcessingHandler audioProHandler = new AudioProcessingHandler();
 
+	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		recordingIndicator.setProgress(0);
@@ -113,7 +116,7 @@ public class PracticeMenu implements Initializable {
 
 
 	/**
-	 *  Chooses a new name.
+	 * Chooses a new name.
 	 */
 	public void handlePrevButton(ActionEvent actionEvent) {
 		if (selectedIndex != 0) {
@@ -124,13 +127,13 @@ public class PracticeMenu implements Initializable {
 
 
 	/**
-	 *  Same functionality as handlePrevButton()
+	 * Same functionality as handlePrevButton()
 	 */
 	public void handleNextButton(ActionEvent actionEvent) {
 		if (selectedIndex != (listToDisplay.size()-1)) {
 			selectedIndex++;
 			updateLists();
-		}
+		 }
 	}
 
 
@@ -153,7 +156,7 @@ public class PracticeMenu implements Initializable {
 
 
 	/**
-	 *  Gets the selected recording
+	 * Gets the selected recording
 	 */
 	public void handleArcListClicked(MouseEvent mouseEvent) {
 		selectedArchive = availableListView.getSelectionModel().getSelectedItem();
@@ -161,8 +164,7 @@ public class PracticeMenu implements Initializable {
 
 
 	/**
-	 *  Plays the selected recording
-	 *  
+	 * Plays the selected recording 
 	 */
 	public void handlePlayArc(ActionEvent actionEvent) {
 		if (selectedArchive == null) {
@@ -200,10 +202,12 @@ public class PracticeMenu implements Initializable {
 		updateArchive();
 	}
 
-
+	/**
+	 * Handles starting/stopping recording for user attempts of names
+	 */
 	public void handleRecordAction(ActionEvent actionEvent) {
-
 		if (btnIsRecord) {
+			// Start recording
 			date = new Date();
 			String currentTime = formatter.format(date);
 			recordingName = recordingNameList.get(selectedIndex) + "_" + currentTime;
@@ -216,8 +220,9 @@ public class PracticeMenu implements Initializable {
 			btnIsRecord = false;
 
 		} else {
+			// Finish recording
 			recordingIndicator.setProgress(0);
-			finishRecording();
+			recorder.finishRecording();
 			listOfAttempts.add(recordingName);
 			updateArchive();
 			setAllButtonsDisabled(false);
@@ -230,7 +235,6 @@ public class PracticeMenu implements Initializable {
 
 	private void startRecording(String recordingName) {
 		File wavFile = new File("Creations/" + recordingName + ".wav");
-		System.out.println("ABOUT TO do recorder.startRecording(wavFile)");
 		new Thread() {
 			@Override
 			public void run() {
@@ -240,11 +244,9 @@ public class PracticeMenu implements Initializable {
 	}
 
 
-	private void finishRecording() {
-		recorder.finishRecording();
-	}
-
-
+	/**
+	 * Launches a window to check the level of the user's microphone
+	 */
 	public void testMicBtnClicked() {
 		try {
 			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(MIC_TEST));
@@ -258,11 +260,18 @@ public class PracticeMenu implements Initializable {
 			stage.setResizable(false);
 			stage.show();
 		} catch (IOException e) {
-			e.printStackTrace();
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+			alert.setTitle("ERROR OPENING MIC TEST WINDOW");
+			alert.setHeaderText(null);
+			alert.setContentText("ERROR OPENING MIC TEST WINDOW");
+			alert.showAndWait();
 		}
 	}
 
-
+	
+	/**
+	 * Creates a pop up alert indicating that no file has been selected
+	 */
 	public void noFileAlert() {
 		Alert alert = new Alert(Alert.AlertType.INFORMATION);
 		alert.setTitle("ERROR");
@@ -292,7 +301,7 @@ public class PracticeMenu implements Initializable {
 
 
 	/**
-	 * Finds corresponding names in creations folder and adds to recordinglist
+	 * Finds corresponding names in creations folder and adds to recordingList
 	 */
 	public void fillAttemptList() {
 		listOfAttempts = new ArrayList<>();
@@ -406,6 +415,7 @@ public class PracticeMenu implements Initializable {
 		initialiseAttemptDatabase();
 	}
 
+	
 	/**
 	 * Trim silent parts of the audio files
 	 */
@@ -416,7 +426,6 @@ public class PracticeMenu implements Initializable {
 		} catch (IOException e) {
 
 		}
-
 	}
 
 }

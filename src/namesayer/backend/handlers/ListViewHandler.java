@@ -1,12 +1,13 @@
 package namesayer.backend.handlers;
 
 import java.util.List;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListView;
 
-// Class to handle clicking and updating ListViews
+/**
+ * Class to handle clicking and updating ListViews
+ */
 public class ListViewHandler {
 
     /**

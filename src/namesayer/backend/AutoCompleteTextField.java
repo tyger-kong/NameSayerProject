@@ -9,7 +9,6 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.CustomMenuItem;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.SortedSet;
@@ -142,5 +141,5 @@ public class AutoCompleteTextField extends TextField {
 			super.replaceSelection(text);
 		}
 	}
-//0-9\(\)
+	
 }

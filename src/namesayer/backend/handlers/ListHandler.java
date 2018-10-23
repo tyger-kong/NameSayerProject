@@ -5,6 +5,9 @@ import java.util.List;
 import namesayer.backend.NameFile;
 import namesayer.backend.SortIgnoreCase;
 
+/**
+ * Class for handling adding names to lists and checking lists for duplicate names
+ */
 public class ListHandler {
 
 	/**

@@ -6,6 +6,9 @@ import java.nio.file.Files;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 
+/**
+ * Class used to handle deleting of user made attempts
+ */
 public class AudioDeleteHandler {
 
 	public void delete(File toDelete) {

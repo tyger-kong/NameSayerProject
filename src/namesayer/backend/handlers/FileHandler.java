@@ -3,11 +3,17 @@ package namesayer.backend.handlers;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class for handling writing and reading from text files
+ */
 public class FileHandler {
 
 	/**
@@ -76,6 +82,7 @@ public class FileHandler {
 	 * @param lineToAdd - File name of the name/recording
 	 */
 	public void addBadRating(String file, String lineToAdd) {
+		removeBadRating(file, lineToAdd); // Prevents the same name being written to the text file multiple times
 		try {
             FileWriter fw = new FileWriter(file, true);
             fw.write(lineToAdd + "\n");
@@ -117,4 +124,26 @@ public class FileHandler {
 			e.printStackTrace();
 		}
 	}
+	
+	
+    /**
+     * Checks Bad_Ratings.txt file for whether the specified name is present
+     */
+	public boolean checkIfBadRating(String file, String name) {
+		List<String> ratingsList = new ArrayList<String>();
+        try {
+            FileInputStream stream = new FileInputStream(file);
+            BufferedReader br = new BufferedReader(new InputStreamReader(stream));
+            String ratedFile;
+            while ((ratedFile = br.readLine()) != null)   {
+                ratingsList.add(ratedFile);
+            }
+            br.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        return ratingsList.contains(name);
+	}
+	
 }

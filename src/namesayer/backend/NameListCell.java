@@ -9,11 +9,17 @@ import javafx.scene.layout.HBox;
 import namesayer.backend.handlers.NameChecker;
 import namesayer.backend.menus.NameSelectionMenu;
 
-// Based on https://www.turais.de/how-to-custom-listview-cell-in-javafx/
+/**
+ * Based on https://www.turais.de/how-to-custom-listview-cell-in-javafx/
+ * @author Dinith Wannigama
+ * 
+ * This class is used in the NameSelectionMenu's ListView to show which parts of the names are in the database using
+ * different colours
+ *
+ */
 public class NameListCell extends ListCell<String[]> {
 	@FXML
 	HBox cellHBox;
-
 	private FXMLLoader loader;
 
 	@Override
