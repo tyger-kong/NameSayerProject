@@ -88,7 +88,7 @@ public class PracticeMenu implements Initializable {
 	private AudioRecordingHandler recorder = new AudioRecordingHandler();
 	private int numberToPractice;
 	private String recordingName;
-	private List<String> recordingNameList;
+
 	
 	ButtonHandler btnHandler = new ButtonHandler();
 	AudioPlayHandler audioPlayHandler = new AudioPlayHandler();
@@ -210,7 +210,7 @@ public class PracticeMenu implements Initializable {
 			// Start recording
 			date = new Date();
 			String currentTime = formatter.format(date);
-			recordingName = recordingNameList.get(selectedIndex) + "_" + currentTime;
+			recordingName = listToDisplay.get(selectedIndex) + "_" + currentTime;
 
 			setAllButtonsDisabled(true);
 			recordButton.setDisable(false);
@@ -382,7 +382,7 @@ public class PracticeMenu implements Initializable {
 				}
 			}
 			listOfAudioCreated.set(selectedIndex, namesToPlay);
-			recordingNameList.set(selectedIndex, tempName.trim());
+
 			processRecordings();
 		}
 	}
@@ -411,7 +411,7 @@ public class PracticeMenu implements Initializable {
 		}
 		numberToPractice = namesToPractice.size();
 		listOfAudioCreated = new ArrayList<List<File>>(Collections.nCopies(numberToPractice, null));
-		recordingNameList = new ArrayList<String>(Collections.nCopies(numberToPractice, null));
+
 		initialiseAttemptDatabase();
 	}
 
