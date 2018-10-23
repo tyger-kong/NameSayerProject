@@ -97,7 +97,7 @@
                         </Label>
                         <Label fx:id="playingLabel" text="--" textFill="#c0b283">
                             <font>
-                                <Font size="20.0" />
+                                <Font size="10.0" />
                             </font>
                         </Label>
                     </children>
