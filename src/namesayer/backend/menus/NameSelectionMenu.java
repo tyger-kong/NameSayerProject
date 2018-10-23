@@ -31,7 +31,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-
+/**
+ * Controller for NameSelectionMenu.fxml
+ */
 public class NameSelectionMenu implements Initializable {
 	private static final String PRACTICE_MENU = "/namesayer/frontend/fxml/PracticeMenu.fxml";
 	private static final String SAVED_FOLDER = "USER_SAVED_LISTS";
@@ -254,6 +256,9 @@ public class NameSelectionMenu implements Initializable {
 	}
 
 	
+	/**
+	 * Transitions to the PracticeMenu
+	 */
 	public void practiceBtnClicked(ActionEvent actionEvent) {
 		if (namesSelectedListView.getItems().isEmpty()) {
 			showAlert(false, "ERROR - Please select some names", "No name(s) have been entered. Please enter at least one name to practice");
@@ -268,7 +273,10 @@ public class NameSelectionMenu implements Initializable {
 		}
 	}
 
-
+	
+	/**
+	 * Deletes the selected name from the ListView
+	 */
 	public void deleteBtnClicked(ActionEvent actionEvent) {
 		if (selectedNameArray != null) {
 			setDeleteShortcuts();
@@ -283,7 +291,10 @@ public class NameSelectionMenu implements Initializable {
 		namesSelectedListView.getSelectionModel().clearSelection();
 	}
 
-
+	
+	/**
+	 * Deletes all the names from the ListView
+	 */
 	public void deleteAllBtnClicked(ActionEvent actionEvent) {
 		setDeleteShortcuts();
 		justDeletedList = FXCollections.observableArrayList(namesSelectedListView.getItems());
@@ -324,6 +335,9 @@ public class NameSelectionMenu implements Initializable {
 	}
 
 
+	/**
+	 * Handles clicking on the ListView cells
+	 */
 	public void handleListSelected(MouseEvent mouseEvent) {
 		selectedNameArray = namesSelectedListView.getSelectionModel().getSelectedItem();
 	}

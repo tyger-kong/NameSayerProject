@@ -3,7 +3,6 @@ package namesayer.backend.menus;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ResourceBundle;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -11,7 +10,9 @@ import javafx.scene.control.Button;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 
-
+/**
+ * Controller for HelpMenu.fxml
+ */
 public class HelpMenu implements Initializable {
 
 	@FXML

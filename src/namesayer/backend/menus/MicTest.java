@@ -2,17 +2,19 @@ package namesayer.backend.menus;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.TargetDataLine;
-
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ProgressBar;
 
+/**
+ * Controller for MicTest.fxml
+ * Shows the user's microphone on a bar
+ */
 public class MicTest implements Initializable {
 	@FXML
 	private ProgressBar micBar = new ProgressBar();
@@ -45,7 +47,8 @@ public class MicTest implements Initializable {
 				} catch (LineUnavailableException ex) {
 					System.out.println("The TargetDataLine is Unavailable.");
 				}
-
+				
+				// Show the mic level on the progress bar
 				while (true) {
 					byte[] bytes = new byte[line.getBufferSize() / 5];
 					line.read(bytes, 0, bytes.length);
@@ -62,7 +65,10 @@ public class MicTest implements Initializable {
 	}
 
 
-	// Taken from https://stackoverflow.com/questions/15870666/calculating-microphone-volume-trying-to-find-max
+	/**
+	 * Taken from https://stackoverflow.com/questions/15870666/calculating-microphone-volume-trying-to-find-max
+	 * Calculate the root mean square of the audio data
+	 */
 	protected static int calculateRMSLevel(byte[] audioData) {
 		// audioData might be buffered data read from a data line
 		long lSum = 0;

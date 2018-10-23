@@ -14,14 +14,14 @@ import javax.sound.sampled.TargetDataLine;
 /**
  * A sample program is to demonstrate how to record sound in Java
  * author: www.codejava.net
- * 
  * Taken from https://www.codejava.net/coding/capture-and-record-sound-into-wav-file-with-java-sound-api
+ * 
+ * Class used to handle recording of audio in the PracticeMenu
  */
-public class AudioRecordHandler {
+public class AudioRecordingHandler {
 	// the line from which audio data is captured
 	TargetDataLine line;
 
-	
 	/**
 	 * Defines an audio format
 	 */
@@ -52,21 +52,13 @@ public class AudioRecordHandler {
 			line = (TargetDataLine)AudioSystem.getLine(info);
 			line.open(format);
 			line.start();   // start capturing
-
-			System.out.println("Start capturing...");
-
 			AudioInputStream ais = new AudioInputStream(line);
-
-			System.out.println("Start recording...");
-
 			// start recording
-			AudioSystem.write(ais, AudioFileFormat.Type.WAVE, wavFile);
-			System.out.println("JUST DID THE WRITE METHOD");
-			
+			AudioSystem.write(ais, AudioFileFormat.Type.WAVE, wavFile);			
 		} catch (LineUnavailableException ex) {
-			ex.printStackTrace();
+			System.out.println("Audio line is unavailable");
 		} catch (IOException ioe) {
-			ioe.printStackTrace();
+			System.out.println("Failed to check audio");
 		}
 	}
 
@@ -75,10 +67,8 @@ public class AudioRecordHandler {
 	 * Closes the target data line to finish capturing and recording
 	 */
 	public void finishRecording() {
-		System.out.println("ENTERED finishRecording() method");
 		line.stop();
 		line.close();
-		System.out.println("Finished recording");
 	}
 
 }

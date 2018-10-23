@@ -13,11 +13,20 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+/**
+ * Class that handles trimming of silence off of the audio files in the database
+ */
 public class AudioProcessingHandler {
 	
+	/**
+	 * Trims the database names in the PracticeMenu
+	 * 
+	 * @param root - PracticeWindow's root - used to create a pop up window while the processing occurs
+	 * @param namesToPlay - Database names to be trimmed
+	 */
 	public void process(Parent root, List<File> namesToPlay) {
 		Stage processingStage = new Stage();
-		processingStage.setTitle("Working Hard");
+		processingStage.setTitle("Working Hard...");
 		processingStage.setScene(new Scene(root, 200, 50));
 		processingStage.setResizable(false);
 		processingStage.initStyle(StageStyle.UNDECORATED);

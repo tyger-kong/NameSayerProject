@@ -14,6 +14,9 @@ import java.io.File;
 import java.net.URL;
 import java.util.*;
 
+/**
+ * Controller for MainMenu.fxml
+ */
 public class MainMenu implements Initializable {
 	
 	private static final String NAME_SELECTION_MENU = "/namesayer/frontend/fxml/NameSelectionMenu.fxml";
@@ -105,20 +108,33 @@ public class MainMenu implements Initializable {
 	}
 
 
+	/**
+	 * @return List of NameFile objects of names in the database
+	 */
 	public static List<NameFile> getAddedNames() {
 		return namesListArray;
 	}
 
-
+	
+	/**
+	 * @return List of file names of names in the database
+	 */
 	public static List<String> getAddedList() {
 		return listOfNamesAdded;
 	}
 
-
+	
+	/**
+	 * @return List of just the Enlgish part of the name files in the database
+	 */
 	public static List<String> getListOfJustNames() {
 		return listOfJustNames;
 	}
 
+	
+	/**
+	 * @return List of just the English part of the name files in the database in lower case
+	 */
 	public static List<String> getListOfAddedLower(){
 		return listOfNamesLowered;
 	}

@@ -13,11 +13,13 @@ import javafx.scene.input.MouseEvent;
 import namesayer.backend.NameFile;
 import namesayer.backend.handlers.AudioPlayHandler;
 import namesayer.backend.handlers.ButtonHandler;
-
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
+/**
+ * Controller for DatabaseMenu.fxml
+ */
 public class DatabaseMenu implements Initializable {
 	@FXML
 	private Button mainMenuBtn;
@@ -34,15 +36,10 @@ public class DatabaseMenu implements Initializable {
 	private NameFile currentName;
 	private AudioPlayHandler audioPlayHandler = new AudioPlayHandler();
 	private ButtonHandler btnHandler = new ButtonHandler();
-
-
-	public void mainMenuBtnClicked(ActionEvent actionEvent) {
-		mainMenuBtn.getScene().setRoot(MainMenu.getMainMenuRoot());
-	}
-
+	
 
 	/**
-	 * Initialises the listview
+	 * Initialises the ListView
 	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -52,6 +49,11 @@ public class DatabaseMenu implements Initializable {
 		databaseListView.setItems(namesList);
 		databaseListView.getSelectionModel().clearSelection();
 		rateBtn.setDisable(true);
+	}
+	
+	
+	public void mainMenuBtnClicked(ActionEvent actionEvent) {
+		mainMenuBtn.getScene().setRoot(MainMenu.getMainMenuRoot());
 	}
 
 

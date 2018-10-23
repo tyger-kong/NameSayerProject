@@ -3,21 +3,27 @@ package namesayer.backend.handlers;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.SourceDataLine;
-
 import javafx.animation.PauseTransition;
 import javafx.scene.control.Button;
 import javafx.util.Duration;
 import namesayer.backend.menus.PracticeMenu;
 
+/**
+ * Class that handles playing of audio files in the PracticeMenu
+ */
 public class AudioPlayHandler {
 	ButtonHandler btnHandler = new ButtonHandler();
 	
+	/**
+	 * Plays the specified audio file and disables the buttons while this happens
+	 * @param fileToPlay - Audio file to play
+	 * @param btns - Buttons to disable
+	 */
 	public void play(String fileToPlay, Button... btns) {
 		new Thread() {
 			@Override
@@ -65,7 +71,7 @@ public class AudioPlayHandler {
 			}
 		}.start();
 	}
-	
+
 
 	/**
 	 * Plays the files in the given list one at a time
@@ -101,8 +107,8 @@ public class AudioPlayHandler {
 			}
 		}.start();
 	}
-	
-	
+
+
 	/**
 	 * Plays the files in the given list one at a time
 	 */
