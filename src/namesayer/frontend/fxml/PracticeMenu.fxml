@@ -92,13 +92,16 @@
                     <children>
                         <Label text="Practicing:" textFill="#c0b283">
                             <font>
-                                <Font name="System Bold" size="20.0" />
+                                <Font name="System Bold" size="15.0" />
                             </font>
                         </Label>
                         <Label fx:id="playingLabel" text="--" textFill="#c0b283">
                             <font>
                                 <Font size="10.0" />
                             </font>
+                     <padding>
+                        <Insets top="10.0" />
+                     </padding>
                         </Label>
                     </children>
                     <opaqueInsets>
