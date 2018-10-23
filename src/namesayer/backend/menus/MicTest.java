@@ -76,7 +76,7 @@ public class MicTest implements Initializable {
 			sumMeanSquare = sumMeanSquare + Math.pow(audioData[j] - dAvg, 2d);
 
 		double averageMeanSquare = sumMeanSquare / audioData.length;
-		return (int) (Math.pow(averageMeanSquare, 0.5d) + 0.5);
+		return (int)(Math.pow(averageMeanSquare, 0.5d) + 0.5);
 	}
 
 }

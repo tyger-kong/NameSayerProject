@@ -1,12 +1,10 @@
 package namesayer.backend;
 
 import javafx.beans.property.SimpleStringProperty;
+import namesayer.backend.handlers.FileHandler;
+
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -20,6 +18,7 @@ public class NameFile {
     private List<String> attemptList = new ArrayList<String>();
     private List<String> attemptListNameOnly = new ArrayList<String>();
     private SimpleStringProperty _justName;
+    private FileHandler fileHandler = new FileHandler();
     
     public enum rating {
     	BAD, GOOD;
@@ -88,43 +87,12 @@ public class NameFile {
 
 
     private void addBadRating() {
-        try {
-            FileWriter fw = new FileWriter(BAD_RATINGS_TXT, true);
-            fw.write(this.getFileName() + "\n");
-            fw.close();
-        } catch(IOException e){
-            e.printStackTrace();
-        }
+    	fileHandler.addBadRating(BAD_RATINGS_TXT, this.getFileName());
     }
 
 
     private void removeBadRating() {
-        try {
-            File ratingsFile = new File(BAD_RATINGS_TXT);
-            File tempFile = new File("temp.txt");
-            tempFile.createNewFile();
-
-            BufferedReader reader = new BufferedReader(new FileReader(ratingsFile));
-            BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
-
-            String lineToRemove = this.getFileName();
-            String currentLine;
-
-            while((currentLine = reader.readLine()) != null) {
-                // trim newline when comparing with lineToRemove
-                String trimmedLine = currentLine.trim();
-                if(!trimmedLine.equals(lineToRemove)) {
-                    writer.write(currentLine + System.getProperty("line.separator"));
-                }
-            }
-
-            writer.close();
-            reader.close();
-            ratingsFile.delete();
-            tempFile.renameTo(ratingsFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    	fileHandler.removeBadRating(BAD_RATINGS_TXT, this.getFileName()); 
     }
 
 

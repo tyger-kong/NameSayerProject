@@ -21,6 +21,7 @@ import javafx.stage.FileChooser;
 import namesayer.backend.AutoCompleteTextField;
 import namesayer.backend.NameListCell;
 import namesayer.backend.handlers.FXMLHandler;
+import namesayer.backend.handlers.FileHandler;
 import namesayer.backend.handlers.ListHandler;
 import namesayer.backend.handlers.NameChecker;
 import java.io.File;
@@ -87,6 +88,7 @@ public class NameSelectionMenu implements Initializable {
 
 	private FXMLHandler fxmlHandler = new FXMLHandler();
 	private ListHandler listHandler = new ListHandler();
+	private FileHandler fileHandler = new FileHandler();
 
 
 	@Override
@@ -215,7 +217,7 @@ public class NameSelectionMenu implements Initializable {
 			if ((selectedFile != null) && (selectedFile.getPath().substring(selectedFile.getAbsolutePath().lastIndexOf('.')).equals(".txt"))) {
 				fileChosen = selectedFile.getAbsolutePath();
 				nameInputField.setText(fileChosen);
-				listHandler.readFromFileToList(selectedFile, listOfNamesFromFile);
+				fileHandler.readFromFileToList(selectedFile, listOfNamesFromFile);
 				
 				// Fills the Listview corresponding to .txt input
 				namesObsListFile.clear();
@@ -225,7 +227,6 @@ public class NameSelectionMenu implements Initializable {
 				}
 			} else {
 				showAlert(false, "ERROR - Not a valid file", "Please choose a .txt file to import");
-
 			}
 		}
 		
@@ -369,7 +370,7 @@ public class NameSelectionMenu implements Initializable {
 	public void exportBtnClicked(ActionEvent actionEvent) {
 		if (!namesObsListManual.isEmpty()) {
 			try {
-				String fileName = listHandler.exportList(namesObsListManual, SAVED_FOLDER);
+				String fileName = fileHandler.exportList(namesObsListManual, SAVED_FOLDER);
 				showAlert(true, "File Created", fileName);
 			} catch (IOException e) {
 				showAlert(false, "ERROR: Failed to create file", "An error occured while trying to export");
