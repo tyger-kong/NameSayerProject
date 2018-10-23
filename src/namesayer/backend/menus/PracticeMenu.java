@@ -21,7 +21,7 @@ import namesayer.backend.handlers.AudioDeleteHandler;
 import namesayer.backend.handlers.AudioPlayHandler;
 import namesayer.backend.handlers.AudioProcessingHandler;
 import namesayer.backend.handlers.AudioRecordHandler;
-
+import namesayer.backend.handlers.ButtonHandler;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -88,6 +88,7 @@ public class PracticeMenu implements Initializable {
 	private String recordingName;
 	private List<String> recordingNameList;
 
+	ButtonHandler btnHandler = new ButtonHandler();
 	AudioPlayHandler audioPlayHandler = new AudioPlayHandler();
 	AudioDeleteHandler audioDeleteHandler = new AudioDeleteHandler();
 	AudioProcessingHandler audioProHandler = new AudioProcessingHandler();
@@ -314,15 +315,9 @@ public class PracticeMenu implements Initializable {
 	 */
 	public void updateArchive() {
 		recordedList = FXCollections.observableArrayList(listOfAttempts);
-		if (recordedList.size() == 0) {
-			contains = false;
-			availableListView.setMouseTransparent(true);
-			availableListView.setFocusTraversable(false);
-		} else {
-			contains = true;
-			availableListView.setMouseTransparent(false);
-			availableListView.setFocusTraversable(true);
-		}
+		contains = !(recordedList.size() == 0);
+		availableListView.setMouseTransparent(!contains);
+		availableListView.setFocusTraversable(contains);
 		availableListView.setItems(recordedList);
 		availableListView.getSelectionModel().clearSelection();
 	}
@@ -334,16 +329,9 @@ public class PracticeMenu implements Initializable {
 	 * @param b - True if all buttons should be disabled, false if they should be enabled
 	 */
 	public void setAllButtonsDisabled(boolean b) {
-		playButton.setDisable(b);
-		prevButton.setDisable(b);
-		nextButton.setDisable(b);
-		recordButton.setDisable(b);
-		playArcButton.setDisable(b);
-		deleteArcButton.setDisable(b);
-		returnButton.setDisable(b);
+		btnHandler.setDisabled(b, playButton, prevButton, nextButton, recordButton, playArcButton, deleteArcButton, returnButton, testMicBtn);
 		displayListView.setMouseTransparent(b);
 		availableListView.setMouseTransparent(b);
-		testMicBtn.setDisable(b);
 	}
 
 
